@@ -1,6 +1,6 @@
-node_modules
-.next
-out
-dist
+client/node_modules/
+client/.next/
+node_modules/
+.next/
 .env
 .env.local
