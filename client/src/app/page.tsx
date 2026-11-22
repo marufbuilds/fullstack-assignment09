@@ -1,5 +1,385 @@
-'use client';
-import Link from 'next/link';import {motion} from 'framer-motion';import {ArrowUpRight,ShieldCheck,Clock3,Wallet,Truck} from 'lucide-react';
-const categories=['Construction','Photography','Vehicles & Transport','Agriculture','Electronics','Event Equipment'];
-const demos=[['Compact Excavator','Construction','$180','https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=900&q=80'],['Pro Camera Kit','Photography','$65','https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=900&q=80'],['Utility Trailer','Vehicles','$45','https://images.unsplash.com/photo-1592833159157-2c6a3f7a8c8?auto=format&fit=crop&w=900&q=80'],['Generator 7kW','Electronics','$55','https://images.unsplash.com/photo-1473341304170-971dccb5acb9?auto=format&fit=crop&w=900&q=80'],['Scissor Lift','Construction','$220','https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?auto=format&fit=crop&w=900&q=80'],['Event Tent','Event Equipment','$80','https://images.unsplash.com/photo-1507504031003-b417219a0fde?auto=format&fit=crop&w=900&q=80']];
-export default function Home(){return <><section className="wrap" style={{padding:'56px 0 70px'}}><motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{duration:.6}} style={{borderRadius:30,overflow:'hidden',background:'linear-gradient(90deg,rgba(17,41,33,.94),rgba(17,41,33,.5)),url(https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1800&q=85) center/cover',padding:'clamp(30px,6vw,80px)',color:'white'}}><div style={{maxWidth:650}}><div className="eyebrow" style={{color:'#c9e4d5'}}>THE EQUIPMENT MARKETPLACE</div><h1 className="h1" style={{margin:'18px 0'}}>Get the right tools. <span style={{color:'#f2bc7b'}}>Get it done.</span></h1><p style={{fontSize:18,lineHeight:1.7,color:'#e1e9e4'}}>Access dependable equipment for your next project without the cost and commitment of owning it.</p><div style={{display:'flex',gap:12,flexWrap:'wrap',marginTop:30}}><Link className="btn" href="/equipment">Explore equipment <ArrowUpRight size={18}/></Link><Link className="btn-outline" style={{color:'white',borderColor:'#ffffff77'}} href="/register">List your equipment</Link></div></div></motion.div></section><section className="wrap section" style={{paddingTop:10}}><div style={{display:'flex',justifyContent:'space-between',gap:20,alignItems:'end',flexWrap:'wrap'}}><div><div className="eyebrow">Browse by need</div><h2 className="h2">Find your category</h2></div><Link href="/equipment" className="btn-outline">View all equipment</Link></div><motion.div initial="hidden" whileInView="show" viewport={{once:true}} variants={{hidden:{},show:{transition:{staggerChildren:.08}}}} style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:12,marginTop:28}}>{categories.map((c,i)=><motion.div key={c} variants={{hidden:{opacity:0,y:15},show:{opacity:1,y:0}}} className="card" style={{padding:24,background:i%2?'#fff':'#e8eee9'}}><span style={{fontSize:12,color:'#236b51',fontWeight:700}}>0{i+1}</span><h3 style={{margin:'12px 0 0',fontWeight:800}}>{c}</h3></motion.div>)}</motion.div></section><section className="wrap section"><div className="eyebrow">A curated selection</div><h2 className="h2">Popular equipment</h2><p className="muted">Demo listings are shown until the backend is connected and populated.</p><motion.div initial="hidden" whileInView="show" viewport={{once:true}} variants={{hidden:{},show:{transition:{staggerChildren:.1}}}} style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(250px,1fr))',gap:18,marginTop:30}}>{demos.map(([name,cat,price,img])=><motion.article key={name} variants={{hidden:{opacity:0,y:20},show:{opacity:1,y:0}}} className="card"><img src={img} alt={name} style={{width:'100%',height:220,objectFit:'cover'}}/><div style={{padding:20}}><span className="eyebrow">{cat}</span><h3 style={{fontWeight:800,fontSize:20,margin:'8px 0'}}>{name}</h3><div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}><b>{price}<span className="muted" style={{fontWeight:400,fontSize:13}}>/day</span></b><Link className="btn-outline" href="/equipment">Explore <ArrowUpRight size={16}/></Link></div></div></motion.article>)}</motion.div></section><section className="section" style={{background:'#e8eee9'}}><div className="wrap"><div className="eyebrow">Built around your project</div><h2 className="h2">Why Equiply?</h2><div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:25,marginTop:28}}>{[[ShieldCheck,'Trusted listings','Owner and listing approval built into the marketplace.'],[Wallet,'Cost efficient','Rent for the time you need instead of purchasing.'],[Clock3,'Flexible periods','Plan your rental around your work schedule.'],[Truck,'Convenient','Discover equipment near your project location.']].map(([Icon,title,desc]:any)=><div key={title}><Icon size={28} color="#236b51"/><h3 style={{fontSize:20,fontWeight:800,margin:'12px 0'}}>{title}</h3><p className="muted">{desc}</p></div>)}</div></div></section><section className="wrap section" id="how"><div className="eyebrow">Three simple steps</div><h2 className="h2">Rent and get to work</h2><div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:18,marginTop:28}}>{['Browse and compare','Book your dates','Pay securely and collect'].map((x,i)=><div className="card" key={x} style={{padding:24}}><div style={{fontSize:32,fontWeight:900,color:'#236b51'}}>0{i+1}</div><h3 style={{fontWeight:800,margin:'14px 0'}}>{x}</h3><p className="muted">{['Explore approved equipment, prices and locations.','Choose your rental dates and quantity.','Complete checkout and coordinate with the owner.'][i]}</p></div>)}</div></section><section className="wrap section"><div className="card" style={{padding:'clamp(28px,5vw,55px)',background:'#183d30',color:'white'}}><h2 className="h2">Your equipment. Your next project.</h2><p style={{color:'#d2e2d9',maxWidth:600,lineHeight:1.7}}>Join a marketplace that makes sharing equipment straightforward.</p><Link href="/register" className="btn" style={{background:'#e6a75e',color:'#18251f',marginTop:16}}>Create an account <ArrowUpRight/></Link></div></section></>}
+"use client";
+
+// Equiply landing page: hero search, categories, featured listings and
+// the "how it works" story.
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Camera,
+  CalendarDays,
+  Car,
+  HardHat,
+  Search,
+  ShieldCheck,
+  Sparkles,
+  Sprout,
+  Tent,
+  Truck,
+  Wallet,
+  Zap,
+} from "lucide-react";
+
+import { ApiError, errorMessage, fetchEquipment, normalizeEquipment } from "@/lib/api";
+import { CATEGORIES } from "@/lib/constants";
+import { demoEquipment } from "@/lib/demo-equipment";
+import type { Equipment } from "@/lib/types";
+import { EquipmentCard } from "@/components/EquipmentCard";
+import { CardSkeleton, Notice } from "@/components/ui";
+
+const categoryIcons: Record<string, typeof HardHat> = {
+  Construction: HardHat,
+  Photography: Camera,
+  "Vehicles & Transportation": Truck,
+  Agriculture: Sprout,
+  Electronics: Zap,
+  "Event Equipment": Tent,
+};
+
+const steps = [
+  {
+    title: "Find the right gear",
+    text: "Search thousands of listings by category, location and daily price.",
+    icon: Search,
+  },
+  {
+    title: "Request your dates",
+    text: "Pick a start and end date, then send the owner a booking request.",
+    icon: CalendarDays,
+  },
+  {
+    title: "Pay and get going",
+    text: "Complete secure checkout, get approval and collect your equipment.",
+    icon: Wallet,
+  },
+];
+
+const benefits = [
+  {
+    title: "Verified listings",
+    text: "Every item is reviewed by our team before it appears on the marketplace.",
+    icon: ShieldCheck,
+  },
+  {
+    title: "Flexible rentals",
+    text: "Rent by the hour, day or week with pricing that fits your project.",
+    icon: CalendarDays,
+  },
+  {
+    title: "Local owners",
+    text: "Discover gear shared by people and businesses in your own city.",
+    icon: Car,
+  },
+  {
+    title: "Protected payments",
+    text: "Checkout is handled by Stripe, so your payment details stay secure.",
+    icon: Wallet,
+  },
+];
+
+export default function Home() {
+  const router = useRouter();
+  const [query, setQuery] = useState("");
+  const [featured, setFeatured] = useState<Equipment[]>([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [demoMode, setDemoMode] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function load() {
+      setLoading(true);
+      setError("");
+      try {
+        const data = await fetchEquipment({ sort: "newest", limit: 6 });
+        if (cancelled) return;
+        setFeatured(data.items);
+        setTotal(data.total);
+        setDemoMode(false);
+      } catch (caught) {
+        if (cancelled) return;
+        if (caught instanceof ApiError && caught.status === 0) {
+          setFeatured(demoEquipment.map(normalizeEquipment).slice(0, 6));
+          setTotal(demoEquipment.length);
+          setDemoMode(true);
+        } else {
+          setError(errorMessage(caught));
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    void load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  function handleSearch(event: React.FormEvent) {
+    event.preventDefault();
+    const value = query.trim();
+    router.push(value ? `/equipment?q=${encodeURIComponent(value)}` : "/equipment");
+  }
+
+  return (
+    <>
+      {/* Hero ------------------------------------------------ */}
+      <section className="wrap" style={{ padding: "44px 0 20px" }}>
+        <motion.div
+          className="hero"
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          style={
+            {
+              "--hero-image":
+                "url(https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1800&q=85)",
+            } as React.CSSProperties
+          }
+        >
+          <div className="hero-inner">
+            <div className="eyebrow" style={{ color: "#9fe3c6" }}>
+              The equipment marketplace
+            </div>
+            <h1 className="h1" style={{ margin: "18px 0" }}>
+              Get the right tools. <span style={{ color: "#f5c184" }}>Get it done.</span>
+            </h1>
+            <p className="lead" style={{ color: "rgba(255,255,255,.82)" }}>
+              Access dependable equipment for your next project without the cost and
+              commitment of owning it — from power tools to excavators.
+            </p>
+
+            <form className="hero-search" onSubmit={handleSearch}>
+              <Search size={19} color="#68766f" />
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="What do you need? e.g. excavator, camera, tent"
+                aria-label="Search equipment"
+              />
+              <button className="btn btn-accent" type="submit">
+                Search
+              </button>
+            </form>
+
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 24 }}>
+              <Link className="btn" href="/equipment">
+                Explore equipment <ArrowUpRight size={17} />
+              </Link>
+              <Link
+                className="btn btn-outline"
+                href="/register"
+                style={{ color: "white", borderColor: "rgba(255,255,255,.45)" }}
+              >
+                List your equipment
+              </Link>
+            </div>
+
+            <div className="hero-stats">
+              <div>
+                <b>{total || "—"}</b>
+                <span>Live listings</span>
+              </div>
+              <div>
+                <b>{CATEGORIES.length}</b>
+                <span>Categories</span>
+              </div>
+              <div>
+                <b>24/7</b>
+                <span>Booking requests</span>
+              </div>
+              <div>
+                <b>100%</b>
+                <span>Reviewed listings</span>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Categories ------------------------------------------ */}
+      <section className="wrap section-tight">
+        <div className="section-head">
+          <div>
+            <div className="eyebrow">Browse by need</div>
+            <h2 className="h2" style={{ marginTop: 8 }}>
+              Find your category
+            </h2>
+          </div>
+          <Link href="/equipment" className="btn btn-outline">
+            View all equipment
+          </Link>
+        </div>
+
+        <div className="grid3">
+          {CATEGORIES.map((category, index) => {
+            const Icon = categoryIcons[category] || Sparkles;
+            return (
+              <motion.div
+                key={category}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
+              >
+                <Link
+                  href={`/equipment?category=${encodeURIComponent(category)}`}
+                  className="card card-pad card-hover"
+                  style={{
+                    display: "flex",
+                    gap: 16,
+                    alignItems: "center",
+                    height: "100%",
+                  }}
+                >
+                  <span className="stat-icon" style={{ width: 50, height: 50 }}>
+                    <Icon size={24} />
+                  </span>
+                  <span>
+                    <strong style={{ display: "block", fontSize: 16.5 }}>
+                      {category}
+                    </strong>
+                    <span className="muted" style={{ fontSize: 13.5 }}>
+                      Browse listings →
+                    </span>
+                  </span>
+                </Link>
+              </motion.div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Featured -------------------------------------------- */}
+      <section className="wrap section-tight">
+        <div className="section-head">
+          <div>
+            <div className="eyebrow">Featured equipment</div>
+            <h2 className="h2" style={{ marginTop: 8 }}>
+              Ready when you are
+            </h2>
+            <p className="muted" style={{ margin: "8px 0 0" }}>
+              Fresh listings from owners across the country.
+            </p>
+          </div>
+          <Link href="/equipment" className="btn btn-outline">
+            See everything <ArrowRight size={16} />
+          </Link>
+        </div>
+
+        {demoMode && (
+          <div style={{ marginBottom: 20 }}>
+            <Notice kind="warning">
+              The API is offline, so demo listings are shown instead.
+            </Notice>
+          </div>
+        )}
+
+        {error && (
+          <div style={{ marginBottom: 20 }}>
+            <Notice kind="error">{error}</Notice>
+          </div>
+        )}
+
+        <div className="grid3">
+          {loading ? (
+            <CardSkeleton count={6} />
+          ) : (
+            featured.map((item) => <EquipmentCard key={item._id} item={item} />)
+          )}
+        </div>
+      </section>
+
+      {/* How it works ---------------------------------------- */}
+      <section className="wrap section-tight">
+        <div className="section-head">
+          <div>
+            <div className="eyebrow">How it works</div>
+            <h2 className="h2" style={{ marginTop: 8 }}>
+              Three steps to your next project
+            </h2>
+          </div>
+        </div>
+
+        <div className="grid3">
+          {steps.map((step, index) => (
+            <div className="step-card" key={step.title}>
+              <span className="step-number">{index + 1}</span>
+              <h3 className="h3">{step.title}</h3>
+              <p className="muted" style={{ margin: 0 }}>
+                {step.text}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Benefits -------------------------------------------- */}
+      <section className="wrap section-tight">
+        <div className="card card-pad" style={{ padding: "clamp(26px,4vw,46px)" }}>
+          <div className="section-head">
+            <div>
+              <div className="eyebrow">Why Equiply</div>
+              <h2 className="h2" style={{ marginTop: 8 }}>
+                Built for real projects
+              </h2>
+            </div>
+          </div>
+
+          <div className="grid4">
+            {benefits.map((benefit) => (
+              <div key={benefit.title} style={{ display: "grid", gap: 10 }}>
+                <span className="stat-icon">
+                  <benefit.icon size={20} />
+                </span>
+                <h3 className="h3" style={{ fontSize: 17 }}>
+                  {benefit.title}
+                </h3>
+                <p className="muted" style={{ margin: 0, fontSize: 14.5 }}>
+                  {benefit.text}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Owner CTA ------------------------------------------- */}
+      <section className="wrap section-tight">
+        <div className="cta-panel">
+          <div>
+            <div className="eyebrow" style={{ color: "#f5c184" }}>
+              For owners
+            </div>
+            <h2 className="h2" style={{ color: "#fff", marginTop: 10 }}>
+              Your gear should work for you
+            </h2>
+            <p>
+              List the equipment sitting in your garage, set your own rates and earn from
+              every approved rental. It only takes a few minutes.
+            </p>
+          </div>
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+            <Link href="/register" className="btn btn-accent">
+              Create free account
+            </Link>
+            <Link
+              href="/about"
+              className="btn btn-outline"
+              style={{ color: "white", borderColor: "rgba(255,255,255,.45)" }}
+            >
+              Learn more
+            </Link>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
