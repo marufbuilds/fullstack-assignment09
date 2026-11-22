@@ -1,34 +1,32 @@
-// Site footer. Rendered inside the app shell on every page.
-
 import Link from "next/link";
-import { Facebook, Github, Instagram, Mail, MapPin, Twitter } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone } from "lucide-react";
 
 const columns = [
   {
-    title: "Marketplace",
+    title: "Navigation",
     links: [
-      { label: "Browse equipment", href: "/equipment" },
-      { label: "Categories", href: "/equipment" },
-      { label: "My rentals", href: "/my-rentals" },
+      { label: "Browse Equipment", href: "/equipment" },
+      { label: "List Your Equipment", href: "/add-equipment" },
+      { label: "About", href: "/about" },
+      { label: "Help Center", href: "/help" },
+    ],
+  },
+  {
+    title: "Account",
+    links: [
+      { label: "Login", href: "/login" },
+      { label: "Sign Up", href: "/register" },
+      { label: "My Rentals", href: "/my-rentals" },
       { label: "Favorites", href: "/favorites" },
     ],
   },
   {
-    title: "For owners",
+    title: "Legal",
     links: [
-      { label: "List equipment", href: "/add-equipment" },
-      { label: "My listings", href: "/owner/listings" },
-      { label: "Owner workspace", href: "/owner" },
-      { label: "Create account", href: "/register" },
-    ],
-  },
-  {
-    title: "Company",
-    links: [
-      { label: "About Equiply", href: "/about" },
-      { label: "Help center", href: "/help" },
-      { label: "Profile", href: "/profile" },
-      { label: "Sign in", href: "/login" },
+      { label: "Terms of Service", href: "/help" },
+      { label: "Privacy Policy", href: "/help" },
+      { label: "Cookie Policy", href: "/help" },
+      { label: "Rental Agreement", href: "/help" },
     ],
   },
 ];
@@ -44,21 +42,29 @@ export function Footer() {
               <span>Equiply</span>
             </div>
             <p className="footer-about">
-              The equipment rental marketplace that connects people who need gear with
-              people who have it. Rent smarter, waste less and get your project moving.
+              The modern equipment rental marketplace for builders, creators and teams.
+              Rent trusted gear when you need it, or earn by listing your own.
             </p>
-            <p
-              className="footer-about"
-              style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 14 }}
-            >
-              <Mail size={16} /> support@equiply.example
-            </p>
-            <p
-              className="footer-about"
-              style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 6 }}
-            >
-              <MapPin size={16} /> Rajshahi · Dhaka · Chattogram
-            </p>
+            <div style={{ display: "grid", gap: 10, marginTop: 18 }}>
+              <p
+                className="footer-about"
+                style={{ display: "flex", alignItems: "center", gap: 10, margin: 0 }}
+              >
+                <Mail size={16} /> support@equiply.com
+              </p>
+              <p
+                className="footer-about"
+                style={{ display: "flex", alignItems: "center", gap: 10, margin: 0 }}
+              >
+                <Phone size={16} /> +880 1700-000000
+              </p>
+              <p
+                className="footer-about"
+                style={{ display: "flex", alignItems: "center", gap: 10, margin: 0 }}
+              >
+                <MapPin size={16} /> Dhaka, Bangladesh
+              </p>
+            </div>
           </div>
 
           {columns.map((column) => (
@@ -74,19 +80,16 @@ export function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <span>© 2026 Equiply. Built for the equipment rental assignment.</span>
+          <span>© 2026 Equiply. All rights reserved.</span>
           <div className="footer-socials">
-            <a href="https://twitter.com" aria-label="Twitter">
-              <Twitter size={16} />
-            </a>
             <a href="https://facebook.com" aria-label="Facebook">
               <Facebook size={16} />
             </a>
             <a href="https://instagram.com" aria-label="Instagram">
               <Instagram size={16} />
             </a>
-            <a href="https://github.com" aria-label="GitHub">
-              <Github size={16} />
+            <a href="https://linkedin.com" aria-label="LinkedIn">
+              <Linkedin size={16} />
             </a>
           </div>
         </div>

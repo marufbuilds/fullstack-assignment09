@@ -37,6 +37,7 @@ export async function api<T>(path: string, options: RequestInit = {}): Promise<T
   };
 
   let response: Response;
+
   try {
     response = await fetch(`${API_URL}${path}`, {
       ...options,
@@ -52,7 +53,9 @@ export async function api<T>(path: string, options: RequestInit = {}): Promise<T
   }
 
   const text = await response.text();
+
   let data: unknown = null;
+
   try {
     data = text ? JSON.parse(text) : null;
   } catch {
@@ -63,6 +66,7 @@ export async function api<T>(path: string, options: RequestInit = {}): Promise<T
     const message =
       (data as { message?: string } | null)?.message ||
       `Request failed (${response.status})`;
+
     throw new ApiError(message, response.status);
   }
 
@@ -71,11 +75,23 @@ export async function api<T>(path: string, options: RequestInit = {}): Promise<T
 
 export const http = {
   get: <T>(path: string) => api<T>(path),
+
   post: <T>(path: string, body?: unknown) =>
-    api<T>(path, { method: "POST", body: JSON.stringify(body ?? {}) }),
+    api<T>(path, {
+      method: "POST",
+      body: JSON.stringify(body ?? {}),
+    }),
+
   patch: <T>(path: string, body?: unknown) =>
-    api<T>(path, { method: "PATCH", body: JSON.stringify(body ?? {}) }),
-  del: <T>(path: string) => api<T>(path, { method: "DELETE" }),
+    api<T>(path, {
+      method: "PATCH",
+      body: JSON.stringify(body ?? {}),
+    }),
+
+  del: <T>(path: string) =>
+    api<T>(path, {
+      method: "DELETE",
+    }),
 };
 
 export function isAuthError(error: unknown): boolean {
@@ -89,6 +105,7 @@ export function isAuthError(error: unknown): boolean {
  */
 async function firstOf<T>(...paths: string[]): Promise<T> {
   let lastError: unknown = null;
+
   for (const path of paths) {
     try {
       return await http.get<T>(path);
@@ -97,14 +114,17 @@ async function firstOf<T>(...paths: string[]): Promise<T> {
         lastError = error;
         continue;
       }
+
       throw error;
     }
   }
+
   throw lastError || new ApiError("Endpoint not found", 404);
 }
 
 export function errorMessage(error: unknown): string {
   if (error instanceof Error) return error.message;
+
   return "Something went wrong. Please try again.";
 }
 
@@ -137,11 +157,15 @@ export type EquipmentQuery = {
 
 function buildQuery(query: EquipmentQuery): string {
   const params = new URLSearchParams();
+
   Object.entries(query).forEach(([key, value]) => {
     if (value === undefined || value === null || value === "") return;
+
     params.set(key, String(value));
   });
+
   const qs = params.toString();
+
   return qs ? `?${qs}` : "";
 }
 
@@ -150,6 +174,7 @@ export async function fetchEquipment(
   query: EquipmentQuery = {},
 ): Promise<Paginated<Equipment>> {
   const data = await http.get<Paginated<Equipment>>(`/equipment${buildQuery(query)}`);
+
   return {
     ...data,
     items: (data.items || []).map(normalizeEquipment),
@@ -159,6 +184,7 @@ export async function fetchEquipment(
 /** GET /equipment/:id — a single approved listing. */
 export async function fetchEquipmentById(id: string): Promise<Equipment> {
   const data = await http.get<Equipment>(`/equipment/${id}`);
+
   return normalizeEquipment(data);
 }
 
@@ -173,6 +199,7 @@ export async function fetchMyListings(): Promise<Equipment[]> {
     "/equipment/owner/mine",
     "/equipment/mine/list",
   );
+
   return (data || []).map(normalizeEquipment);
 }
 
@@ -186,11 +213,15 @@ export async function deleteEquipment(id: string) {
   return http.del<{ message: string }>(`/equipment/${id}`);
 }
 
-/** POST /bookings — customer requests a rental. */
+/**
+ * POST /bookings — customer requests a rental.
+ * Customer phone is saved with the booking.
+ */
 export async function createBooking(input: {
   equipmentId: string;
   startDate: string;
   endDate: string;
+  phone: string;
 }): Promise<Booking> {
   return http.post<Booking>("/bookings", input);
 }
@@ -210,12 +241,15 @@ export async function updateBookingStatus(
   id: string,
   status: string,
 ): Promise<{ message: string }> {
-  return http.patch<{ message: string }>(`/bookings/${id}/status`, { status });
+  return http.patch<{ message: string }>(`/bookings/${id}/status`, {
+    status,
+  });
 }
 
 /** POST /payments/checkout/:bookingId — Stripe Checkout redirect URL. */
 export async function startCheckout(bookingId: string): Promise<string> {
   const data = await http.post<{ url: string }>(`/payments/checkout/${bookingId}`);
+
   return data.url;
 }
 
@@ -237,12 +271,15 @@ export async function removeFavorite(equipmentId: string) {
 /** GET /profile */
 export async function fetchProfile(): Promise<AuthUser> {
   const data = await http.get<{ user: AuthUser }>("/profile");
+
   return data.user;
 }
 
 /** PATCH /profile */
 export async function updateProfile(name: string) {
-  return http.patch<{ message: string; name: string }>("/profile", { name });
+  return http.patch<{ message: string; name: string }>("/profile", {
+    name,
+  });
 }
 
 /** GET /owner/analytics */
@@ -258,6 +295,7 @@ export async function fetchAdminStats(): Promise<AdminStats> {
 /** GET /admin/equipment — every listing including pending ones. */
 export async function fetchAdminEquipment(): Promise<Equipment[]> {
   const data = await firstOf<Equipment[]>("/admin/equipment", "/equipment/admin/all");
+
   return (data || []).map(normalizeEquipment);
 }
 
@@ -266,9 +304,7 @@ export async function setEquipmentStatus(
   id: string,
   status: "approved" | "rejected" | "pending",
 ) {
-  return http.patch<{ message: string }>(`/admin/equipment/${id}/status`, {
-    status,
-  });
+  return http.patch<{ message: string }>(`/admin/equipment/${id}/status`, { status });
 }
 
 /** GET /admin/bookings */
@@ -283,5 +319,7 @@ export async function fetchAdminUsers(): Promise<(AuthUser & { _id: string })[]>
 
 /** PATCH /admin/users/:id/role */
 export async function setUserRole(id: string, role: string) {
-  return http.patch<{ message: string }>(`/admin/users/${id}/role`, { role });
+  return http.patch<{ message: string }>(`/admin/users/${id}/role`, {
+    role,
+  });
 }

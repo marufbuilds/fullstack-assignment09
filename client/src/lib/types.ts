@@ -54,6 +54,7 @@ export type Booking = {
   renterId?: string;
   startDate: string;
   endDate: string;
+  phone: string;
   days: number;
   amount: number;
   status: BookingStatus;

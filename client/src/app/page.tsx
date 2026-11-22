@@ -1,255 +1,498 @@
 "use client";
 
-// Equiply landing page: hero search, categories, featured listings and
-// the "how it works" story.
-
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+
 import {
   ArrowRight,
-  ArrowUpRight,
-  Camera,
   CalendarDays,
-  Car,
+  Camera,
+  CarFront,
   HardHat,
+  MapPin,
   Search,
-  ShieldCheck,
-  Sparkles,
-  Sprout,
   Tent,
-  Truck,
-  Wallet,
+  Wrench,
   Zap,
+  ShieldCheck,
+  Truck,
+  RefreshCcw,
+  Leaf,
+  Heart,
+  Star,
+  PackageCheck,
 } from "lucide-react";
 
-import { ApiError, errorMessage, fetchEquipment, normalizeEquipment } from "@/lib/api";
-import { CATEGORIES } from "@/lib/constants";
-import { demoEquipment } from "@/lib/demo-equipment";
-import type { Equipment } from "@/lib/types";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
 import { EquipmentCard } from "@/components/EquipmentCard";
 import { CardSkeleton, Notice } from "@/components/ui";
 
-const categoryIcons: Record<string, typeof HardHat> = {
-  Construction: HardHat,
-  Photography: Camera,
-  "Vehicles & Transportation": Truck,
-  Agriculture: Sprout,
-  Electronics: Zap,
-  "Event Equipment": Tent,
-};
+import {
+  ApiError,
+  errorMessage,
+  fetchEquipment,
+  normalizeEquipment,
+} from "@/lib/api";
 
-const steps = [
+import { demoEquipment } from "@/lib/demo-equipment";
+import type { Equipment } from "@/lib/types";
+
+/* ----------------------------------
+   CATEGORY DATA
+---------------------------------- */
+
+const categories = [
   {
-    title: "Find the right gear",
-    text: "Search thousands of listings by category, location and daily price.",
-    icon: Search,
+    name: "Construction",
+    href: "/equipment?category=Construction",
+    image:
+      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=700&q=85",
+    icon: HardHat,
   },
   {
-    title: "Request your dates",
-    text: "Pick a start and end date, then send the owner a booking request.",
-    icon: CalendarDays,
+    name: "Tools",
+    href: "/equipment?q=tools",
+    image:
+      "https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=700&q=85",
+    icon: Wrench,
   },
   {
-    title: "Pay and get going",
-    text: "Complete secure checkout, get approval and collect your equipment.",
-    icon: Wallet,
+    name: "Vehicles",
+    href: "/equipment?category=Vehicles%20%26%20Transportation",
+    image:
+      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=700&q=85",
+    icon: CarFront,
+  },
+  {
+    name: "Photography",
+    href: "/equipment?category=Photography",
+    image:
+      "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=700&q=85",
+    icon: Camera,
+  },
+  {
+    name: "Camping",
+    href: "/equipment?q=camping",
+    image:
+      "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=700&q=85",
+    icon: Tent,
+  },
+  {
+    name: "Electronics",
+    href: "/equipment?category=Electronics",
+    image:
+      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=700&q=85",
+    icon: Zap,
   },
 ];
 
-const benefits = [
+/* ----------------------------------
+   DIFFERENT IMAGE DATA
+---------------------------------- */
+
+const heroImage =
+  "https://images.unsplash.com/photo-1751054619908-65d27a503ce8?auto=format&fit=crop&w=2000&q=90";
+
+const promoImages = [
+  "https://images.unsplash.com/photo-1771122453274-d3270e73cf94?auto=format&fit=crop&w=1400&q=90",
+  "https://images.unsplash.com/photo-1746985106190-6c116edec9bc?auto=format&fit=crop&w=1400&q=90",
+];
+
+const storyImage =
+  "https://images.unsplash.com/photo-1755943807913-5f999c562f45?auto=format&fit=crop&w=1400&q=90";
+
+const inspirationImage =
+  "https://images.unsplash.com/photo-1737332439478-4fe9721a2f3e?auto=format&fit=crop&w=1400&q=90";
+
+const inspirationSideImage =
+  "https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&w=1200&q=90";
+
+const communityImage =
+  "https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1400&q=90";
+
+/* ----------------------------------
+   TESTIMONIAL DATA
+---------------------------------- */
+
+const testimonials = [
   {
-    title: "Verified listings",
-    text: "Every item is reviewed by our team before it appears on the marketplace.",
-    icon: ShieldCheck,
+    name: "Daniel R.",
+    role: "Verified Renter",
+    text: "Finding the right equipment was easy. The booking process was simple and everything arrived on time.",
   },
   {
-    title: "Flexible rentals",
-    text: "Rent by the hour, day or week with pricing that fits your project.",
-    icon: CalendarDays,
+    name: "Rahul K.",
+    role: "Equipment Owner",
+    text: "Equiply has helped me make better use of my equipment and connect with people who need it.",
   },
   {
-    title: "Local owners",
-    text: "Discover gear shared by people and businesses in your own city.",
-    icon: Car,
-  },
-  {
-    title: "Protected payments",
-    text: "Checkout is handled by Stripe, so your payment details stay secure.",
-    icon: Wallet,
+    name: "Neha M.",
+    role: "Verified Renter",
+    text: "A great way to find quality equipment without spending a fortune buying it.",
   },
 ];
+
+/* ----------------------------------
+   HOMEPAGE
+---------------------------------- */
 
 export default function Home() {
   const router = useRouter();
-  const [query, setQuery] = useState("");
+
+  const [q, setQ] = useState("");
+  const [location, setLocation] = useState("");
+  const [date, setDate] = useState("");
+
   const [featured, setFeatured] = useState<Equipment[]>([]);
-  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [demoMode, setDemoMode] = useState(false);
   const [error, setError] = useState("");
+
+  /* ----------------------------------
+     FETCH FEATURED EQUIPMENT
+  ---------------------------------- */
 
   useEffect(() => {
     let cancelled = false;
 
     async function load() {
-      setLoading(true);
-      setError("");
       try {
-        const data = await fetchEquipment({ sort: "newest", limit: 6 });
+        const data = await fetchEquipment({
+          sort: "newest",
+          limit: 4,
+        });
+
         if (cancelled) return;
-        setFeatured(data.items);
-        setTotal(data.total);
+
+        setFeatured(data.items.slice(0, 4));
         setDemoMode(false);
-      } catch (caught) {
+      } catch (e) {
         if (cancelled) return;
-        if (caught instanceof ApiError && caught.status === 0) {
-          setFeatured(demoEquipment.map(normalizeEquipment).slice(0, 6));
-          setTotal(demoEquipment.length);
+
+        if (e instanceof ApiError && e.status === 0) {
+          setFeatured(
+            demoEquipment.map(normalizeEquipment).slice(0, 4)
+          );
+
           setDemoMode(true);
         } else {
-          setError(errorMessage(caught));
+          setError(errorMessage(e));
         }
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     }
 
     void load();
+
     return () => {
       cancelled = true;
     };
   }, []);
 
-  function handleSearch(event: React.FormEvent) {
-    event.preventDefault();
-    const value = query.trim();
-    router.push(value ? `/equipment?q=${encodeURIComponent(value)}` : "/equipment");
+  /* ----------------------------------
+     SEARCH
+  ---------------------------------- */
+
+  function handleSearch(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const params = new URLSearchParams();
+
+    if (q.trim()) {
+      params.set("q", q.trim());
+    }
+
+    if (location.trim()) {
+      params.set("location", location.trim());
+    }
+
+    if (date) {
+      params.set("date", date);
+    }
+
+    router.push(
+      `/equipment${params.size ? `?${params.toString()}` : ""}`
+    );
   }
 
   return (
-    <>
-      {/* Hero ------------------------------------------------ */}
-      <section className="wrap" style={{ padding: "44px 0 20px" }}>
-        <motion.div
-          className="hero"
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          style={
-            {
-              "--hero-image":
-                "url(https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1800&q=85)",
-            } as React.CSSProperties
-          }
-        >
-          <div className="hero-inner">
-            <div className="eyebrow" style={{ color: "#9fe3c6" }}>
-              The equipment marketplace
-            </div>
-            <h1 className="h1" style={{ margin: "18px 0" }}>
-              Get the right tools. <span style={{ color: "#f5c184" }}>Get it done.</span>
+    <main className="min-h-screen overflow-hidden bg-[#fffdfb] text-[#292723]">
+
+      {/* ANNOUNCEMENT BAR */}
+
+      <div className="flex items-center justify-between bg-[#e9e0d5] px-5 py-2 text-[10px] text-[#655a50] sm:px-8 md:px-12">
+        <p>Find the equipment your project needs</p>
+
+        <p className="hidden sm:block">
+          Reliable rentals. Better projects.
+        </p>
+      </div>
+
+      {/* HERO SECTION */}
+
+      <section className="relative flex min-h-[490px] items-center overflow-hidden bg-[#d9d0c5] md:min-h-[570px]">
+
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${heroImage})` }}
+        />
+
+        <div className="absolute inset-0 bg-gradient-to-r from-[#29231d]/85 via-[#29231d]/55 to-transparent" />
+
+        <div className="relative z-10 mx-auto w-full max-w-[1400px] px-6 py-20 sm:px-10 md:px-16 lg:px-20">
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            className="max-w-2xl"
+          >
+            <span className="mb-5 block text-[10px] font-semibold tracking-[3px] text-[#e8d7c3]">
+              EQUIPMENT FOR EVERY PROJECT
+            </span>
+
+            <h1 className="max-w-xl text-4xl font-semibold leading-[1.12] tracking-tight text-white sm:text-5xl md:text-6xl">
+              Get the job done.
+              <br />
+              <span className="text-[#e5cdb3]">
+                Rent smarter.
+              </span>
             </h1>
-            <p className="lead" style={{ color: "rgba(255,255,255,.82)" }}>
-              Access dependable equipment for your next project without the cost and
-              commitment of owning it — from power tools to excavators.
+
+            <p className="mt-6 max-w-md text-sm leading-7 text-white/80 sm:text-base">
+              Find quality equipment, trusted owners and flexible
+              rentals for everything you need to get moving.
             </p>
 
-            <form className="hero-search" onSubmit={handleSearch}>
-              <Search size={19} color="#68766f" />
-              <input
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="What do you need? e.g. excavator, camera, tent"
-                aria-label="Search equipment"
-              />
-              <button className="btn btn-accent" type="submit">
-                Search
-              </button>
-            </form>
-
-            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 24 }}>
-              <Link className="btn" href="/equipment">
-                Explore equipment <ArrowUpRight size={17} />
-              </Link>
+            <div className="mt-8">
               <Link
-                className="btn btn-outline"
-                href="/register"
-                style={{ color: "white", borderColor: "rgba(255,255,255,.45)" }}
+                href="/equipment"
+                className="inline-flex h-12 items-center justify-center bg-[#79563e] px-7 text-xs font-semibold text-white transition hover:bg-[#5d402e]"
               >
-                List your equipment
+                Explore Equipment
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </div>
 
-            <div className="hero-stats">
+            <div className="mt-12 flex flex-wrap gap-x-10 gap-y-5">
               <div>
-                <b>{total || "—"}</b>
-                <span>Live listings</span>
+                <p className="text-lg font-semibold text-white">
+                  Trusted
+                </p>
+                <p className="mt-1 text-[10px] text-white/70">
+                  Equipment owners
+                </p>
               </div>
+
               <div>
-                <b>{CATEGORIES.length}</b>
-                <span>Categories</span>
+                <p className="text-lg font-semibold text-white">
+                  Flexible
+                </p>
+                <p className="mt-1 text-[10px] text-white/70">
+                  Rental periods
+                </p>
               </div>
+
               <div>
-                <b>24/7</b>
-                <span>Booking requests</span>
-              </div>
-              <div>
-                <b>100%</b>
-                <span>Reviewed listings</span>
+                <p className="text-lg font-semibold text-white">
+                  Simple
+                </p>
+                <p className="mt-1 text-[10px] text-white/70">
+                  Booking experience
+                </p>
               </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       </section>
 
-      {/* Categories ------------------------------------------ */}
-      <section className="wrap section-tight">
-        <div className="section-head">
+      {/* SEARCH SECTION */}
+
+      <section className="relative z-20 mx-auto -mt-8 max-w-6xl px-4 sm:px-6">
+
+        <form
+          onSubmit={handleSearch}
+          className="grid gap-3 border border-[#e8e0d7] bg-white p-4 shadow-xl shadow-[#493522]/10 md:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr_auto] lg:gap-0 lg:p-5"
+        >
+          <label className="flex min-w-0 items-center gap-3 border-b border-[#eee7df] px-3 py-3 lg:border-b-0 lg:border-r">
+            <Search className="h-5 w-5 shrink-0 text-[#94765b]" />
+
+            <span className="min-w-0 flex-1">
+              <span className="block text-[10px] font-semibold uppercase tracking-wider text-[#655a50]">
+                Equipment
+              </span>
+
+              <Input
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="What do you need?"
+                className="h-8 border-0 bg-transparent px-0 text-xs shadow-none focus-visible:ring-0"
+              />
+            </span>
+          </label>
+
+          <label className="flex min-w-0 items-center gap-3 border-b border-[#eee7df] px-3 py-3 lg:border-b-0 lg:border-r">
+            <MapPin className="h-5 w-5 shrink-0 text-[#94765b]" />
+
+            <span className="min-w-0 flex-1">
+              <span className="block text-[10px] font-semibold uppercase tracking-wider text-[#655a50]">
+                Location
+              </span>
+
+              <Input
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="City or area"
+                className="h-8 border-0 bg-transparent px-0 text-xs shadow-none focus-visible:ring-0"
+              />
+            </span>
+          </label>
+
+          <label className="flex min-w-0 items-center gap-3 border-b border-[#eee7df] px-3 py-3 lg:border-b-0 lg:border-r">
+            <CalendarDays className="h-5 w-5 shrink-0 text-[#94765b]" />
+
+            <span className="min-w-0 flex-1">
+              <span className="block text-[10px] font-semibold uppercase tracking-wider text-[#655a50]">
+                Rental date
+              </span>
+
+              <Input
+                type="date"
+                min={new Date().toISOString().slice(0, 10)}
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="h-8 border-0 bg-transparent px-0 text-xs shadow-none focus-visible:ring-0"
+              />
+            </span>
+          </label>
+
+          <Button
+            type="submit"
+            className="h-12 rounded-none bg-[#79563e] px-8 text-xs font-semibold text-white hover:bg-[#5d402e] lg:ml-4"
+          >
+            <Search className="mr-2 h-4 w-4" />
+            Search
+          </Button>
+        </form>
+      </section>
+
+      {/* BENEFITS STRIP */}
+
+      <section className="grid grid-cols-2 border-b border-[#eee7df] px-5 py-10 sm:px-10 lg:grid-cols-4 lg:px-16">
+
+        {[
+          {
+            icon: Leaf,
+            title: "Better resource use",
+            subtitle: "Rent instead of buying",
+          },
+          {
+            icon: Truck,
+            title: "Convenient rentals",
+            subtitle: "Find equipment nearby",
+          },
+          {
+            icon: RefreshCcw,
+            title: "Flexible booking",
+            subtitle: "Choose your rental period",
+          },
+          {
+            icon: ShieldCheck,
+            title: "Trusted marketplace",
+            subtitle: "Book with confidence",
+          },
+        ].map((item) => {
+          const Icon = item.icon;
+
+          return (
+            <div
+              key={item.title}
+              className="flex items-center justify-center gap-3 px-2 py-4"
+            >
+              <Icon className="h-6 w-6 shrink-0 text-[#856b51]" />
+
+              <div>
+                <p className="text-[11px] font-semibold text-[#292723]">
+                  {item.title}
+                </p>
+
+                <p className="mt-1 text-[10px] text-[#8b837a]">
+                  {item.subtitle}
+                </p>
+              </div>
+            </div>
+          );
+        })}
+      </section>
+
+      {/* CATEGORIES */}
+
+      <section className="mx-auto max-w-[1400px] px-5 py-16 sm:px-8 md:px-12 lg:px-16">
+
+        <div className="mb-10 flex items-end justify-between gap-4">
           <div>
-            <div className="eyebrow">Browse by need</div>
-            <h2 className="h2" style={{ marginTop: 8 }}>
-              Find your category
+            <span className="mb-3 block text-[10px] font-bold tracking-[2px] text-[#94765b]">
+              EXPLORE BY CATEGORY
+            </span>
+
+            <h2 className="text-2xl font-medium tracking-tight sm:text-3xl">
+              Find equipment for every job
             </h2>
           </div>
-          <Link href="/equipment" className="btn btn-outline">
-            View all equipment
+
+          <Link
+            href="/equipment"
+            className="flex shrink-0 items-center gap-2 text-xs font-medium text-[#55483d] hover:text-[#94765b]"
+          >
+            View all
+            <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
 
-        <div className="grid3">
-          {CATEGORIES.map((category, index) => {
-            const Icon = categoryIcons[category] || Sparkles;
+        <div className="grid grid-cols-3 gap-x-4 gap-y-8 sm:grid-cols-3 md:grid-cols-6 md:gap-7">
+
+          {categories.map((cat, i) => {
+            const Icon = cat.icon;
+
             return (
               <motion.div
-                key={category}
-                initial={{ opacity: 0, y: 16 }}
+                key={cat.name}
+                initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05 }}
               >
                 <Link
-                  href={`/equipment?category=${encodeURIComponent(category)}`}
-                  className="card card-pad card-hover"
-                  style={{
-                    display: "flex",
-                    gap: 16,
-                    alignItems: "center",
-                    height: "100%",
-                  }}
+                  href={cat.href}
+                  className="group flex flex-col items-center text-center"
                 >
-                  <span className="stat-icon" style={{ width: 50, height: 50 }}>
-                    <Icon size={24} />
-                  </span>
-                  <span>
-                    <strong style={{ display: "block", fontSize: 16.5 }}>
-                      {category}
-                    </strong>
-                    <span className="muted" style={{ fontSize: 13.5 }}>
-                      Browse listings →
-                    </span>
-                  </span>
+                  <div className="relative mb-4 aspect-square w-full max-w-[150px] overflow-hidden rounded-full bg-[#eee7df]">
+                    <img
+                      src={cat.image}
+                      alt={cat.name}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition group-hover:bg-black/10">
+                      <Icon className="h-6 w-6 text-white opacity-0 drop-shadow group-hover:opacity-100" />
+                    </div>
+                  </div>
+
+                  <h3 className="text-xs font-semibold text-[#292723]">
+                    {cat.name}
+                  </h3>
+
+                  <p className="mt-1 text-[10px] text-[#8b837a]">
+                    Browse rentals
+                  </p>
                 </Link>
               </motion.div>
             );
@@ -257,129 +500,387 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured -------------------------------------------- */}
-      <section className="wrap section-tight">
-        <div className="section-head">
-          <div>
-            <div className="eyebrow">Featured equipment</div>
-            <h2 className="h2" style={{ marginTop: 8 }}>
-              Ready when you are
+      {/* PROMOTIONAL COLLECTIONS */}
+
+      <section className="mx-auto grid max-w-[1400px] gap-5 px-5 pb-12 sm:px-8 md:grid-cols-2 md:px-12 lg:px-16">
+
+        <div
+          className="group relative flex min-h-[280px] items-center overflow-hidden bg-cover bg-center"
+          style={{ backgroundImage: `url(${promoImages[0]})` }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-black/75 to-black/10" />
+
+          <div className="relative max-w-sm p-8 sm:p-10">
+            <span className="text-[10px] font-bold tracking-[2px] text-[#e8d7c3]">
+              FOR YOUR NEXT PROJECT
+            </span>
+
+            <h2 className="mt-4 text-3xl font-medium leading-tight text-white">
+              Build more.
+              <br />
+              Buy less.
             </h2>
-            <p className="muted" style={{ margin: "8px 0 0" }}>
-              Fresh listings from owners across the country.
+
+            <p className="mt-3 text-xs leading-6 text-white/80">
+              Discover reliable construction tools and machinery.
+            </p>
+
+            <Link
+              href="/equipment?category=Construction"
+              className="mt-6 inline-flex h-10 items-center justify-center bg-[#f5f0e9] px-5 text-xs text-[#46372c] transition hover:bg-white"
+            >
+              Explore construction
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+
+        <div
+          className="group relative flex min-h-[280px] items-center overflow-hidden bg-cover bg-center"
+          style={{ backgroundImage: `url(${promoImages[1]})` }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-black/75 to-black/10" />
+
+          <div className="relative max-w-sm p-8 sm:p-10">
+            <span className="text-[10px] font-bold tracking-[2px] text-[#e8d7c3]">
+              VEHICLES & TRANSPORT
+            </span>
+
+            <h2 className="mt-4 text-3xl font-medium leading-tight text-white">
+              Move things.
+              <br />
+              Move forward.
+            </h2>
+
+            <p className="mt-3 text-xs leading-6 text-white/80">
+              Find vehicles and transport equipment for your needs.
+            </p>
+
+            <Link
+              href="/equipment?category=Vehicles%20%26%20Transportation"
+              className="mt-6 inline-flex h-10 items-center justify-center bg-[#f5f0e9] px-5 text-xs text-[#46372c] transition hover:bg-white"
+            >
+              Explore vehicles
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* FEATURED EQUIPMENT */}
+
+      <section className="mx-auto max-w-[1400px] px-5 py-16 sm:px-8 md:px-12 lg:px-16">
+
+        <div className="mb-9 flex items-end justify-between gap-4">
+          <div>
+            <span className="mb-3 block text-[10px] font-bold tracking-[2px] text-[#94765b]">
+              POPULAR RENTALS
+            </span>
+
+            <h2 className="text-2xl font-medium tracking-tight sm:text-3xl">
+              Equipment worth discovering
+            </h2>
+
+            <p className="mt-2 text-xs text-[#81796f]">
+              Find quality equipment for your next project.
             </p>
           </div>
-          <Link href="/equipment" className="btn btn-outline">
-            See everything <ArrowRight size={16} />
+
+          <Link
+            href="/equipment"
+            className="flex shrink-0 items-center gap-2 text-xs font-medium hover:text-[#94765b]"
+          >
+            View marketplace
+            <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
 
+        {error && <Notice kind="error">{error}</Notice>}
+
         {demoMode && (
-          <div style={{ marginBottom: 20 }}>
-            <Notice kind="warning">
-              The API is offline, so demo listings are shown instead.
-            </Notice>
-          </div>
+          <Notice kind="info">
+            Showing sample listings while the server is offline.
+          </Notice>
         )}
 
-        {error && (
-          <div style={{ marginBottom: 20 }}>
-            <Notice kind="error">{error}</Notice>
-          </div>
-        )}
-
-        <div className="grid3">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {loading ? (
-            <CardSkeleton count={6} />
+            <CardSkeleton count={4} />
           ) : (
-            featured.map((item) => <EquipmentCard key={item._id} item={item} />)
+            featured.map((item) => (
+              <EquipmentCard key={item._id} item={item} />
+            ))
           )}
         </div>
       </section>
 
-      {/* How it works ---------------------------------------- */}
-      <section className="wrap section-tight">
-        <div className="section-head">
-          <div>
-            <div className="eyebrow">How it works</div>
-            <h2 className="h2" style={{ marginTop: 8 }}>
-              Three steps to your next project
-            </h2>
-          </div>
+      {/* BRAND STORY */}
+
+      <section className="grid bg-[#f1ece6] md:grid-cols-[1.15fr_1fr_0.8fr]">
+
+        <div className="min-h-[300px] overflow-hidden md:min-h-[390px]">
+          <img
+            src={storyImage}
+            alt="Equipment and machinery at work"
+            loading="lazy"
+            className="h-full w-full object-cover"
+          />
         </div>
 
-        <div className="grid3">
-          {steps.map((step, index) => (
-            <div className="step-card" key={step.title}>
-              <span className="step-number">{index + 1}</span>
-              <h3 className="h3">{step.title}</h3>
-              <p className="muted" style={{ margin: 0 }}>
-                {step.text}
+        <div className="flex flex-col justify-center px-7 py-12 sm:px-12">
+          <span className="mb-4 text-[10px] font-bold tracking-[2px] text-[#94765b]">
+            A BETTER WAY TO GET THINGS DONE
+          </span>
+
+          <h2 className="text-3xl font-medium leading-tight tracking-tight">
+            Smart rentals.
+            <br />
+            Real possibilities.
+          </h2>
+
+          <p className="mt-5 text-sm leading-7 text-[#797169]">
+            We believe useful equipment should be accessible when you
+            need it. Equiply connects people who have equipment with
+            people who need it, making projects easier and resources
+            more useful.
+          </p>
+
+          <Link
+            href="/equipment"
+            className="mt-7 inline-flex h-11 w-fit items-center justify-center bg-[#79563e] px-6 text-xs text-white transition hover:bg-[#5d402e]"
+          >
+            Discover Equiply
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Link>
+        </div>
+
+        <div className="flex flex-col justify-center gap-6 bg-[#6c665c] px-8 py-12 text-white sm:px-10">
+          <h3 className="text-2xl font-medium">
+            Better projects.
+            <br />
+            Better choices.
+          </h3>
+
+          {[
+            { icon: Leaf, text: "More efficient equipment use" },
+            { icon: PackageCheck, text: "Equipment for every project" },
+            { icon: ShieldCheck, text: "Convenient rental experience" },
+            { icon: Heart, text: "A community of owners and renters" },
+          ].map((item) => {
+            const Icon = item.icon;
+
+            return (
+              <div
+                key={item.text}
+                className="flex items-center gap-3 text-xs text-white/85"
+              >
+                <Icon className="h-5 w-5 shrink-0" />
+                {item.text}
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* BENEFIT CARDS */}
+
+      <section className="mx-auto grid max-w-[1400px] grid-cols-2 gap-5 px-5 py-12 sm:px-8 md:grid-cols-4 md:px-12 lg:px-16">
+
+        {[
+          {
+            icon: Leaf,
+            title: "Resource conscious",
+            desc: "Make better use of equipment through renting.",
+          },
+          {
+            icon: ShieldCheck,
+            title: "Quality equipment",
+            desc: "Discover equipment for your work and projects.",
+          },
+          {
+            icon: PackageCheck,
+            title: "Simple process",
+            desc: "Find, request and manage your rentals.",
+          },
+          {
+            icon: Heart,
+            title: "Community driven",
+            desc: "Connect renters with equipment owners.",
+          },
+        ].map((item) => {
+          const Icon = item.icon;
+
+          return (
+            <div
+              key={item.title}
+              className="px-3 py-5 text-center"
+            >
+              <Icon className="mx-auto h-7 w-7 text-[#79563e]" />
+
+              <h3 className="mt-4 text-sm font-semibold">
+                {item.title}
+              </h3>
+
+              <p className="mt-2 text-xs leading-6 text-[#81796f]">
+                {item.desc}
               </p>
             </div>
+          );
+        })}
+      </section>
+
+      {/* INSPIRATION SECTION */}
+
+      <section className="grid bg-[#f1ece6] md:grid-cols-[1.1fr_1fr_0.7fr]">
+
+        <div className="min-h-[280px] overflow-hidden">
+          <img
+            src={inspirationImage}
+            alt="Workshop and equipment"
+            loading="lazy"
+            className="h-full w-full object-cover"
+          />
+        </div>
+
+        <div className="flex flex-col justify-center px-7 py-12 sm:px-12">
+          <span className="mb-4 text-[10px] font-bold tracking-[2px] text-[#94765b]">
+            MAKE YOUR NEXT PROJECT HAPPEN
+          </span>
+
+          <h2 className="text-3xl font-medium leading-tight">
+            Everything you need.
+            <br />
+            Nothing you don't.
+          </h2>
+
+          <p className="mt-5 text-sm leading-7 text-[#797169]">
+            Explore equipment, discover new possibilities and find
+            practical solutions for the work ahead.
+          </p>
+
+          <Link
+            href="/equipment"
+            className="mt-7 inline-flex h-11 w-fit items-center justify-center bg-[#79563e] px-6 text-xs text-white transition hover:bg-[#5d402e]"
+          >
+            Find your equipment
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Link>
+        </div>
+
+        <div className="relative min-h-[250px] overflow-hidden">
+          <img
+            src={inspirationSideImage}
+            alt="Equipment inspiration"
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+
+          <div className="absolute bottom-8 left-7 text-white">
+            <h3 className="text-2xl font-medium">
+              Make it happen.
+            </h3>
+
+            <p className="mt-2 text-xs text-white/80">
+              Find what your project needs.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+
+      <section className="mx-auto max-w-[1400px] px-5 py-16 sm:px-8 md:px-12 lg:px-16">
+
+        <div className="mb-10">
+          <span className="mb-3 block text-[10px] font-bold tracking-[2px] text-[#94765b]">
+            WHAT OUR COMMUNITY SAYS
+          </span>
+
+          <h2 className="text-2xl font-medium sm:text-3xl">
+            Trusted by renters and owners
+          </h2>
+        </div>
+
+        <div className="grid gap-5 md:grid-cols-3">
+          {testimonials.map((item) => (
+            <article
+              key={item.name}
+              className="border border-[#ece5dc] bg-[#faf7f3] p-7"
+            >
+              <div className="flex gap-1 text-[#b48a53]">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star
+                    key={i}
+                    className="h-3.5 w-3.5 fill-current"
+                  />
+                ))}
+              </div>
+
+              <p className="my-6 text-sm leading-7 text-[#615950]">
+                &ldquo;{item.text}&rdquo;
+              </p>
+
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#e6d7c7] text-sm font-semibold text-[#6d4f37]">
+                  {item.name.charAt(0)}
+                </div>
+
+                <div>
+                  <h3 className="text-xs font-semibold">
+                    {item.name}
+                  </h3>
+
+                  <p className="mt-1 text-[10px] text-[#898177]">
+                    {item.role}
+                  </p>
+                </div>
+              </div>
+            </article>
           ))}
         </div>
       </section>
 
-      {/* Benefits -------------------------------------------- */}
-      <section className="wrap section-tight">
-        <div className="card card-pad" style={{ padding: "clamp(26px,4vw,46px)" }}>
-          <div className="section-head">
-            <div>
-              <div className="eyebrow">Why Equiply</div>
-              <h2 className="h2" style={{ marginTop: 8 }}>
-                Built for real projects
-              </h2>
-            </div>
-          </div>
+      {/* COMMUNITY CTA */}
 
-          <div className="grid4">
-            {benefits.map((benefit) => (
-              <div key={benefit.title} style={{ display: "grid", gap: 10 }}>
-                <span className="stat-icon">
-                  <benefit.icon size={20} />
-                </span>
-                <h3 className="h3" style={{ fontSize: 17 }}>
-                  {benefit.title}
-                </h3>
-                <p className="muted" style={{ margin: 0, fontSize: 14.5 }}>
-                  {benefit.text}
-                </p>
-              </div>
-            ))}
-          </div>
+      <section className="grid overflow-hidden bg-[#e9e0d5] md:grid-cols-[1fr_0.65fr]">
+
+        <div className="flex flex-col justify-center px-7 py-14 sm:px-12 lg:px-20">
+          <span className="mb-4 text-[10px] font-bold tracking-[2px] text-[#94765b]">
+            JOIN THE EQUIPLY COMMUNITY
+          </span>
+
+          <h2 className="max-w-lg text-3xl font-medium leading-tight sm:text-4xl">
+            Projects start with the right equipment.
+          </h2>
+
+          <p className="mt-5 max-w-md text-sm leading-7 text-[#766d64]">
+            Discover equipment, connect with owners and make your
+            next project easier.
+          </p>
+
+          <Link
+            href="/equipment"
+            className="mt-7 inline-flex h-12 w-fit items-center justify-center bg-[#79563e] px-7 text-xs text-white transition hover:bg-[#5d402e]"
+          >
+            Explore the marketplace
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Link>
+        </div>
+
+        <div className="min-h-[250px] overflow-hidden">
+          <img
+            src={communityImage}
+            alt="Industrial equipment ready for a project"
+            loading="lazy"
+            className="h-full w-full object-cover"
+          />
         </div>
       </section>
 
-      {/* Owner CTA ------------------------------------------- */}
-      <section className="wrap section-tight">
-        <div className="cta-panel">
-          <div>
-            <div className="eyebrow" style={{ color: "#f5c184" }}>
-              For owners
-            </div>
-            <h2 className="h2" style={{ color: "#fff", marginTop: 10 }}>
-              Your gear should work for you
-            </h2>
-            <p>
-              List the equipment sitting in your garage, set your own rates and earn from
-              every approved rental. It only takes a few minutes.
-            </p>
-          </div>
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-            <Link href="/register" className="btn btn-accent">
-              Create free account
-            </Link>
-            <Link
-              href="/about"
-              className="btn btn-outline"
-              style={{ color: "white", borderColor: "rgba(255,255,255,.45)" }}
-            >
-              Learn more
-            </Link>
-          </div>
-        </div>
-      </section>
-    </>
+      {/* EXISTING SHARED FOOTER REMAINS IN LAYOUT */}
+
+    </main>
   );
 }

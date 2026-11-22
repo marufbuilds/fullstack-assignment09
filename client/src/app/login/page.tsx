@@ -1,4 +1,3 @@
- 
 "use client";
 
 import Link from "next/link";
@@ -64,20 +63,20 @@ export default function Login() {
     }
   }
 
- async function handleGoogle() {
-  setMessage("");
-  setGoogleLoading(true);
+  async function handleGoogle() {
+    setMessage("");
+    setGoogleLoading(true);
 
-  try {
-    await authClient.signIn.social({
-      provider: "google",
-      callbackURL: `${window.location.origin}${target}`,
-    });
-  } catch {
-    setMessage("Google sign-in could not be started.");
-    setGoogleLoading(false);
+    try {
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: `${window.location.origin}${target}`,
+      });
+    } catch {
+      setMessage("Google sign-in could not be started.");
+      setGoogleLoading(false);
+    }
   }
-}
 
   return (
     <div className="wrap section authwrap">
@@ -91,8 +90,8 @@ export default function Login() {
         </h1>
 
         <p>
-          Sign in to request rentals, track bookings, manage your listings
-          and keep your favorites in sync across devices.
+          Sign in to request rentals, track bookings, manage your listings and keep your
+          favorites in sync across devices.
         </p>
 
         <div className="authpill">
@@ -100,9 +99,7 @@ export default function Login() {
         </div>
 
         <div className="notice notice-info" style={{ marginTop: 24 }}>
-          <strong style={{ display: "block", marginBottom: 6 }}>
-            Demo accounts
-          </strong>
+          <strong style={{ display: "block", marginBottom: 6 }}>Demo accounts</strong>
 
           {DEMO_ACCOUNTS.map((account) => (
             <span

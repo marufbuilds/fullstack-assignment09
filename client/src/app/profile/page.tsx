@@ -1,4 +1,3 @@
- 
 "use client";
 
 import Link from "next/link";
@@ -221,9 +220,7 @@ function ProfileContent() {
             </div>
 
             {saved && (
-              <Notice kind="success">
-                Your profile was updated successfully.
-              </Notice>
+              <Notice kind="success">Your profile was updated successfully.</Notice>
             )}
           </form>
 
@@ -257,8 +254,8 @@ function ProfileContent() {
 
               {!isOwner && (
                 <div className="notice notice-info" style={{ marginTop: 16 }}>
-                  Ask an administrator to switch your role to <b>owner</b> so
-                  you can list equipment and earn.
+                  Ask an administrator to switch your role to <b>owner</b> so you can list
+                  equipment and earn.
                 </div>
               )}
             </div>

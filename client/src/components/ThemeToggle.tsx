@@ -13,12 +13,7 @@ export default function ThemeToggle() {
   }, []);
 
   if (!mounted) {
-    return (
-      <button
-        className="h-10 w-10 rounded-full border"
-        aria-label="Change theme"
-      />
-    );
+    return <button className="h-10 w-10 rounded-full border" aria-label="Change theme" />;
   }
 
   return (
@@ -28,11 +23,7 @@ export default function ThemeToggle() {
       aria-label="Toggle theme"
       title="Toggle theme"
     >
-      {theme === "dark" ? (
-        <Sun size={20} />
-      ) : (
-        <Moon size={20} />
-      )}
+      {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
     </button>
   );
 }

@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -24,9 +23,9 @@ import { useAuth } from "@/lib/auth";
 import { initials } from "@/lib/format";
 
 const primaryLinks = [
-  { label: "Marketplace", href: "/equipment" },
-  { label: "How it works", href: "/about" },
-  { label: "Help", href: "/help" },
+  { label: "Browse Equipment", href: "/equipment" },
+  { label: "List Your Equipment", href: "/add-equipment" },
+  { label: "About", href: "/about" },
 ];
 
 function ThemeToggle() {
@@ -39,11 +38,7 @@ function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <button
-        type="button"
-        className="theme-toggle"
-        aria-label="Toggle theme"
-      >
+      <button type="button" className="theme-toggle" aria-label="Toggle theme">
         <Sun size={18} />
       </button>
     );
@@ -72,9 +67,7 @@ export function Navbar({ onToggleMenu }: { onToggleMenu: () => void }) {
   const [imageFailed, setImageFailed] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const profileImage = (
-    user as (typeof user & { image?: string | null }) | null
-  )?.image;
+  const profileImage = (user as (typeof user & { image?: string | null }) | null)?.image;
 
   useEffect(() => {
     setMenuOpen(false);
@@ -86,10 +79,7 @@ export function Navbar({ onToggleMenu }: { onToggleMenu: () => void }) {
 
   useEffect(() => {
     function handleClick(event: MouseEvent) {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(event.target as Node)
-      ) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setMenuOpen(false);
       }
     }
@@ -145,11 +135,11 @@ export function Navbar({ onToggleMenu }: { onToggleMenu: () => void }) {
           {status === "unauthenticated" && (
             <>
               <Link href="/login" className="btn btn-ghost hide-sm">
-                Sign in
+                Login
               </Link>
 
               <Link href="/register" className="btn btn-sm">
-                Get started
+                Sign Up
               </Link>
             </>
           )}
@@ -188,9 +178,7 @@ export function Navbar({ onToggleMenu }: { onToggleMenu: () => void }) {
                   )}
                 </span>
 
-                <span className="hide-sm">
-                  {user.name.split(" ")[0]}
-                </span>
+                <span className="hide-sm">{user.name.split(" ")[0]}</span>
 
                 <ChevronDown size={16} />
               </button>
