@@ -1,6 +1,5 @@
+ 
 "use client";
-
-// Protects pages that need a signed-in user (and optionally a role).
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -10,17 +9,29 @@ import { ShieldAlert, Lock } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { LoadingPage } from "./ui";
 
+type AuthGuardProps = {
+  children: ReactNode;
+  require?: "owner" | "admin";
+};
+
 export function AuthGuard({
   children,
   require,
-}: {
-  children: ReactNode;
-  /** Minimum role needed: "customer" (any user), "owner" or "admin". */
-  require?: "owner" | "admin";
-}) {
-  const { status, role } = useAuth();
+}: AuthGuardProps) {
+  const { status, role, user } = useAuth();
+
   const pathname = usePathname();
   const router = useRouter();
+
+  // Check both role sources and normalize the value.
+  const currentRole = String(
+    role ?? user?.role ?? "customer"
+  )
+    .trim()
+    .toLowerCase();
+
+  const isOwner = currentRole === "owner";
+  const isAdmin = currentRole === "admin";
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -37,7 +48,7 @@ export function AuthGuard({
     return <LoadingPage label="Redirecting to sign in…" />;
   }
 
-  if (require === "admin" && role !== "admin") {
+  if (require === "admin" && !isAdmin) {
     return (
       <div className="wrap section" style={{ maxWidth: 720 }}>
         <div className="card empty">
@@ -47,11 +58,14 @@ export function AuthGuard({
           >
             <ShieldAlert size={28} />
           </span>
+
           <h1 className="h3">Admin access required</h1>
+
           <p className="muted" style={{ maxWidth: 470, margin: 0 }}>
-            Your account does not have the admin role. Sign in with an admin account to
-            open the administration panel.
+            Your account does not have administrator permissions.
+            Please sign in with an admin account to access this page.
           </p>
+
           <Link className="btn" href="/dashboard">
             Back to dashboard
           </Link>
@@ -60,7 +74,7 @@ export function AuthGuard({
     );
   }
 
-  if (require === "owner" && role !== "owner" && role !== "admin") {
+  if (require === "owner" && !isOwner && !isAdmin) {
     return (
       <div className="wrap section" style={{ maxWidth: 720 }}>
         <div className="card empty">
@@ -70,12 +84,15 @@ export function AuthGuard({
           >
             <Lock size={28} />
           </span>
-          <h1 className="h3">Owner tools only</h1>
+
+          <h1 className="h3">Owner access required</h1>
+
           <p className="muted" style={{ maxWidth: 500, margin: 0 }}>
-            Listing equipment requires the <b>owner</b> role. Your account is currently a{" "}
-            <b>{role || "customer"}</b> — ask an administrator to promote you from the
-            Admin panel, then reload this page.
+            Your current account role is{" "}
+            <b>{currentRole}</b>. You need an owner or admin
+            account to manage equipment and rental requests.
           </p>
+
           <div
             style={{
               display: "flex",
@@ -87,7 +104,8 @@ export function AuthGuard({
             <Link className="btn" href="/dashboard">
               Back to dashboard
             </Link>
-            <Link className="btn-outline" href="/help">
+
+            <Link className="btn btn-outline" href="/help">
               Read the guide
             </Link>
           </div>

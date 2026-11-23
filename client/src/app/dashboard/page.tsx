@@ -1,6 +1,5 @@
+ 
 "use client";
-
-// Customer dashboard: bookings, favorites and quick actions at a glance.
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -11,6 +10,7 @@ import {
   ListChecks,
   PackagePlus,
   Wallet,
+  BriefcaseBusiness,
 } from "lucide-react";
 
 import { errorMessage, fetchMyBookings, fetchMyListings } from "@/lib/api";
@@ -19,34 +19,12 @@ import { useFavorites } from "@/lib/favorites";
 import { formatDateRange, money } from "@/lib/format";
 import type { Booking, Equipment } from "@/lib/types";
 import { AuthGuard } from "@/components/AuthGuard";
-import { EmptyState, ErrorState, Notice, PageHeader, StatusBadge } from "@/components/ui";
-
-const quickLinks = [
-  {
-    title: "Browse equipment",
-    description: "Search the marketplace for your next tool.",
-    href: "/equipment",
-    icon: PackagePlus,
-  },
-  {
-    title: "My rentals",
-    description: "Track requests, payments and active rentals.",
-    href: "/my-rentals",
-    icon: CalendarDays,
-  },
-  {
-    title: "Favorites",
-    description: "Equipment you saved for later.",
-    href: "/favorites",
-    icon: Heart,
-  },
-  {
-    title: "List equipment",
-    description: "Share your gear and start earning.",
-    href: "/add-equipment",
-    icon: ListChecks,
-  },
-];
+import {
+  EmptyState,
+  ErrorState,
+  PageHeader,
+  StatusBadge,
+} from "@/components/ui";
 
 function DashboardContent() {
   const { user, role } = useAuth();
@@ -57,20 +35,28 @@ function DashboardContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const isOwner = role === "owner" || role === "admin";
+  // Check both possible role sources.
+  const userRole = String(
+    role ?? (user as { role?: string } | null)?.role ?? ""
+  )
+    .trim()
+    .toLowerCase();
+
+  const isOwner = userRole === "owner" || userRole === "admin";
 
   async function load() {
     setLoading(true);
     setError("");
+
     try {
       const myBookings = await fetchMyBookings();
       setBookings(myBookings);
+
       if (isOwner) {
-        try {
-          setListings(await fetchMyListings());
-        } catch {
-          setListings([]);
-        }
+        const myListings = await fetchMyListings();
+        setListings(myListings);
+      } else {
+        setListings([]);
       }
     } catch (caught) {
       setError(errorMessage(caught));
@@ -85,12 +71,21 @@ function DashboardContent() {
   }, [isOwner]);
 
   const active = bookings.filter(
-    (booking) => booking.status === "pending" || booking.status === "confirmed",
+    (booking) =>
+      booking.status === "pending" ||
+      booking.status === "confirmed"
   );
-  const completed = bookings.filter((booking) => booking.status === "completed");
+
+  const completed = bookings.filter(
+    (booking) => booking.status === "completed"
+  );
+
   const spent = bookings
     .filter((booking) => booking.status !== "rejected")
-    .reduce((sum, booking) => sum + Number(booking.amount || 0), 0);
+    .reduce(
+      (sum, booking) => sum + Number(booking.amount || 0),
+      0
+    );
 
   const stats = [
     {
@@ -126,18 +121,63 @@ function DashboardContent() {
         },
   ];
 
+  const quickLinks = [
+    {
+      title: "Browse equipment",
+      description: "Search the marketplace for your next tool.",
+      href: "/equipment",
+      icon: PackagePlus,
+    },
+    {
+      title: "My rentals",
+      description: "Track requests, payments and active rentals.",
+      href: "/my-rentals",
+      icon: CalendarDays,
+    },
+    {
+      title: "Favorites",
+      description: "Equipment you saved for later.",
+      href: "/favorites",
+      icon: Heart,
+    },
+    {
+      title: "List equipment",
+      description: "Share your gear and start earning.",
+      href: "/add-equipment",
+      icon: ListChecks,
+    },
+  ];
+
   return (
     <div className="wrap section">
       <PageHeader
         eyebrow="Workspace"
         title={`Welcome back, ${(user?.name || "there").split(" ")[0]}`}
-        description="Here is everything happening with your rentals, saved equipment and listings."
+        description={
+          isOwner
+            ? "Manage your equipment, rental requests and business activity."
+            : "Here is everything happening with your rentals, saved equipment and listings."
+        }
         actions={
           <>
-            <Link className="btn" href="/equipment">
+            {isOwner && (
+              <Link className="btn" href="/owner">
+                <BriefcaseBusiness size={16} />
+                Owner workspace
+              </Link>
+            )}
+
+            <Link
+              className="btn"
+              href="/equipment"
+            >
               Find equipment
             </Link>
-            <Link className="btn btn-outline" href="/profile">
+
+            <Link
+              className="btn btn-outline"
+              href="/profile"
+            >
               Edit profile
             </Link>
           </>
@@ -146,7 +186,10 @@ function DashboardContent() {
 
       {error && (
         <div style={{ marginBottom: 22 }}>
-          <ErrorState message={error} onRetry={() => void load()} />
+          <ErrorState
+            message={error}
+            onRetry={() => void load()}
+          />
         </div>
       )}
 
@@ -163,24 +206,43 @@ function DashboardContent() {
                   }}
                 >
                   <p>{stat.label}</p>
-                  <span className="stat-icon">{stat.icon}</span>
+                  <span className="stat-icon">
+                    {stat.icon}
+                  </span>
                 </div>
+
                 <h2>{stat.value}</h2>
                 <small className="muted">{stat.hint}</small>
               </div>
             ))}
           </div>
 
-          <div className="grid2" style={{ marginTop: 30, alignItems: "start" }}>
+          <div
+            className="grid2"
+            style={{ marginTop: 30, alignItems: "start" }}
+          >
             <div className="card card-pad">
-              <div className="section-head" style={{ marginBottom: 14 }}>
+              <div
+                className="section-head"
+                style={{ marginBottom: 14 }}
+              >
                 <div>
-                  <div className="eyebrow">Recent activity</div>
-                  <h2 className="h3" style={{ marginTop: 8 }}>
+                  <div className="eyebrow">
+                    Recent activity
+                  </div>
+
+                  <h2
+                    className="h3"
+                    style={{ marginTop: 8 }}
+                  >
                     Your latest bookings
                   </h2>
                 </div>
-                <Link href="/my-rentals" className="btn btn-ghost btn-sm">
+
+                <Link
+                  href="/my-rentals"
+                  className="btn btn-ghost btn-sm"
+                >
                   View all <ArrowUpRight size={15} />
                 </Link>
               </div>
@@ -188,7 +250,11 @@ function DashboardContent() {
               {loading && (
                 <div style={{ display: "grid", gap: 12 }}>
                   {[0, 1, 2].map((row) => (
-                    <div className="skeleton" key={row} style={{ height: 56 }} />
+                    <div
+                      className="skeleton"
+                      key={row}
+                      style={{ height: 56 }}
+                    />
                   ))}
                 </div>
               )}
@@ -199,7 +265,10 @@ function DashboardContent() {
                   title="No bookings yet"
                   description="When you request a rental it will show up here with its live status."
                   action={
-                    <Link className="btn" href="/equipment">
+                    <Link
+                      className="btn"
+                      href="/equipment"
+                    >
                       Explore equipment
                     </Link>
                   }
@@ -211,15 +280,31 @@ function DashboardContent() {
                   <div
                     className="rentrow"
                     key={booking._id}
-                    style={{ gridTemplateColumns: "1.4fr 1fr auto" }}
+                    style={{
+                      gridTemplateColumns: "1.4fr 1fr auto",
+                    }}
                   >
                     <div>
-                      <strong>{booking.equipmentTitle || "Equipment"}</strong>
-                      <small className="muted" style={{ display: "block", fontSize: 13 }}>
-                        {formatDateRange(booking.startDate, booking.endDate)}
+                      <strong>
+                        {booking.equipmentTitle || "Equipment"}
+                      </strong>
+
+                      <small
+                        className="muted"
+                        style={{
+                          display: "block",
+                          fontSize: 13,
+                        }}
+                      >
+                        {formatDateRange(
+                          booking.startDate,
+                          booking.endDate
+                        )}
                       </small>
                     </div>
+
                     <strong>{money(booking.amount)}</strong>
+
                     <StatusBadge status={booking.status} />
                   </div>
                 ))}
@@ -227,7 +312,10 @@ function DashboardContent() {
 
             <div className="stack">
               <div className="card card-pad">
-                <div className="eyebrow">Quick actions</div>
+                <div className="eyebrow">
+                  Quick actions
+                </div>
+
                 <div
                   style={{
                     display: "grid",
@@ -235,62 +323,102 @@ function DashboardContent() {
                     marginTop: 14,
                   }}
                 >
-                  {quickLinks.map(({ title, description, href, icon: Icon }) => (
-                    <Link
-                      key={title}
-                      href={href}
-                      style={{
-                        display: "flex",
-                        gap: 14,
-                        alignItems: "center",
-                        padding: "12px 14px",
-                        border: "1px solid var(--line)",
-                        borderRadius: 14,
-                        transition: "border-color .16s ease, background .16s ease",
-                      }}
-                    >
-                      <span className="stat-icon">
-                        <Icon size={18} />
-                      </span>
-                      <span style={{ minWidth: 0 }}>
-                        <strong style={{ display: "block", fontSize: 14.5 }}>
-                          {title}
-                        </strong>
-                        <span className="muted" style={{ fontSize: 13 }}>
-                          {description}
+                  {quickLinks.map(
+                    ({ title, description, href, icon: Icon }) => (
+                      <Link
+                        key={title}
+                        href={href}
+                        style={{
+                          display: "flex",
+                          gap: 14,
+                          alignItems: "center",
+                          padding: "12px 14px",
+                          border: "1px solid var(--line)",
+                          borderRadius: 14,
+                          transition:
+                            "border-color .16s ease, background .16s ease",
+                        }}
+                      >
+                        <span className="stat-icon">
+                          <Icon size={18} />
                         </span>
-                      </span>
-                      <ArrowUpRight
-                        size={16}
-                        style={{ marginLeft: "auto", color: "var(--muted)" }}
-                      />
-                    </Link>
-                  ))}
+
+                        <span style={{ minWidth: 0 }}>
+                          <strong
+                            style={{
+                              display: "block",
+                              fontSize: 14.5,
+                            }}
+                          >
+                            {title}
+                          </strong>
+
+                          <span
+                            className="muted"
+                            style={{ fontSize: 13 }}
+                          >
+                            {description}
+                          </span>
+                        </span>
+
+                        <ArrowUpRight
+                          size={16}
+                          style={{
+                            marginLeft: "auto",
+                            color: "var(--muted)",
+                          }}
+                        />
+                      </Link>
+                    )
+                  )}
                 </div>
               </div>
 
               {isOwner ? (
                 <div className="notice">
-                  <strong style={{ display: "block", marginBottom: 4 }}>
+                  <strong
+                    style={{
+                      display: "block",
+                      marginBottom: 4,
+                    }}
+                  >
                     Owner tools are active
                   </strong>
-                  Manage incoming rental requests from the{" "}
-                  <Link href="/owner" style={{ fontWeight: 700 }}>
+
+                  Manage incoming rental requests and your
+                  equipment from your{" "}
+
+                  <Link
+                    href="/owner"
+                    style={{ fontWeight: 700 }}
+                  >
                     owner workspace
-                  </Link>{" "}
-                  or add new gear from{" "}
-                  <Link href="/add-equipment" style={{ fontWeight: 700 }}>
-                    add equipment
                   </Link>
                   .
+
+                  <div style={{ marginTop: 12 }}>
+                    <Link
+                      href="/owner"
+                      className="btn"
+                    >
+                      Manage bookings and listings
+                      <ArrowUpRight size={16} />
+                    </Link>
+                  </div>
                 </div>
               ) : (
                 <div className="notice notice-info">
-                  <strong style={{ display: "block", marginBottom: 4 }}>
+                  <strong
+                    style={{
+                      display: "block",
+                      marginBottom: 4,
+                    }}
+                  >
                     Want to earn from your gear?
                   </strong>
-                  Ask an administrator to enable owner tools for your account, then list
-                  your first item in minutes.
+
+                  Ask an administrator to enable owner tools
+                  for your account, then list your first item.
                 </div>
               )}
             </div>
