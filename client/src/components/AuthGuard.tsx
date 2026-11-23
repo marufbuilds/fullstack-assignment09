@@ -23,10 +23,8 @@ export function AuthGuard({
   const pathname = usePathname();
   const router = useRouter();
 
-  // Get the role from the authenticated user first.
-  const currentRole = String(
-    user?.role ?? role ?? ""
-  )
+  // Prioritize the auth context role
+  const currentRole = String(role ?? user?.role ?? "")
     .trim()
     .toLowerCase();
 
@@ -94,7 +92,6 @@ export function AuthGuard({
             You need an owner or admin account to manage equipment and rental requests.
           </p>
 
-          {/* Temporary debugging information */}
           <div
             style={{
               width: "100%",
