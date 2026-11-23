@@ -1,7 +1,9 @@
+ 
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
+
 import {
   CalendarDays,
   ListChecks,
@@ -9,27 +11,62 @@ import {
   Save,
   ShieldCheck,
   UserRound,
+  BriefcaseBusiness,
+  Mail,
+  Clock,
+  PackagePlus,
 } from "lucide-react";
 
-import { errorMessage, fetchProfile, updateProfile } from "@/lib/api";
+import {
+  errorMessage,
+  fetchProfile,
+  updateProfile,
+} from "@/lib/api";
+
 import { useAuth } from "@/lib/auth";
 import { formatDate, initials } from "@/lib/format";
+
 import type { AuthUser } from "@/lib/types";
+
 import { AuthGuard } from "@/components/AuthGuard";
-import { ErrorState, Notice, PageHeader, Spinner } from "@/components/ui";
+
+import {
+  ErrorState,
+  Notice,
+  PageHeader,
+  Spinner,
+} from "@/components/ui";
 
 function ProfileContent() {
   const { user, role, refresh, signOut } = useAuth();
 
   const [profile, setProfile] = useState<AuthUser | null>(null);
   const [name, setName] = useState("");
+
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+
   const [imageFailed, setImageFailed] = useState(false);
 
   const profileImage = profile?.image || user?.image;
+
+  const currentRole = String(
+    role ?? profile?.role ?? user?.role ?? "customer"
+  )
+    .trim()
+    .toLowerCase();
+
+  const isAdmin = currentRole === "admin";
+  const isOwner = currentRole === "owner";
+
+  const displayName =
+    profile?.name || user?.name || "Equiply member";
+
+  const email = profile?.email || user?.email || "";
 
   useEffect(() => {
     setImageFailed(false);
@@ -41,8 +78,9 @@ function ProfileContent() {
 
     try {
       const data = await fetchProfile();
+
       setProfile(data);
-      setName(data.name);
+      setName(data.name || "");
     } catch (caught) {
       setError(errorMessage(caught));
     } finally {
@@ -55,16 +93,40 @@ function ProfileContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function handleSubmit(event: React.FormEvent) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSaved(false);
+
+    const trimmedName = name.trim();
+
+    if (trimmedName.length < 2 || trimmedName.length > 80) {
+      setError("Name must contain between 2 and 80 characters.");
+      return;
+    }
+
+    if (trimmedName === profile?.name) {
+      setSuccess("Your profile is already up to date.");
+      setError("");
+      return;
+    }
+
     setSaving(true);
+    setError("");
+    setSuccess("");
 
     try {
-      await updateProfile(name.trim());
-      setSaved(true);
+      await updateProfile(trimmedName);
+
+      setProfile((current) =>
+        current
+          ? { ...current, name: trimmedName }
+          : current
+      );
+
+      setName(trimmedName);
+
       await refresh();
-      await load();
+
+      setSuccess("Your profile was updated successfully.");
     } catch (caught) {
       setError(errorMessage(caught));
     } finally {
@@ -72,14 +134,18 @@ function ProfileContent() {
     }
   }
 
-  const displayName = profile?.name || user?.name || "Equiply member";
-  const email = profile?.email || user?.email || "";
-  const currentRole = role || profile?.role || "customer";
+  async function handleSignOut() {
+    setSigningOut(true);
 
-  const isOwner = currentRole === "owner" || currentRole === "admin";
-  const isAdmin = currentRole === "admin";
+    try {
+      await signOut();
+    } catch (caught) {
+      setError(errorMessage(caught));
+      setSigningOut(false);
+    }
+  }
 
-  function Avatar({ size = 64 }: { size?: number }) {
+  function Avatar({ size = 76 }: { size?: number }) {
     return (
       <div
         className="avatar"
@@ -118,12 +184,30 @@ function ProfileContent() {
       <PageHeader
         eyebrow="Account settings"
         title="My profile"
-        description="Manage your personal details and account."
+        description="Manage your personal information and account access."
+        actions={
+          <span
+            className="badge badge-brand"
+            style={{ textTransform: "capitalize" }}
+          >
+            <UserRound size={14} />
+            {currentRole} account
+          </span>
+        }
       />
 
       {error && (
         <div style={{ marginBottom: 20 }}>
-          <ErrorState message={error} onRetry={() => void load()} />
+          <ErrorState
+            message={error}
+            onRetry={() => void load()}
+          />
+        </div>
+      )}
+
+      {success && (
+        <div style={{ marginBottom: 20 }}>
+          <Notice kind="success">{success}</Notice>
         </div>
       )}
 
@@ -136,7 +220,11 @@ function ProfileContent() {
 
       {!loading && !error && (
         <div className="grid2" style={{ alignItems: "start" }}>
-          <form className="card card-pad profileform" onSubmit={handleSubmit}>
+          {/* Profile information */}
+          <form
+            className="card card-pad profileform"
+            onSubmit={handleSubmit}
+          >
             <div
               style={{
                 display: "flex",
@@ -145,7 +233,7 @@ function ProfileContent() {
                 flexWrap: "wrap",
               }}
             >
-              <Avatar size={76} />
+              <Avatar />
 
               <div style={{ flex: 1, minWidth: 180 }}>
                 <h2 className="h3">{displayName}</h2>
@@ -170,42 +258,65 @@ function ProfileContent() {
 
             <label>
               Full name
+
               <input
                 value={name}
                 onChange={(event) => {
                   setName(event.target.value);
-                  setSaved(false);
+                  setSuccess("");
                 }}
                 minLength={2}
                 maxLength={80}
                 required
                 autoComplete="name"
+                placeholder="Enter your full name"
               />
             </label>
 
             <label>
               Email address
-              <input value={email} disabled readOnly type="email" />
+
+              <input
+                value={email}
+                disabled
+                readOnly
+                type="email"
+              />
             </label>
 
             <label>
               Member since
+
               <input
-                value={formatDate(profile?.createdAt || user?.createdAt)}
+                value={formatDate(
+                  profile?.createdAt || user?.createdAt
+                )}
                 disabled
                 readOnly
               />
             </label>
 
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-              <button className="btn" type="submit" disabled={saving}>
+            <div
+              style={{
+                display: "flex",
+                gap: 10,
+                flexWrap: "wrap",
+              }}
+            >
+              <button
+                className="btn"
+                type="submit"
+                disabled={saving || name.trim().length < 2}
+              >
                 {saving ? (
                   <>
-                    <Spinner /> Saving…
+                    <Spinner />
+                    Saving…
                   </>
                 ) : (
                   <>
-                    <Save size={17} /> Save changes
+                    <Save size={17} />
+                    Save changes
                   </>
                 )}
               </button>
@@ -213,23 +324,30 @@ function ProfileContent() {
               <button
                 type="button"
                 className="btn btn-outline"
-                onClick={() => void signOut()}
+                onClick={() => void handleSignOut()}
+                disabled={signingOut}
               >
-                <LogOut size={17} /> Sign out
+                {signingOut ? (
+                  <Spinner />
+                ) : (
+                  <LogOut size={17} />
+                )}
+
+                {signingOut ? "Signing out…" : "Sign out"}
               </button>
             </div>
-
-            {saved && (
-              <Notice kind="success">Your profile was updated successfully.</Notice>
-            )}
           </form>
 
+          {/* Account access */}
           <div className="stack">
             <div className="card card-pad">
               <div className="eyebrow">Account access</div>
 
-              <h2 className="h3" style={{ marginTop: 8, marginBottom: 14 }}>
-                What you can do
+              <h2
+                className="h3"
+                style={{ marginTop: 8, marginBottom: 14 }}
+              >
+                Your permissions
               </h2>
 
               <div className="spec-row">
@@ -244,43 +362,120 @@ function ProfileContent() {
 
               <div className="spec-row">
                 <span>List equipment</span>
-                <strong>{isOwner ? "Allowed" : "Owner role needed"}</strong>
+                <strong>
+                  {isOwner ? "Allowed" : isAdmin ? "Admin access" : "Owner role needed"}
+                </strong>
+              </div>
+
+              <div className="spec-row">
+                <span>Owner workspace</span>
+                <strong>{isOwner ? "Allowed" : "Not available"}</strong>
               </div>
 
               <div className="spec-row">
                 <span>Admin panel</span>
-                <strong>{isAdmin ? "Allowed" : "Admin role needed"}</strong>
+                <strong>{isAdmin ? "Allowed" : "Not available"}</strong>
               </div>
 
-              {!isOwner && (
-                <div className="notice notice-info" style={{ marginTop: 16 }}>
-                  Ask an administrator to switch your role to <b>owner</b> so you can list
-                  equipment and earn.
+              {!isOwner && !isAdmin && (
+                <div
+                  className="notice notice-info"
+                  style={{ marginTop: 16 }}
+                >
+                  <strong>Become an equipment owner</strong>
+
+                  <p style={{ margin: "6px 0 0" }}>
+                    Ask an administrator to change your role to
+                    owner to list equipment and manage rental requests.
+                  </p>
+                </div>
+              )}
+
+              {isOwner && (
+                <div className="notice" style={{ marginTop: 16 }}>
+                  <strong>Owner account active</strong>
+
+                  <p style={{ margin: "6px 0 0" }}>
+                    You can list equipment and manage your rental business.
+                  </p>
+                </div>
+              )}
+
+              {isAdmin && (
+                <div className="notice" style={{ marginTop: 16 }}>
+                  <strong>Administrator account active</strong>
+
+                  <p style={{ margin: "6px 0 0" }}>
+                    You have access to platform administration and management.
+                  </p>
                 </div>
               )}
             </div>
 
+            {/* Quick access */}
             <div className="card card-pad">
               <div className="eyebrow">Quick access</div>
 
-              <div style={{ display: "grid", gap: 10, marginTop: 14 }}>
-                <Link className="btn btn-outline btn-block" href="/my-rentals">
-                  <CalendarDays size={16} /> My rentals
+              <div
+                style={{
+                  display: "grid",
+                  gap: 10,
+                  marginTop: 14,
+                }}
+              >
+                <Link
+                  className="btn btn-outline btn-block"
+                  href="/my-rentals"
+                >
+                  <CalendarDays size={16} />
+                  My rentals
                 </Link>
 
-                <Link className="btn btn-outline btn-block" href="/owner/listings">
-                  <ListChecks size={16} /> My listings
-                </Link>
+                {isOwner && (
+                  <>
+                    <Link
+                      className="btn btn-outline btn-block"
+                      href="/owner"
+                    >
+                      <BriefcaseBusiness size={16} />
+                      Owner workspace
+                    </Link>
 
-                <Link className="btn btn-outline btn-block" href="/dashboard">
-                  <UserRound size={16} /> Dashboard
-                </Link>
+                    <Link
+                      className="btn btn-outline btn-block"
+                      href="/owner/listings"
+                    >
+                      <ListChecks size={16} />
+                      My listings
+                    </Link>
+
+                    <Link
+                      className="btn btn-outline btn-block"
+                      href="/add-equipment"
+                    >
+                      <PackagePlus size={16} />
+                      Add equipment
+                    </Link>
+                  </>
+                )}
 
                 {isAdmin && (
-                  <Link className="btn btn-block" href="/admin">
-                    <ShieldCheck size={16} /> Admin panel
+                  <Link
+                    className="btn btn-block"
+                    href="/admin"
+                  >
+                    <ShieldCheck size={16} />
+                    Admin panel
                   </Link>
                 )}
+
+                <Link
+                  className="btn btn-outline btn-block"
+                  href="/dashboard"
+                >
+                  <UserRound size={16} />
+                  Dashboard
+                </Link>
               </div>
             </div>
           </div>

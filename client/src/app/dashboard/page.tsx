@@ -3,6 +3,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
 import {
   ArrowUpRight,
   CalendarDays,
@@ -13,12 +15,20 @@ import {
   BriefcaseBusiness,
 } from "lucide-react";
 
-import { errorMessage, fetchMyBookings, fetchMyListings } from "@/lib/api";
+import {
+  errorMessage,
+  fetchMyBookings,
+  fetchMyListings,
+} from "@/lib/api";
+
 import { useAuth } from "@/lib/auth";
 import { useFavorites } from "@/lib/favorites";
 import { formatDateRange, money } from "@/lib/format";
+
 import type { Booking, Equipment } from "@/lib/types";
+
 import { AuthGuard } from "@/components/AuthGuard";
+
 import {
   EmptyState,
   ErrorState,
@@ -29,20 +39,28 @@ import {
 function DashboardContent() {
   const { user, role } = useAuth();
   const { ids } = useFavorites();
+  const router = useRouter();
 
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [listings, setListings] = useState<Equipment[]>([]);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Check both possible role sources.
   const userRole = String(
     role ?? (user as { role?: string } | null)?.role ?? ""
   )
     .trim()
     .toLowerCase();
 
-  const isOwner = userRole === "owner" || userRole === "admin";
+  const isOwner = userRole === "owner";
+  const isAdmin = userRole === "admin";
+
+  useEffect(() => {
+    if (isAdmin) {
+      router.replace("/admin");
+    }
+  }, [isAdmin, router]);
 
   async function load() {
     setLoading(true);
@@ -66,9 +84,16 @@ function DashboardContent() {
   }
 
   useEffect(() => {
-    void load();
+    if (!isAdmin) {
+      void load();
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOwner]);
+  }, [isOwner, isAdmin]);
+
+  if (isAdmin) {
+    return null;
+  }
 
   const active = bookings.filter(
     (booking) =>
@@ -81,7 +106,10 @@ function DashboardContent() {
   );
 
   const spent = bookings
-    .filter((booking) => booking.status !== "rejected")
+    .filter(
+      (booking) =>
+        booking.paymentStatus === "paid"
+    )
     .reduce(
       (sum, booking) => sum + Number(booking.amount || 0),
       0
@@ -116,7 +144,7 @@ function DashboardContent() {
       : {
           label: "Total spent",
           value: loading ? "…" : money(spent),
-          hint: "Across all bookings",
+          hint: "Successful payments",
           icon: <Wallet size={19} />,
         },
   ];
@@ -156,7 +184,7 @@ function DashboardContent() {
         description={
           isOwner
             ? "Manage your equipment, rental requests and business activity."
-            : "Here is everything happening with your rentals, saved equipment and listings."
+            : "Here is everything happening with your rentals, saved equipment and bookings."
         }
         actions={
           <>
@@ -167,17 +195,11 @@ function DashboardContent() {
               </Link>
             )}
 
-            <Link
-              className="btn"
-              href="/equipment"
-            >
+            <Link className="btn" href="/equipment">
               Find equipment
             </Link>
 
-            <Link
-              className="btn btn-outline"
-              href="/profile"
-            >
+            <Link className="btn btn-outline" href="/profile">
               Edit profile
             </Link>
           </>
@@ -206,12 +228,14 @@ function DashboardContent() {
                   }}
                 >
                   <p>{stat.label}</p>
+
                   <span className="stat-icon">
                     {stat.icon}
                   </span>
                 </div>
 
                 <h2>{stat.value}</h2>
+
                 <small className="muted">{stat.hint}</small>
               </div>
             ))}
@@ -231,10 +255,7 @@ function DashboardContent() {
                     Recent activity
                   </div>
 
-                  <h2
-                    className="h3"
-                    style={{ marginTop: 8 }}
-                  >
+                  <h2 className="h3" style={{ marginTop: 8 }}>
                     Your latest bookings
                   </h2>
                 </div>
@@ -265,10 +286,7 @@ function DashboardContent() {
                   title="No bookings yet"
                   description="When you request a rental it will show up here with its live status."
                   action={
-                    <Link
-                      className="btn"
-                      href="/equipment"
-                    >
+                    <Link className="btn" href="/equipment">
                       Explore equipment
                     </Link>
                   }
@@ -397,10 +415,7 @@ function DashboardContent() {
                   .
 
                   <div style={{ marginTop: 12 }}>
-                    <Link
-                      href="/owner"
-                      className="btn"
-                    >
+                    <Link href="/owner" className="btn">
                       Manage bookings and listings
                       <ArrowUpRight size={16} />
                     </Link>
