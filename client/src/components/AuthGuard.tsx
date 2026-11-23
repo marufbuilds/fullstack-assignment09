@@ -23,9 +23,9 @@ export function AuthGuard({
   const pathname = usePathname();
   const router = useRouter();
 
-  // Check both role sources and normalize the value.
+  // Get the role from the authenticated user first.
   const currentRole = String(
-    role ?? user?.role ?? "customer"
+    user?.role ?? role ?? ""
   )
     .trim()
     .toLowerCase();
@@ -48,6 +48,7 @@ export function AuthGuard({
     return <LoadingPage label="Redirecting to sign in…" />;
   }
 
+  // Admin-only access
   if (require === "admin" && !isAdmin) {
     return (
       <div className="wrap section" style={{ maxWidth: 720 }}>
@@ -74,6 +75,7 @@ export function AuthGuard({
     );
   }
 
+  // Owner or admin access
   if (require === "owner" && !isOwner && !isAdmin) {
     return (
       <div className="wrap section" style={{ maxWidth: 720 }}>
@@ -88,10 +90,42 @@ export function AuthGuard({
           <h1 className="h3">Owner access required</h1>
 
           <p className="muted" style={{ maxWidth: 500, margin: 0 }}>
-            Your current account role is{" "}
-            <b>{currentRole}</b>. You need an owner or admin
-            account to manage equipment and rental requests.
+            Your current account role is <b>{currentRole || "unknown"}</b>.
+            You need an owner or admin account to manage equipment and rental requests.
           </p>
+
+          {/* Temporary debugging information */}
+          <div
+            style={{
+              width: "100%",
+              maxWidth: 500,
+              marginTop: 16,
+              padding: 12,
+              borderRadius: 8,
+              background: "#f3f4f6",
+              color: "#111",
+              textAlign: "left",
+              overflowX: "auto",
+            }}
+          >
+            <p style={{ fontWeight: 600, marginBottom: 8 }}>
+              Debug information
+            </p>
+
+            <pre style={{ fontSize: 12, whiteSpace: "pre-wrap" }}>
+              {JSON.stringify(
+                {
+                  email: user?.email,
+                  userRole: user?.role,
+                  contextRole: role,
+                  currentRole,
+                  status,
+                },
+                null,
+                2
+              )}
+            </pre>
+          </div>
 
           <div
             style={{
@@ -99,6 +133,7 @@ export function AuthGuard({
               gap: 10,
               flexWrap: "wrap",
               justifyContent: "center",
+              marginTop: 16,
             }}
           >
             <Link className="btn" href="/dashboard">

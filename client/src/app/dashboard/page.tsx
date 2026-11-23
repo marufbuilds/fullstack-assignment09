@@ -19,6 +19,7 @@ import {
   errorMessage,
   fetchMyBookings,
   fetchMyListings,
+  fetchOwnerBookings,
 } from "@/lib/api";
 
 import { useAuth } from "@/lib/auth";
@@ -37,7 +38,7 @@ import {
 } from "@/components/ui";
 
 function DashboardContent() {
-  const { user, role } = useAuth();
+  const { user, role, status } = useAuth();
   const { ids } = useFavorites();
   const router = useRouter();
 
@@ -47,33 +48,41 @@ function DashboardContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const userRole = String(
-    role ?? (user as { role?: string } | null)?.role ?? ""
-  )
+  // Determine the current user's role.
+  const userRole = String(user?.role ?? role ?? "")
     .trim()
     .toLowerCase();
 
   const isOwner = userRole === "owner";
   const isAdmin = userRole === "admin";
 
+  // Redirect administrators to their dashboard.
   useEffect(() => {
-    if (isAdmin) {
+    if (status === "authenticated" && isAdmin) {
       router.replace("/admin");
     }
-  }, [isAdmin, router]);
+  }, [status, isAdmin, router]);
 
+  // Load dashboard information according to the user's role.
   async function load() {
     setLoading(true);
     setError("");
 
     try {
-      const myBookings = await fetchMyBookings();
-      setBookings(myBookings);
-
       if (isOwner) {
-        const myListings = await fetchMyListings();
+        // Owners see incoming booking requests for their equipment.
+        const [ownerBookings, myListings] = await Promise.all([
+          fetchOwnerBookings(),
+          fetchMyListings(),
+        ]);
+
+        setBookings(ownerBookings);
         setListings(myListings);
       } else {
+        // Customers see the rentals they requested.
+        const myBookings = await fetchMyBookings();
+
+        setBookings(myBookings);
         setListings([]);
       }
     } catch (caught) {
@@ -83,18 +92,23 @@ function DashboardContent() {
     }
   }
 
+  // Load data after authentication is complete.
   useEffect(() => {
-    if (!isAdmin) {
-      void load();
+    if (status !== "authenticated" || isAdmin) {
+      return;
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOwner, isAdmin]);
+    void load();
 
-  if (isAdmin) {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status, isOwner, isAdmin]);
+
+  // Avoid showing the wrong dashboard during authentication.
+  if (status === "loading" || status !== "authenticated" || isAdmin) {
     return null;
   }
 
+  // Calculate booking statistics.
   const active = bookings.filter(
     (booking) =>
       booking.status === "pending" ||
@@ -105,21 +119,21 @@ function DashboardContent() {
     (booking) => booking.status === "completed"
   );
 
-  const spent = bookings
-    .filter(
-      (booking) =>
-        booking.paymentStatus === "paid"
-    )
+  const paidAmount = bookings
+    .filter((booking) => booking.paymentStatus === "paid")
     .reduce(
       (sum, booking) => sum + Number(booking.amount || 0),
       0
     );
 
+  // Dashboard statistics.
   const stats = [
     {
-      label: "Active rentals",
+      label: isOwner ? "Incoming requests" : "Active rentals",
       value: loading ? "…" : active.length,
-      hint: "Pending or confirmed",
+      hint: isOwner
+        ? "Pending or confirmed requests"
+        : "Pending or confirmed",
       icon: <CalendarDays size={19} />,
     },
     {
@@ -143,12 +157,13 @@ function DashboardContent() {
         }
       : {
           label: "Total spent",
-          value: loading ? "…" : money(spent),
+          value: loading ? "…" : money(paidAmount),
           hint: "Successful payments",
           icon: <Wallet size={19} />,
         },
   ];
 
+  // Dashboard quick links.
   const quickLinks = [
     {
       title: "Browse equipment",
@@ -168,23 +183,27 @@ function DashboardContent() {
       href: "/favorites",
       icon: Heart,
     },
-    {
-      title: "List equipment",
-      description: "Share your gear and start earning.",
-      href: "/add-equipment",
-      icon: ListChecks,
-    },
+    ...(isOwner
+      ? [
+          {
+            title: "List equipment",
+            description: "Share your gear and start earning.",
+            href: "/add-equipment",
+            icon: ListChecks,
+          },
+        ]
+      : []),
   ];
 
   return (
     <div className="wrap section">
       <PageHeader
-        eyebrow="Workspace"
+        eyebrow={isOwner ? "Owner workspace" : "Customer dashboard"}
         title={`Welcome back, ${(user?.name || "there").split(" ")[0]}`}
         description={
           isOwner
-            ? "Manage your equipment, rental requests and business activity."
-            : "Here is everything happening with your rentals, saved equipment and bookings."
+            ? "Manage your equipment, incoming customer bookings and business activity."
+            : "Track your rental requests, payments and saved equipment."
         }
         actions={
           <>
@@ -217,6 +236,7 @@ function DashboardContent() {
 
       {!error && (
         <>
+          {/* Statistics */}
           <div className="grid4">
             {stats.map((stat) => (
               <div className="card stat" key={stat.label}>
@@ -241,10 +261,12 @@ function DashboardContent() {
             ))}
           </div>
 
+          {/* Main dashboard content */}
           <div
             className="grid2"
             style={{ marginTop: 30, alignItems: "start" }}
           >
+            {/* Recent bookings */}
             <div className="card card-pad">
               <div
                 className="section-head"
@@ -252,16 +274,18 @@ function DashboardContent() {
               >
                 <div>
                   <div className="eyebrow">
-                    Recent activity
+                    {isOwner ? "Customer activity" : "Recent activity"}
                   </div>
 
                   <h2 className="h3" style={{ marginTop: 8 }}>
-                    Your latest bookings
+                    {isOwner
+                      ? "Incoming rental requests"
+                      : "Your latest bookings"}
                   </h2>
                 </div>
 
                 <Link
-                  href="/my-rentals"
+                  href={isOwner ? "/owner" : "/my-rentals"}
                   className="btn btn-ghost btn-sm"
                 >
                   View all <ArrowUpRight size={15} />
@@ -283,8 +307,16 @@ function DashboardContent() {
               {!loading && bookings.length === 0 && (
                 <EmptyState
                   icon={<CalendarDays size={28} />}
-                  title="No bookings yet"
-                  description="When you request a rental it will show up here with its live status."
+                  title={
+                    isOwner
+                      ? "No rental requests yet"
+                      : "No bookings yet"
+                  }
+                  description={
+                    isOwner
+                      ? "When customers request your equipment, their bookings will appear here."
+                      : "When you request a rental, it will show up here with its live status."
+                  }
                   action={
                     <Link className="btn" href="/equipment">
                       Explore equipment
@@ -328,6 +360,7 @@ function DashboardContent() {
                 ))}
             </div>
 
+            {/* Quick actions and role information */}
             <div className="stack">
               <div className="card card-pad">
                 <div className="eyebrow">
@@ -403,16 +436,8 @@ function DashboardContent() {
                     Owner tools are active
                   </strong>
 
-                  Manage incoming rental requests and your
-                  equipment from your{" "}
-
-                  <Link
-                    href="/owner"
-                    style={{ fontWeight: 700 }}
-                  >
-                    owner workspace
-                  </Link>
-                  .
+                  Manage incoming rental requests and your equipment
+                  from your owner workspace.
 
                   <div style={{ marginTop: 12 }}>
                     <Link href="/owner" className="btn">

@@ -12,8 +12,6 @@ import {
   ShieldCheck,
   UserRound,
   BriefcaseBusiness,
-  Mail,
-  Clock,
   PackagePlus,
 } from "lucide-react";
 
@@ -54,8 +52,10 @@ function ProfileContent() {
 
   const profileImage = profile?.image || user?.image;
 
+  // Prefer the authenticated session role.
+  // Do not use ?? here because an empty string is not null or undefined.
   const currentRole = String(
-    role ?? profile?.role ?? user?.role ?? "customer"
+    user?.role || profile?.role || role || "customer"
   )
     .trim()
     .toLowerCase();
@@ -103,7 +103,7 @@ function ProfileContent() {
       return;
     }
 
-    if (trimmedName === profile?.name) {
+    if (trimmedName === (profile?.name || user?.name || "")) {
       setSuccess("Your profile is already up to date.");
       setError("");
       return;
@@ -363,18 +363,26 @@ function ProfileContent() {
               <div className="spec-row">
                 <span>List equipment</span>
                 <strong>
-                  {isOwner ? "Allowed" : isAdmin ? "Admin access" : "Owner role needed"}
+                  {isOwner
+                    ? "Allowed"
+                    : isAdmin
+                      ? "Admin access"
+                      : "Owner role needed"}
                 </strong>
               </div>
 
               <div className="spec-row">
                 <span>Owner workspace</span>
-                <strong>{isOwner ? "Allowed" : "Not available"}</strong>
+                <strong>
+                  {isOwner || isAdmin ? "Allowed" : "Not available"}
+                </strong>
               </div>
 
               <div className="spec-row">
                 <span>Admin panel</span>
-                <strong>{isAdmin ? "Allowed" : "Not available"}</strong>
+                <strong>
+                  {isAdmin ? "Allowed" : "Not available"}
+                </strong>
               </div>
 
               {!isOwner && !isAdmin && (
@@ -431,7 +439,7 @@ function ProfileContent() {
                   My rentals
                 </Link>
 
-                {isOwner && (
+                {(isOwner || isAdmin) && (
                   <>
                     <Link
                       className="btn btn-outline btn-block"
