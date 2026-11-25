@@ -1,13 +1,33 @@
+ 
+"use client";
 
 import Link from "next/link";
-import { MapPin, ShieldCheck, ArrowUpRight } from "lucide-react";
+import {
+  MapPin,
+  ShieldCheck,
+  ArrowUpRight,
+  Trash2,
+  Loader2,
+} from "lucide-react";
 
 import { money, rentalUnit } from "@/lib/format";
 import type { Equipment } from "@/lib/types";
 import { FavoriteButton } from "./FavoriteButton";
 
-export function EquipmentCard({ item }: { item: Equipment }) {
-  const description = item.description || "Explore this equipment and its rental details.";
+type EquipmentCardProps = {
+  item: Equipment;
+  onDelete?: (id: string) => void;
+  deleting?: boolean;
+};
+
+export function EquipmentCard({
+  item,
+  onDelete,
+  deleting = false,
+}: EquipmentCardProps) {
+  const description =
+    item.description ||
+    "Explore this equipment and its rental details.";
 
   return (
     <article className="group flex h-full flex-col overflow-hidden border border-[#e9e1d8] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[#cdbba8] hover:shadow-[0_12px_35px_rgba(55,40,28,0.09)]">
@@ -28,14 +48,14 @@ export function EquipmentCard({ item }: { item: Equipment }) {
         </Link>
 
         {/* Image overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/5 pointer-events-none" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/5" />
 
         {/* Category */}
         <span className="absolute left-3 top-3 bg-[#fffdfb]/95 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[1px] text-[#79563e] shadow-sm">
           {item.category}
         </span>
 
-        {/* Favorite */}
+        {/* Favorite heart */}
         <div className="absolute right-3 top-3">
           <FavoriteButton item={item} />
         </div>
@@ -106,13 +126,33 @@ export function EquipmentCard({ item }: { item: Equipment }) {
             </p>
           </div>
 
-          <Link
-            href={`/equipment/${item._id}`}
-            aria-label={`View ${item.title}`}
-            className="flex h-9 w-9 shrink-0 items-center justify-center border border-[#e9e1d8] text-[#79563e] transition-all hover:border-[#79563e] hover:bg-[#79563e] hover:text-white"
-          >
-            <ArrowUpRight className="h-4 w-4" />
-          </Link>
+          <div className="flex shrink-0 items-center gap-2">
+            {/* Delete button: shown only on Favorites */}
+            {onDelete && (
+              <button
+                type="button"
+                onClick={() => onDelete(item._id)}
+                disabled={deleting}
+                aria-label={`Delete ${item.title} from favorites`}
+                title="Delete from favorites"
+                className="flex h-9 w-9 items-center justify-center border border-[#e9e1d8] text-[#79563e] transition-all hover:border-red-300 hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {deleting ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Trash2 className="h-4 w-4" />
+                )}
+              </button>
+            )}
+
+            <Link
+              href={`/equipment/${item._id}`}
+              aria-label={`View ${item.title}`}
+              className="flex h-9 w-9 items-center justify-center border border-[#e9e1d8] text-[#79563e] transition-all hover:border-[#79563e] hover:bg-[#79563e] hover:text-white"
+            >
+              <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
       </div>
     </article>

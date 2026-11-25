@@ -6,13 +6,17 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import {
+  ArrowRight,
   ArrowUpRight,
   CalendarDays,
+  CheckCircle2,
   Heart,
   ListChecks,
   PackagePlus,
   Wallet,
   BriefcaseBusiness,
+  Search,
+  UserRound,
 } from "lucide-react";
 
 import {
@@ -33,7 +37,6 @@ import { AuthGuard } from "@/components/AuthGuard";
 import {
   EmptyState,
   ErrorState,
-  PageHeader,
   StatusBadge,
 } from "@/components/ui";
 
@@ -48,7 +51,6 @@ function DashboardContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Determine the current user's role.
   const userRole = String(user?.role ?? role ?? "")
     .trim()
     .toLowerCase();
@@ -56,21 +58,18 @@ function DashboardContent() {
   const isOwner = userRole === "owner";
   const isAdmin = userRole === "admin";
 
-  // Redirect administrators to their dashboard.
   useEffect(() => {
     if (status === "authenticated" && isAdmin) {
       router.replace("/admin");
     }
   }, [status, isAdmin, router]);
 
-  // Load dashboard information according to the user's role.
   async function load() {
     setLoading(true);
     setError("");
 
     try {
       if (isOwner) {
-        // Owners see incoming booking requests for their equipment.
         const [ownerBookings, myListings] = await Promise.all([
           fetchOwnerBookings(),
           fetchMyListings(),
@@ -79,7 +78,6 @@ function DashboardContent() {
         setBookings(ownerBookings);
         setListings(myListings);
       } else {
-        // Customers see the rentals they requested.
         const myBookings = await fetchMyBookings();
 
         setBookings(myBookings);
@@ -92,7 +90,6 @@ function DashboardContent() {
     }
   }
 
-  // Load data after authentication is complete.
   useEffect(() => {
     if (status !== "authenticated" || isAdmin) {
       return;
@@ -103,12 +100,10 @@ function DashboardContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, isOwner, isAdmin]);
 
-  // Avoid showing the wrong dashboard during authentication.
   if (status === "loading" || status !== "authenticated" || isAdmin) {
     return null;
   }
 
-  // Calculate booking statistics.
   const active = bookings.filter(
     (booking) =>
       booking.status === "pending" ||
@@ -126,7 +121,6 @@ function DashboardContent() {
       0
     );
 
-  // Dashboard statistics.
   const stats = [
     {
       label: isOwner ? "Incoming requests" : "Active rentals",
@@ -134,36 +128,35 @@ function DashboardContent() {
       hint: isOwner
         ? "Pending or confirmed requests"
         : "Pending or confirmed",
-      icon: <CalendarDays size={19} />,
+      icon: CalendarDays,
     },
     {
       label: "Saved equipment",
       value: loading ? "…" : ids.length,
       hint: "In your favorites",
-      icon: <Heart size={19} />,
+      icon: Heart,
     },
     {
       label: "Completed rentals",
       value: loading ? "…" : completed.length,
       hint: "All time",
-      icon: <ListChecks size={19} />,
+      icon: ListChecks,
     },
     isOwner
       ? {
           label: "My listings",
           value: loading ? "…" : listings.length,
           hint: "Equipment you own",
-          icon: <PackagePlus size={19} />,
+          icon: PackagePlus,
         }
       : {
           label: "Total spent",
           value: loading ? "…" : money(paidAmount),
           hint: "Successful payments",
-          icon: <Wallet size={19} />,
+          icon: Wallet,
         },
   ];
 
-  // Dashboard quick links.
   const quickLinks = [
     {
       title: "Browse equipment",
@@ -196,276 +189,331 @@ function DashboardContent() {
   ];
 
   return (
-    <div className="wrap section">
-      <PageHeader
-        eyebrow={isOwner ? "Owner workspace" : "Customer dashboard"}
-        title={`Welcome back, ${(user?.name || "there").split(" ")[0]}`}
-        description={
-          isOwner
-            ? "Manage your equipment, incoming customer bookings and business activity."
-            : "Track your rental requests, payments and saved equipment."
-        }
-        actions={
-          <>
+    <main className="min-h-screen bg-[#FFFCFA] px-4 py-8 text-[#292723] sm:px-6 lg:px-8 lg:py-12">
+      <div className="mx-auto max-w-[1160px]">
+
+        {/* Welcome header */}
+        <section className="mb-9 flex flex-col justify-between gap-6 border-b border-[#E8DFD6] pb-8 lg:flex-row lg:items-end">
+          <div>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#9A7656]">
+              {isOwner ? "Owner workspace" : "Customer dashboard"}
+            </p>
+
+            <h1 className="text-3xl font-semibold tracking-tight text-[#292723] sm:text-4xl">
+              Welcome back, {(user?.name || "there").split(" ")[0]}
+            </h1>
+
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-[#82776D] sm:text-base">
+              {isOwner
+                ? "Manage your equipment, incoming customer bookings and business activity."
+                : "Track your rental requests, payments and saved equipment."}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-3">
             {isOwner && (
-              <Link className="btn" href="/owner">
+              <Link
+                href="/owner"
+                className="inline-flex h-11 items-center gap-2 rounded-xl border border-[#E8DFD6] bg-white px-4 text-sm font-semibold text-[#79563E] transition hover:border-[#79563E] hover:bg-[#F8F3EE]"
+              >
                 <BriefcaseBusiness size={16} />
                 Owner workspace
               </Link>
             )}
 
-            <Link className="btn" href="/equipment">
+            <Link
+              href="/equipment"
+              className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#79563E] px-5 text-sm font-semibold text-white transition hover:bg-[#62432F]"
+            >
+              <Search size={16} />
               Find equipment
             </Link>
 
-            <Link className="btn btn-outline" href="/profile">
+            <Link
+              href="/profile"
+              className="inline-flex h-11 items-center gap-2 rounded-xl border border-[#E8DFD6] bg-white px-4 text-sm font-semibold text-[#79563E] transition hover:border-[#79563E] hover:bg-[#F8F3EE]"
+            >
+              <UserRound size={16} />
               Edit profile
             </Link>
-          </>
-        }
-      />
-
-      {error && (
-        <div style={{ marginBottom: 22 }}>
-          <ErrorState
-            message={error}
-            onRetry={() => void load()}
-          />
-        </div>
-      )}
-
-      {!error && (
-        <>
-          {/* Statistics */}
-          <div className="grid4">
-            {stats.map((stat) => (
-              <div className="card stat" key={stat.label}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    gap: 10,
-                  }}
-                >
-                  <p>{stat.label}</p>
-
-                  <span className="stat-icon">
-                    {stat.icon}
-                  </span>
-                </div>
-
-                <h2>{stat.value}</h2>
-
-                <small className="muted">{stat.hint}</small>
-              </div>
-            ))}
           </div>
+        </section>
 
-          {/* Main dashboard content */}
-          <div
-            className="grid2"
-            style={{ marginTop: 30, alignItems: "start" }}
-          >
-            {/* Recent bookings */}
-            <div className="card card-pad">
-              <div
-                className="section-head"
-                style={{ marginBottom: 14 }}
-              >
-                <div>
-                  <div className="eyebrow">
-                    {isOwner ? "Customer activity" : "Recent activity"}
-                  </div>
+        {/* Error state */}
+        {error && (
+          <div className="mb-7">
+            <ErrorState
+              message={error}
+              onRetry={() => void load()}
+            />
+          </div>
+        )}
 
-                  <h2 className="h3" style={{ marginTop: 8 }}>
-                    {isOwner
-                      ? "Incoming rental requests"
-                      : "Your latest bookings"}
-                  </h2>
-                </div>
+        {!error && (
+          <>
+            {/* Statistics */}
+            <section>
+              <div className="mb-5">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9A7656]">
+                  Overview
+                </p>
 
-                <Link
-                  href={isOwner ? "/owner" : "/my-rentals"}
-                  className="btn btn-ghost btn-sm"
-                >
-                  View all <ArrowUpRight size={15} />
-                </Link>
+                <h2 className="mt-2 text-xl font-semibold text-[#292723]">
+                  Your activity
+                </h2>
               </div>
 
-              {loading && (
-                <div style={{ display: "grid", gap: 12 }}>
-                  {[0, 1, 2].map((row) => (
-                    <div
-                      className="skeleton"
-                      key={row}
-                      style={{ height: 56 }}
-                    />
-                  ))}
-                </div>
-              )}
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                {stats.map((stat) => {
+                  const Icon = stat.icon;
 
-              {!loading && bookings.length === 0 && (
-                <EmptyState
-                  icon={<CalendarDays size={28} />}
-                  title={
-                    isOwner
-                      ? "No rental requests yet"
-                      : "No bookings yet"
-                  }
-                  description={
-                    isOwner
-                      ? "When customers request your equipment, their bookings will appear here."
-                      : "When you request a rental, it will show up here with its live status."
-                  }
-                  action={
-                    <Link className="btn" href="/equipment">
-                      Explore equipment
-                    </Link>
-                  }
-                />
-              )}
+                  return (
+                    <article
+                      key={stat.label}
+                      className="rounded-2xl border border-[#E8DFD6] bg-white p-5 shadow-[0_4px_24px_rgba(60,40,20,0.035)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(60,40,20,0.06)]"
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                        <p className="text-sm font-medium text-[#82776D]">
+                          {stat.label}
+                        </p>
 
-              {!loading &&
-                bookings.slice(0, 5).map((booking) => (
-                  <div
-                    className="rentrow"
-                    key={booking._id}
-                    style={{
-                      gridTemplateColumns: "1.4fr 1fr auto",
-                    }}
-                  >
-                    <div>
-                      <strong>
-                        {booking.equipmentTitle || "Equipment"}
-                      </strong>
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F5EEE8] text-[#79563E]">
+                          <Icon size={19} />
+                        </div>
+                      </div>
 
-                      <small
-                        className="muted"
-                        style={{
-                          display: "block",
-                          fontSize: 13,
-                        }}
-                      >
-                        {formatDateRange(
-                          booking.startDate,
-                          booking.endDate
-                        )}
-                      </small>
-                    </div>
+                      <h3 className="mt-5 break-words text-3xl font-semibold tracking-tight text-[#292723]">
+                        {stat.value}
+                      </h3>
 
-                    <strong>{money(booking.amount)}</strong>
+                      <p className="mt-2 text-xs text-[#9A8D80]">
+                        {stat.hint}
+                      </p>
+                    </article>
+                  );
+                })}
+              </div>
+            </section>
 
-                    <StatusBadge status={booking.status} />
+            {/* Main dashboard */}
+            <div className="mt-8 grid items-start gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+
+              {/* Recent bookings */}
+              <section className="overflow-hidden rounded-2xl border border-[#E8DFD6] bg-white shadow-[0_4px_24px_rgba(60,40,20,0.035)]">
+                <div className="flex flex-col justify-between gap-3 border-b border-[#E8DFD6] px-5 py-5 sm:flex-row sm:items-center sm:px-7">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9A7656]">
+                      {isOwner ? "Customer activity" : "Recent activity"}
+                    </p>
+
+                    <h2 className="mt-2 text-lg font-semibold text-[#292723]">
+                      {isOwner
+                        ? "Incoming rental requests"
+                        : "Your latest bookings"}
+                    </h2>
                   </div>
-                ))}
-            </div>
 
-            {/* Quick actions and role information */}
-            <div className="stack">
-              <div className="card card-pad">
-                <div className="eyebrow">
-                  Quick actions
+                  <Link
+                    href={isOwner ? "/owner" : "/my-rentals"}
+                    className="inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-[#79563E] transition hover:text-[#62432F]"
+                  >
+                    View all
+                    <ArrowUpRight size={16} />
+                  </Link>
                 </div>
 
-                <div
-                  style={{
-                    display: "grid",
-                    gap: 10,
-                    marginTop: 14,
-                  }}
-                >
-                  {quickLinks.map(
-                    ({ title, description, href, icon: Icon }) => (
-                      <Link
-                        key={title}
-                        href={href}
-                        style={{
-                          display: "flex",
-                          gap: 14,
-                          alignItems: "center",
-                          padding: "12px 14px",
-                          border: "1px solid var(--line)",
-                          borderRadius: 14,
-                          transition:
-                            "border-color .16s ease, background .16s ease",
-                        }}
-                      >
-                        <span className="stat-icon">
-                          <Icon size={18} />
-                        </span>
-
-                        <span style={{ minWidth: 0 }}>
-                          <strong
-                            style={{
-                              display: "block",
-                              fontSize: 14.5,
-                            }}
-                          >
-                            {title}
-                          </strong>
-
-                          <span
-                            className="muted"
-                            style={{ fontSize: 13 }}
-                          >
-                            {description}
-                          </span>
-                        </span>
-
-                        <ArrowUpRight
-                          size={16}
-                          style={{
-                            marginLeft: "auto",
-                            color: "var(--muted)",
-                          }}
+                <div className="p-5 sm:p-7">
+                  {loading && (
+                    <div className="grid gap-3">
+                      {[0, 1, 2].map((row) => (
+                        <div
+                          key={row}
+                          className="h-[76px] animate-pulse rounded-xl bg-[#F8F3EE]"
                         />
-                      </Link>
-                    )
+                      ))}
+                    </div>
+                  )}
+
+                  {!loading && bookings.length === 0 && (
+                    <EmptyState
+                      icon={<CalendarDays size={28} />}
+                      title={
+                        isOwner
+                          ? "No rental requests yet"
+                          : "No bookings yet"
+                      }
+                      description={
+                        isOwner
+                          ? "When customers request your equipment, their bookings will appear here."
+                          : "When you request a rental, it will show up here with its live status."
+                      }
+                      action={
+                        <Link
+                          className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#79563E] px-5 text-sm font-semibold text-white transition hover:bg-[#62432F]"
+                          href="/equipment"
+                        >
+                          Explore equipment
+                          <ArrowRight size={16} />
+                        </Link>
+                      }
+                    />
+                  )}
+
+                  {!loading && bookings.length > 0 && (
+                    <div className="divide-y divide-[#EEE7E0]">
+                      {bookings.slice(0, 5).map((booking) => (
+                        <div
+                          key={booking._id}
+                          className="flex flex-col justify-between gap-3 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-center"
+                        >
+                          <div className="min-w-0">
+                            <h3 className="truncate text-sm font-semibold text-[#443B34]">
+                              {booking.equipmentTitle || "Equipment"}
+                            </h3>
+
+                            <p className="mt-1 text-xs text-[#82776D]">
+                              {formatDateRange(
+                                booking.startDate,
+                                booking.endDate
+                              )}
+                            </p>
+                          </div>
+
+                          <div className="flex items-center justify-between gap-4 sm:justify-end">
+                            <strong className="text-sm font-semibold text-[#79563E]">
+                              {money(booking.amount)}
+                            </strong>
+
+                            <StatusBadge status={booking.status} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   )}
                 </div>
-              </div>
+              </section>
 
-              {isOwner ? (
-                <div className="notice">
-                  <strong
-                    style={{
-                      display: "block",
-                      marginBottom: 4,
-                    }}
-                  >
-                    Owner tools are active
-                  </strong>
+              {/* Right column */}
+              <div className="space-y-6">
 
-                  Manage incoming rental requests and your equipment
-                  from your owner workspace.
+                {/* Quick actions */}
+                <section className="rounded-2xl border border-[#E8DFD6] bg-white p-5 shadow-[0_4px_24px_rgba(60,40,20,0.035)] sm:p-7">
+                  <div className="mb-5">
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9A7656]">
+                      Shortcuts
+                    </p>
 
-                  <div style={{ marginTop: 12 }}>
-                    <Link href="/owner" className="btn">
+                    <h2 className="mt-2 text-lg font-semibold text-[#292723]">
+                      Quick actions
+                    </h2>
+
+                    <p className="mt-1 text-xs text-[#82776D]">
+                      Everything you need, in one place.
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    {quickLinks.map(
+                      ({ title, description, href, icon: Icon }) => (
+                        <Link
+                          key={title}
+                          href={href}
+                          className="group flex items-center gap-3 rounded-xl border border-transparent p-3 transition hover:border-[#E8DFD6] hover:bg-[#FFFCFA]"
+                        >
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F5EEE8] text-[#79563E] transition group-hover:bg-[#79563E] group-hover:text-white">
+                            <Icon size={18} />
+                          </div>
+
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-semibold text-[#443B34]">
+                              {title}
+                            </p>
+
+                            <p className="mt-1 text-xs leading-5 text-[#96897D]">
+                              {description}
+                            </p>
+                          </div>
+
+                          <ArrowUpRight
+                            size={16}
+                            className="shrink-0 text-[#B5A89B] transition group-hover:translate-x-0.5 group-hover:text-[#79563E]"
+                          />
+                        </Link>
+                      )
+                    )}
+                  </div>
+                </section>
+
+                {/* Role information */}
+                {isOwner ? (
+                  <section className="rounded-2xl border border-[#E8DFD6] bg-[#F8F3EE] p-6">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-[#79563E]">
+                        <BriefcaseBusiness size={19} />
+                      </div>
+
+                      <div>
+                        <h3 className="font-semibold text-[#79563E]">
+                          Owner tools are active
+                        </h3>
+
+                        <p className="mt-1 text-xs text-[#82776D]">
+                          Your owner workspace is ready.
+                        </p>
+                      </div>
+                    </div>
+
+                    <p className="mt-4 text-sm leading-6 text-[#82776D]">
+                      Manage incoming rental requests and your
+                      equipment from your owner workspace.
+                    </p>
+
+                    <Link
+                      href="/owner"
+                      className="mt-5 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#79563E] px-4 text-sm font-semibold text-white transition hover:bg-[#62432F]"
+                    >
                       Manage bookings and listings
                       <ArrowUpRight size={16} />
                     </Link>
-                  </div>
-                </div>
-              ) : (
-                <div className="notice notice-info">
-                  <strong
-                    style={{
-                      display: "block",
-                      marginBottom: 4,
-                    }}
-                  >
-                    Want to earn from your gear?
-                  </strong>
+                  </section>
+                ) : (
+                  <section className="rounded-2xl border border-[#E8DFD6] bg-[#F8F3EE] p-6">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-[#79563E]">
+                        <PackagePlus size={19} />
+                      </div>
 
-                  Ask an administrator to enable owner tools
-                  for your account, then list your first item.
+                      <h3 className="font-semibold text-[#79563E]">
+                        Earn from your equipment
+                      </h3>
+                    </div>
+
+                    <p className="mt-4 text-sm leading-6 text-[#82776D]">
+                      Have equipment you don't use every day?
+                      Ask an administrator to enable owner tools
+                      for your account, then list your first item.
+                    </p>
+                  </section>
+                )}
+
+                {/* Account note */}
+                <div className="flex items-start gap-3 rounded-xl border border-[#E8DFD6] bg-white p-4">
+                  <CheckCircle2
+                    size={18}
+                    className="mt-0.5 shrink-0 text-[#79563E]"
+                  />
+
+                  <p className="text-xs leading-5 text-[#82776D]">
+                    Your dashboard keeps your rental activity,
+                    saved equipment and account shortcuts together.
+                  </p>
                 </div>
-              )}
+              </div>
             </div>
-          </div>
-        </>
-      )}
-    </div>
+          </>
+        )}
+      </div>
+    </main>
   );
 }
 

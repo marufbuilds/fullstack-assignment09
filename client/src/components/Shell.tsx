@@ -1,7 +1,5 @@
+ 
 "use client";
-
-// Holds the mobile menu state and renders the whole app shell:
-// top navbar, sidebar navigation, page content and footer.
 
 import { useEffect, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
@@ -14,19 +12,35 @@ export function Shell({ children }: { children: ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  // Always close the drawer when the route changes.
+  const isHomePage = pathname === "/";
+
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
 
   return (
-    <>
-      <Navbar onToggleMenu={() => setMenuOpen((open) => !open)} />
-      <Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} />
-      <div className="app-content">
-        <main>{children}</main>
-        <Footer />
+    <div className="min-h-screen w-full bg-[#FFFCFA] text-[#292723]">
+      <Navbar
+        onToggleMenu={() => {
+          if (!isHomePage) {
+            setMenuOpen((open) => !open);
+          }
+        }}
+      />
+
+      <div className="flex min-h-[calc(100vh-72px)] w-full">
+        {!isHomePage && (
+          <Sidebar
+            open={menuOpen}
+            onClose={() => setMenuOpen(false)}
+          />
+        )}
+
+        <div className="min-w-0 w-full flex-1">
+          <main className="min-h-[60vh] w-full">{children}</main>
+          <Footer />
+        </div>
       </div>
-    </>
+    </div>
   );
 }
