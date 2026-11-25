@@ -15,12 +15,8 @@ import {
   UserRound,
   BriefcaseBusiness,
   PackagePlus,
-  Mail,
-  Calendar,
   LockKeyhole,
   CircleUserRound,
-  AlertCircle,
-  X,
 } from "lucide-react";
 
 import {
@@ -31,25 +27,21 @@ import {
 
 import { useAuth } from "@/lib/auth";
 import { formatDate, initials } from "@/lib/format";
+import { useToast } from "@/lib/toast";
 
 import type { AuthUser } from "@/lib/types";
 
 import { AuthGuard } from "@/components/AuthGuard";
 import { Spinner } from "@/components/ui";
 
-type ToastType = "success" | "error";
-
 function ProfileContent() {
   const { user, role, refresh, signOut } = useAuth();
+  const { showToast } = useToast();
 
   const [profile, setProfile] = useState<AuthUser | null>(null);
   const [name, setName] = useState("");
 
   const [error, setError] = useState("");
-  const [toast, setToast] = useState<{
-    message: string;
-    type: ToastType;
-  } | null>(null);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -73,21 +65,6 @@ function ProfileContent() {
 
   const email = profile?.email || user?.email || "";
 
-  // Automatically hide toast after 4 seconds.
-  useEffect(() => {
-    if (!toast) return;
-
-    const timeout = window.setTimeout(() => {
-      setToast(null);
-    }, 4000);
-
-    return () => window.clearTimeout(timeout);
-  }, [toast]);
-
-  function showToast(message: string, type: ToastType = "success") {
-    setToast({ message, type });
-  }
-
   useEffect(() => {
     setImageFailed(false);
   }, [profileImage]);
@@ -103,6 +80,7 @@ function ProfileContent() {
       setName(data.name || "");
     } catch (caught) {
       const message = errorMessage(caught);
+
       setError(message);
       showToast(message, "error");
     } finally {
@@ -129,7 +107,7 @@ function ProfileContent() {
     }
 
     if (trimmedName === (profile?.name || user?.name || "")) {
-      showToast("Your profile is already up to date.");
+      showToast("Your profile is already up to date.", "info");
       return;
     }
 
@@ -145,9 +123,14 @@ function ProfileContent() {
 
       setName(trimmedName);
 
-      await refresh();
+      showToast(
+        "Your profile was updated successfully.",
+        "success"
+      );
 
-      showToast("Your profile was updated successfully.");
+      void refresh().catch((caught) => {
+        console.error("Profile refresh failed:", caught);
+      });
     } catch (caught) {
       showToast(errorMessage(caught), "error");
     } finally {
@@ -245,49 +228,6 @@ function ProfileContent() {
 
   return (
     <div className="min-h-screen bg-[#FFFCFA] px-4 py-8 text-[#292723] sm:px-6 lg:px-8 lg:py-12">
-
-      {/* Toast notification */}
-      {toast && (
-        <div
-          role="status"
-          aria-live="polite"
-          className="fixed right-4 top-5 z-[100] flex w-[calc(100%-2rem)] max-w-sm items-start gap-3 rounded-2xl border border-[#E8DFD6] bg-white p-4 shadow-[0_12px_40px_rgba(60,40,20,0.12)] animate-in slide-in-from-top-3 fade-in duration-300"
-        >
-          <div
-            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
-              toast.type === "success"
-                ? "bg-[#F0F5ED] text-[#66805D]"
-                : "bg-red-50 text-red-600"
-            }`}
-          >
-            {toast.type === "success" ? (
-              <Check size={21} />
-            ) : (
-              <AlertCircle size={21} />
-            )}
-          </div>
-
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-[#292723]">
-              {toast.type === "success" ? "Success" : "Something went wrong"}
-            </p>
-
-            <p className="mt-1 text-xs leading-5 text-[#82776D]">
-              {toast.message}
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setToast(null)}
-            aria-label="Close notification"
-            className="rounded-lg p-1 text-[#A0968D] transition hover:bg-[#F8F3EE] hover:text-[#79563E]"
-          >
-            <X size={17} />
-          </button>
-        </div>
-      )}
-
       <div className="mx-auto max-w-[1120px]">
 
         {/* Page heading */}
@@ -332,6 +272,7 @@ function ProfileContent() {
         {loading && (
           <div className="grid gap-6 lg:grid-cols-[1.3fr_0.8fr]">
             <div className="h-[460px] animate-pulse rounded-2xl border border-[#E8DFD6] bg-white" />
+
             <div className="space-y-6">
               <div className="h-[260px] animate-pulse rounded-2xl border border-[#E8DFD6] bg-white" />
               <div className="h-[240px] animate-pulse rounded-2xl border border-[#E8DFD6] bg-white" />
@@ -344,7 +285,6 @@ function ProfileContent() {
 
             {/* Profile information */}
             <section className="overflow-hidden rounded-2xl border border-[#E8DFD6] bg-white shadow-[0_4px_24px_rgba(60,40,20,0.035)]">
-
               <div className="border-b border-[#E8DFD6] px-6 py-5 sm:px-8">
                 <h2 className="text-lg font-semibold text-[#292723]">
                   Personal information
@@ -380,7 +320,6 @@ function ProfileContent() {
 
                 {/* Form fields */}
                 <div className="space-y-5">
-
                   <div>
                     <label
                       htmlFor="profile-name"
@@ -389,26 +328,17 @@ function ProfileContent() {
                       Full name
                     </label>
 
-                    <div className="relative">
-                      <UserRound
-                        size={17}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9A8D80]"
-                      />
-
-                      <input
-                        id="profile-name"
-                        value={name}
-                        onChange={(event) => {
-                          setName(event.target.value);
-                        }}
-                        minLength={2}
-                        maxLength={80}
-                        required
-                        autoComplete="name"
-                        placeholder="Enter your full name"
-                        className="h-12 w-full rounded-xl border border-[#E8DFD6] bg-[#FFFCFA] pl-11 pr-4 text-sm text-[#292723] outline-none transition placeholder:text-[#A99D92] focus:border-[#79563E] focus:ring-2 focus:ring-[#79563E]/10"
-                      />
-                    </div>
+                    <input
+                      id="profile-name"
+                      value={name}
+                      onChange={(event) => setName(event.target.value)}
+                      minLength={2}
+                      maxLength={80}
+                      required
+                      autoComplete="name"
+                      placeholder="Enter your full name"
+                      className="h-12 w-full rounded-xl border border-[#E8DFD6] bg-[#FFFCFA] px-4 text-sm text-[#292723] outline-none transition placeholder:text-[#A99D92] focus:border-[#79563E] focus:ring-2 focus:ring-[#79563E]/10"
+                    />
                   </div>
 
                   <div>
@@ -419,21 +349,14 @@ function ProfileContent() {
                       Email address
                     </label>
 
-                    <div className="relative">
-                      <Mail
-                        size={17}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9A8D80]"
-                      />
-
-                      <input
-                        id="profile-email"
-                        value={email}
-                        disabled
-                        readOnly
-                        type="email"
-                        className="h-12 w-full cursor-not-allowed rounded-xl border border-[#E8DFD6] bg-[#F8F5F1] pl-11 pr-4 text-sm text-[#82776D] outline-none"
-                      />
-                    </div>
+                    <input
+                      id="profile-email"
+                      value={email}
+                      disabled
+                      readOnly
+                      type="email"
+                      className="h-12 w-full cursor-not-allowed rounded-xl border border-[#E8DFD6] bg-[#F8F5F1] px-4 text-sm text-[#82776D] outline-none"
+                    />
 
                     <p className="mt-2 text-xs text-[#9A8D80]">
                       Your email address cannot be changed here.
@@ -448,22 +371,15 @@ function ProfileContent() {
                       Member since
                     </label>
 
-                    <div className="relative">
-                      <Calendar
-                        size={17}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9A8D80]"
-                      />
-
-                      <input
-                        id="profile-date"
-                        value={formatDate(
-                          profile?.createdAt || user?.createdAt
-                        )}
-                        disabled
-                        readOnly
-                        className="h-12 w-full cursor-not-allowed rounded-xl border border-[#E8DFD6] bg-[#F8F5F1] pl-11 pr-4 text-sm text-[#82776D] outline-none"
-                      />
-                    </div>
+                    <input
+                      id="profile-date"
+                      value={formatDate(
+                        profile?.createdAt || user?.createdAt
+                      )}
+                      disabled
+                      readOnly
+                      className="h-12 w-full cursor-not-allowed rounded-xl border border-[#E8DFD6] bg-[#F8F5F1] px-4 text-sm text-[#82776D] outline-none"
+                    />
                   </div>
                 </div>
 
@@ -493,11 +409,7 @@ function ProfileContent() {
                     disabled={signingOut}
                     className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-[#E8DFD6] bg-white px-6 text-sm font-semibold text-[#79563E] transition hover:border-[#79563E] hover:bg-[#F8F3EE] disabled:opacity-60"
                   >
-                    {signingOut ? (
-                      <Spinner />
-                    ) : (
-                      <LogOut size={17} />
-                    )}
+                    {signingOut ? <Spinner /> : <LogOut size={17} />}
 
                     {signingOut ? "Signing out..." : "Sign out"}
                   </button>
@@ -510,7 +422,6 @@ function ProfileContent() {
 
               {/* Account permissions */}
               <section className="rounded-2xl border border-[#E8DFD6] bg-white p-6 shadow-[0_4px_24px_rgba(60,40,20,0.035)] sm:p-7">
-
                 <div className="mb-5 flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F5EEE8] text-[#79563E]">
                     <LockKeyhole size={19} />
@@ -596,7 +507,6 @@ function ProfileContent() {
 
               {/* Quick access */}
               <section className="rounded-2xl border border-[#E8DFD6] bg-white p-6 shadow-[0_4px_24px_rgba(60,40,20,0.035)] sm:p-7">
-
                 <div className="mb-5 flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F5EEE8] text-[#79563E]">
                     <CircleUserRound size={20} />
