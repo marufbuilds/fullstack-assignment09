@@ -1,3 +1,4 @@
+ 
 // Equiply API client.
 // Everything the frontend sends to the Express backend goes through here.
 
@@ -13,8 +14,9 @@ import type {
   Paginated,
 } from "./types";
 
-/** Base URL of the Express API, e.g. http://localhost:5000/api */
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+/** Base URL of the Express API. */
+export const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
 export class ApiError extends Error {
   status: number;
@@ -26,11 +28,11 @@ export class ApiError extends Error {
   }
 }
 
-/**
- * Perform a JSON request against the API.
- * Cookies are always sent so Better Auth sessions work.
- */
-export async function api<T>(path: string, options: RequestInit = {}): Promise<T> {
+/** Perform a JSON request against the API. */
+export async function api<T>(
+  path: string,
+  options: RequestInit = {},
+): Promise<T> {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     ...((options.headers as Record<string, string>) || {}),
@@ -53,7 +55,6 @@ export async function api<T>(path: string, options: RequestInit = {}): Promise<T
   }
 
   const text = await response.text();
-
   let data: unknown = null;
 
   try {
@@ -98,11 +99,7 @@ export function isAuthError(error: unknown): boolean {
   return error instanceof ApiError && error.status === 401;
 }
 
-/**
- * Try several paths in order and return the first success.
- * The API documentation and the implementation use slightly different
- * names for a few read-only endpoints.
- */
+/** Try several paths in order and return the first success. */
 async function firstOf<T>(...paths: string[]): Promise<T> {
   let lastError: unknown = null;
 
@@ -124,7 +121,6 @@ async function firstOf<T>(...paths: string[]): Promise<T> {
 
 export function errorMessage(error: unknown): string {
   if (error instanceof Error) return error.message;
-
   return "Something went wrong. Please try again.";
 }
 
@@ -160,12 +156,10 @@ function buildQuery(query: EquipmentQuery): string {
 
   Object.entries(query).forEach(([key, value]) => {
     if (value === undefined || value === null || value === "") return;
-
     params.set(key, String(value));
   });
 
   const qs = params.toString();
-
   return qs ? `?${qs}` : "";
 }
 
@@ -173,7 +167,9 @@ function buildQuery(query: EquipmentQuery): string {
 export async function fetchEquipment(
   query: EquipmentQuery = {},
 ): Promise<Paginated<Equipment>> {
-  const data = await http.get<Paginated<Equipment>>(`/equipment${buildQuery(query)}`);
+  const data = await http.get<Paginated<Equipment>>(
+    `/equipment${buildQuery(query)}`,
+  );
 
   return {
     ...data,
@@ -181,19 +177,21 @@ export async function fetchEquipment(
   };
 }
 
-/** GET /equipment/:id — a single approved listing. */
+/** GET /equipment/:id */
 export async function fetchEquipmentById(id: string): Promise<Equipment> {
   const data = await http.get<Equipment>(`/equipment/${id}`);
-
   return normalizeEquipment(data);
 }
 
-/** POST /equipment — owner submits a listing. */
+/** POST /equipment */
 export async function createEquipment(draft: ListingDraft) {
-  return http.post<{ message: string; equipment: Equipment }>("/equipment", draft);
+  return http.post<{ message: string; equipment: Equipment }>(
+    "/equipment",
+    draft,
+  );
 }
 
-/** GET /equipment/owner/mine — listings owned by the signed-in user. */
+/** GET /equipment/owner/mine */
 export async function fetchMyListings(): Promise<Equipment[]> {
   const data = await firstOf<Equipment[]>(
     "/equipment/owner/mine",
@@ -203,8 +201,11 @@ export async function fetchMyListings(): Promise<Equipment[]> {
   return (data || []).map(normalizeEquipment);
 }
 
-/** PATCH /equipment/:id — owner edits a listing. */
-export async function updateEquipment(id: string, updates: Partial<ListingDraft>) {
+/** PATCH /equipment/:id */
+export async function updateEquipment(
+  id: string,
+  updates: Partial<ListingDraft>,
+) {
   return http.patch<{ message: string }>(`/equipment/${id}`, updates);
 }
 
@@ -213,10 +214,7 @@ export async function deleteEquipment(id: string) {
   return http.del<{ message: string }>(`/equipment/${id}`);
 }
 
-/**
- * POST /bookings — customer requests a rental.
- * Customer phone is saved with the booking.
- */
+/** POST /bookings */
 export async function createBooking(input: {
   equipmentId: string;
   startDate: string;
@@ -226,17 +224,17 @@ export async function createBooking(input: {
   return http.post<Booking>("/bookings", input);
 }
 
-/** GET /bookings/mine — bookings made by the signed-in customer. */
+/** GET /bookings/mine */
 export async function fetchMyBookings(): Promise<Booking[]> {
   return (await http.get<Booking[]>("/bookings/mine")) || [];
 }
 
-/** GET /bookings/owner — bookings on the owner's listings. */
+/** GET /bookings/owner */
 export async function fetchOwnerBookings(): Promise<Booking[]> {
   return (await http.get<Booking[]>("/bookings/owner")) || [];
 }
 
-/** PATCH /bookings/:id/status — owner/admin updates a booking. */
+/** PATCH /bookings/:id/status */
 export async function updateBookingStatus(
   id: string,
   status: string,
@@ -246,9 +244,11 @@ export async function updateBookingStatus(
   });
 }
 
-/** POST /payments/checkout/:bookingId — Stripe Checkout redirect URL. */
+/** POST /payments/checkout/:bookingId */
 export async function startCheckout(bookingId: string): Promise<string> {
-  const data = await http.post<{ url: string }>(`/payments/checkout/${bookingId}`);
+  const data = await http.post<{ url: string }>(
+    `/payments/checkout/${bookingId}`,
+  );
 
   return data.url;
 }
@@ -271,7 +271,6 @@ export async function removeFavorite(equipmentId: string) {
 /** GET /profile */
 export async function fetchProfile(): Promise<AuthUser> {
   const data = await http.get<{ user: AuthUser }>("/profile");
-
   return data.user;
 }
 
@@ -287,34 +286,58 @@ export async function fetchOwnerAnalytics(): Promise<OwnerAnalytics> {
   return http.get<OwnerAnalytics>("/owner/analytics");
 }
 
+/* =========================================
+   ADMIN API
+========================================= */
+
 /** GET /admin/stats */
 export async function fetchAdminStats(): Promise<AdminStats> {
-  return http.get<AdminStats>("/admin/stats");
+  const data = await http.get<{ stats: AdminStats }>("/admin/stats");
+
+  return data.stats;
 }
 
-/** GET /admin/equipment — every listing including pending ones. */
+/** GET /admin/equipment */
 export async function fetchAdminEquipment(): Promise<Equipment[]> {
-  const data = await firstOf<Equipment[]>("/admin/equipment", "/equipment/admin/all");
+  const data = await http.get<{
+    equipment: Equipment[];
+    pagination?: unknown;
+  }>("/admin/equipment?limit=100");
 
-  return (data || []).map(normalizeEquipment);
+  return (data.equipment || []).map(normalizeEquipment);
 }
 
-/** PATCH /admin/equipment/:id/status — approve or reject a listing. */
+/** PATCH /admin/equipment/:id/status */
 export async function setEquipmentStatus(
   id: string,
   status: "approved" | "rejected" | "pending",
 ) {
-  return http.patch<{ message: string }>(`/admin/equipment/${id}/status`, { status });
+  return http.patch<{ message: string }>(
+    `/admin/equipment/${id}/status`,
+    { status },
+  );
 }
 
 /** GET /admin/bookings */
 export async function fetchAdminBookings(): Promise<Booking[]> {
-  return (await firstOf<Booking[]>("/admin/bookings", "/bookings/admin/all")) || [];
+  const data = await http.get<{
+    bookings: Booking[];
+    pagination?: unknown;
+  }>("/admin/bookings?limit=100");
+
+  return data.bookings || [];
 }
 
 /** GET /admin/users */
-export async function fetchAdminUsers(): Promise<(AuthUser & { _id: string })[]> {
-  return (await http.get<(AuthUser & { _id: string })[]>("/admin/users")) || [];
+export async function fetchAdminUsers(): Promise<
+  (AuthUser & { _id: string })[]
+> {
+  const data = await http.get<{
+    users: (AuthUser & { _id: string })[];
+    pagination?: unknown;
+  }>("/admin/users?limit=100");
+
+  return data.users || [];
 }
 
 /** PATCH /admin/users/:id/role */

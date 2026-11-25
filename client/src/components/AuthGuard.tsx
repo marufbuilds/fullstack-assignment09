@@ -14,22 +14,24 @@ type AuthGuardProps = {
   require?: "owner" | "admin";
 };
 
-export function AuthGuard({
-  children,
-  require,
-}: AuthGuardProps) {
+export function AuthGuard({ children, require }: AuthGuardProps) {
   const { status, role, user } = useAuth();
 
   const pathname = usePathname();
   const router = useRouter();
 
-  // Prioritize the auth context role
-  const currentRole = String(role ?? user?.role ?? "")
-    .trim()
-    .toLowerCase();
+  const contextRole = String(role ?? "").trim().toLowerCase();
+  const userRole = String(user?.role ?? "").trim().toLowerCase();
 
-  const isOwner = currentRole === "owner";
-  const isAdmin = currentRole === "admin";
+  // Recognize admin from either auth source.
+  const isAdmin = contextRole === "admin" || userRole === "admin";
+  const isOwner = contextRole === "owner" || userRole === "owner";
+
+  const currentRole = isAdmin
+    ? "admin"
+    : isOwner
+      ? "owner"
+      : contextRole || userRole;
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -46,25 +48,17 @@ export function AuthGuard({
     return <LoadingPage label="Redirecting to sign in…" />;
   }
 
-  // Admin-only access
   if (require === "admin" && !isAdmin) {
     return (
       <div className="wrap section" style={{ maxWidth: 720 }}>
         <div className="card empty">
-          <span
-            className="empty-icon"
-            style={{ background: "#fff6e6", color: "#9a6700" }}
-          >
+          <span className="empty-icon" style={{ background: "#fff6e6", color: "#9a6700" }}>
             <ShieldAlert size={28} />
           </span>
-
           <h1 className="h3">Admin access required</h1>
-
-          <p className="muted" style={{ maxWidth: 470, margin: 0 }}>
+          <p className="muted">
             Your account does not have administrator permissions.
-            Please sign in with an admin account to access this page.
           </p>
-
           <Link className="btn" href="/dashboard">
             Back to dashboard
           </Link>
@@ -73,74 +67,21 @@ export function AuthGuard({
     );
   }
 
-  // Owner or admin access
   if (require === "owner" && !isOwner && !isAdmin) {
     return (
       <div className="wrap section" style={{ maxWidth: 720 }}>
         <div className="card empty">
-          <span
-            className="empty-icon"
-            style={{ background: "#fff6e6", color: "#9a6700" }}
-          >
+          <span className="empty-icon" style={{ background: "#fff6e6", color: "#9a6700" }}>
             <Lock size={28} />
           </span>
-
           <h1 className="h3">Owner access required</h1>
-
-          <p className="muted" style={{ maxWidth: 500, margin: 0 }}>
+          <p className="muted">
             Your current account role is <b>{currentRole || "unknown"}</b>.
-            You need an owner or admin account to manage equipment and rental requests.
+            You need an owner or admin account to access this page.
           </p>
-
-          <div
-            style={{
-              width: "100%",
-              maxWidth: 500,
-              marginTop: 16,
-              padding: 12,
-              borderRadius: 8,
-              background: "#f3f4f6",
-              color: "#111",
-              textAlign: "left",
-              overflowX: "auto",
-            }}
-          >
-            <p style={{ fontWeight: 600, marginBottom: 8 }}>
-              Debug information
-            </p>
-
-            <pre style={{ fontSize: 12, whiteSpace: "pre-wrap" }}>
-              {JSON.stringify(
-                {
-                  email: user?.email,
-                  userRole: user?.role,
-                  contextRole: role,
-                  currentRole,
-                  status,
-                },
-                null,
-                2
-              )}
-            </pre>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              gap: 10,
-              flexWrap: "wrap",
-              justifyContent: "center",
-              marginTop: 16,
-            }}
-          >
-            <Link className="btn" href="/dashboard">
-              Back to dashboard
-            </Link>
-
-            <Link className="btn btn-outline" href="/help">
-              Read the guide
-            </Link>
-          </div>
+          <Link className="btn" href="/dashboard">
+            Back to dashboard
+          </Link>
         </div>
       </div>
     );

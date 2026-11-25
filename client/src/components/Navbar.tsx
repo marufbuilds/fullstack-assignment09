@@ -1,3 +1,4 @@
+ 
 "use client";
 
 import Link from "next/link";
@@ -67,7 +68,16 @@ export function Navbar({ onToggleMenu }: { onToggleMenu: () => void }) {
   const [imageFailed, setImageFailed] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const profileImage = (user as (typeof user & { image?: string | null }) | null)?.image;
+  const normalizedRole = String(role || user?.role || "")
+    .trim()
+    .toLowerCase();
+
+  const isOwner = ["owner", "admin"].includes(normalizedRole);
+  const isAdmin = normalizedRole === "admin";
+
+  const profileImage = (
+    user as (typeof user & { image?: string | null }) | null
+  )?.image;
 
   useEffect(() => {
     setMenuOpen(false);
@@ -79,7 +89,10 @@ export function Navbar({ onToggleMenu }: { onToggleMenu: () => void }) {
 
   useEffect(() => {
     function handleClick(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node)
+      ) {
         setMenuOpen(false);
       }
     }
@@ -90,9 +103,6 @@ export function Navbar({ onToggleMenu }: { onToggleMenu: () => void }) {
       document.removeEventListener("mousedown", handleClick);
     };
   }, []);
-
-  const isOwner = role === "owner" || role === "admin";
-  const isAdmin = role === "admin";
 
   return (
     <header className="topbar">
@@ -179,7 +189,6 @@ export function Navbar({ onToggleMenu }: { onToggleMenu: () => void }) {
                 </span>
 
                 <span className="hide-sm">{user.name.split(" ")[0]}</span>
-
                 <ChevronDown size={16} />
               </button>
 
@@ -230,10 +239,7 @@ export function Navbar({ onToggleMenu }: { onToggleMenu: () => void }) {
 
                       <div style={{ minWidth: 0 }}>
                         <strong
-                          style={{
-                            display: "block",
-                            fontSize: 14.5,
-                          }}
+                          style={{ display: "block", fontSize: 14.5 }}
                         >
                           {user.name}
                         </strong>
@@ -252,11 +258,9 @@ export function Navbar({ onToggleMenu }: { onToggleMenu: () => void }) {
 
                     <span
                       className="badge badge-brand"
-                      style={{
-                        textTransform: "capitalize",
-                      }}
+                      style={{ textTransform: "capitalize" }}
                     >
-                      {role || "member"}
+                      {normalizedRole || "member"}
                     </span>
                   </div>
 

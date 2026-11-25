@@ -8,9 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-
 import { createAuthClient } from "better-auth/react";
-
 import { API_URL } from "./api";
 import type { AuthUser } from "./types";
 
@@ -21,10 +19,7 @@ export const authClient = createAuthClient({
   },
 });
 
-type AuthStatus =
-  | "loading"
-  | "authenticated"
-  | "unauthenticated";
+type AuthStatus = "loading" | "authenticated" | "unauthenticated";
 
 type AuthContextValue = {
   user: AuthUser | null;
@@ -44,42 +39,112 @@ const AuthContext = createContext<AuthContextValue>({
   signOut: async () => {},
 });
 
-export function AuthProvider({
-  children,
-}: {
-  children: ReactNode;
-}) {
+function normalizeRole(value: unknown): string {
+  return String(value ?? "").trim().toLowerCase();
+}
+
+export function AuthProvider({ children }: { children: ReactNode }) {
   const session = authClient.useSession();
 
-  const [status, setStatus] = useState<AuthStatus>("loading");
+  const sessionUser =
+    (session.data?.user as unknown as AuthUser | undefined) ?? null;
 
-  const user =
-    (session.data?.user as unknown as AuthUser | undefined) ??
-    null;
-
-  // Normalize the role so comparisons are consistent.
-  const role = String(user?.role ?? "")
-    .trim()
-    .toLowerCase();
+  const [profileUser, setProfileUser] = useState<AuthUser | null>(null);
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [profileReloadKey, setProfileReloadKey] = useState(0);
 
   useEffect(() => {
-    if (session.isPending) {
-      setStatus("loading");
+    if (!sessionUser?.id) {
+      setProfileUser(null);
+      setProfileLoading(false);
       return;
     }
 
-    setStatus(
-      session.data?.user
-        ? "authenticated"
-        : "unauthenticated"
-    );
-  }, [session.isPending, session.data]);
+    const currentSessionUser = sessionUser;
+    let cancelled = false;
+
+    async function loadProfile() {
+      setProfileLoading(true);
+
+      try {
+        // Correct backend endpoint: GET /api/profile
+        const response = await fetch(`${API_URL}/profile`, {
+          method: "GET",
+          credentials: "include",
+          cache: "no-store",
+        });
+
+        if (!response.ok) {
+          throw new Error(`Profile request failed: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const fetchedUser = data?.user ?? data?.profile ?? null;
+
+        if (!cancelled && fetchedUser) {
+          setProfileUser({
+            ...currentSessionUser,
+            ...fetchedUser,
+            role:
+              normalizeRole(fetchedUser.role) ||
+              normalizeRole(currentSessionUser.role) ||
+              "customer",
+          } as AuthUser);
+        } else if (!cancelled) {
+          setProfileUser(currentSessionUser);
+        }
+      } catch (error) {
+        console.error("Could not load user profile:", error);
+
+        if (!cancelled) {
+          setProfileUser(currentSessionUser);
+        }
+      } finally {
+        if (!cancelled) {
+          setProfileLoading(false);
+        }
+      }
+    }
+
+    void loadProfile();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    sessionUser?.id,
+    sessionUser?.email,
+    sessionUser?.role,
+    profileReloadKey,
+  ]);
+
+  const user: AuthUser | null = sessionUser
+    ? ({
+        ...sessionUser,
+        ...(profileUser ?? {}),
+        role:
+          normalizeRole(profileUser?.role) ||
+          normalizeRole(sessionUser.role) ||
+          "customer",
+      } as AuthUser)
+    : null;
+
+  const role = normalizeRole(user?.role);
+
+  const status: AuthStatus = session.isPending || profileLoading
+    ? "loading"
+    : sessionUser
+      ? "authenticated"
+      : "unauthenticated";
 
   async function refresh() {
+    setProfileUser(null);
     await session.refetch();
+    setProfileReloadKey((current) => current + 1);
   }
 
   async function signOut() {
+    setProfileUser(null);
     await authClient.signOut();
     await session.refetch();
   }
@@ -102,20 +167,4 @@ export function AuthProvider({
 
 export function useAuth() {
   return useContext(AuthContext);
-}
-
-export function nextPath(): string {
-  if (typeof window === "undefined") {
-    return "/dashboard";
-  }
-
-  const value = new URLSearchParams(
-    window.location.search
-  ).get("next");
-
-  if (!value || !value.startsWith("/")) {
-    return "/dashboard";
-  }
-
-  return value;
 }
