@@ -1,6 +1,5 @@
+ 
 "use client";
-
-// Help center: frequently asked questions plus contact options.
 
 import Link from "next/link";
 import { useState } from "react";
@@ -10,9 +9,11 @@ import {
   Mail,
   MessageSquare,
   PackageSearch,
+  ArrowRight,
+  Headphones,
+  Clock3,
+  ShieldCheck,
 } from "lucide-react";
-
-import { Notice, PageHeader } from "@/components/ui";
 
 const faqs: { question: string; answer: string }[] = [
   {
@@ -51,107 +52,181 @@ export default function HelpPage() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <div className="wrap section" style={{ maxWidth: 900 }}>
-      <PageHeader
-        eyebrow="Help center"
-        title="Frequently asked questions"
-        description="A quick guide to using the Equiply marketplace, from booking your first rental to listing your own gear."
-      />
+    <main className="min-h-screen bg-[#FFFCFA] text-[#292723]">
+      <div className="mx-auto max-w-[1000px] px-4 py-10 sm:px-8 md:py-14">
 
-      <div className="stack">
-        {faqs.map((faq, index) => {
-          const isOpen = open === index;
-          return (
-            <article className="card faq" key={faq.question}>
-              <button
-                onClick={() => setOpen(isOpen ? null : index)}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  gap: 16,
-                  alignItems: "center",
-                  background: "none",
-                  border: 0,
-                  padding: 0,
-                  textAlign: "left",
-                  color: "inherit",
-                }}
-                aria-expanded={isOpen}
+        {/* Page heading */}
+        <div className="mb-10">
+          <div className="mb-4 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[2px] text-[#9A7656]">
+            <CircleHelp size={15} />
+            Help center
+          </div>
+
+          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+            How can we help?
+          </h1>
+
+          <p className="mt-3 max-w-2xl text-sm leading-7 text-[#82776D] sm:text-base">
+            Find answers to common questions about using Equiply, booking
+            equipment, payments and listing your own equipment.
+          </p>
+        </div>
+
+        {/* FAQ section */}
+        <section>
+          <div className="mb-5 flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-semibold">Frequently asked questions</h2>
+              <p className="mt-1 text-xs text-[#82776D]">
+                Everything you need to know to get started.
+              </p>
+            </div>
+
+            <span className="hidden rounded-full bg-[#F5EEE8] px-3 py-1.5 text-xs font-semibold text-[#79563E] sm:inline-flex">
+              {faqs.length} questions
+            </span>
+          </div>
+
+          <div className="space-y-3">
+            {faqs.map((faq, index) => {
+              const isOpen = open === index;
+
+              return (
+                <article
+                  key={faq.question}
+                  className={`overflow-hidden rounded-2xl border bg-white transition ${
+                    isOpen
+                      ? "border-[#D9C5B2] shadow-[0_5px_20px_rgba(60,40,20,0.045)]"
+                      : "border-[#E8DFD6]"
+                  }`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setOpen(isOpen ? null : index)}
+                    className="flex w-full items-center justify-between gap-5 px-5 py-5 text-left sm:px-6"
+                    aria-expanded={isOpen}
+                  >
+                    <span className="flex items-center gap-4">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F8F3EE] text-xs font-semibold text-[#79563E]">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+
+                      <span className="text-sm font-semibold text-[#292723] sm:text-base">
+                        {faq.question}
+                      </span>
+                    </span>
+
+                    <ChevronDown
+                      size={19}
+                      className={`shrink-0 text-[#9A7656] transition-transform duration-200 ${
+                        isOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {isOpen && (
+                    <div className="border-t border-[#F0EAE4] px-5 pb-5 pt-4 sm:px-6 sm:pl-[76px]">
+                      <p className="text-sm leading-7 text-[#82776D]">
+                        {faq.answer}
+                      </p>
+                    </div>
+                  )}
+                </article>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Support information */}
+        <section className="mt-12">
+          <div className="mb-5">
+            <p className="text-[10px] font-bold uppercase tracking-[2px] text-[#9A7656]">
+              Need more help?
+            </p>
+            <h2 className="mt-2 text-xl font-semibold">
+              We're here to help
+            </h2>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div className="rounded-2xl border border-[#E8DFD6] bg-white p-5">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F8F3EE] text-[#79563E]">
+                <Mail size={19} />
+              </span>
+              <h3 className="mt-4 text-sm font-semibold">Email support</h3>
+              <a
+                href="mailto:support@equiply.example"
+                className="mt-2 block break-all text-xs text-[#79563E] hover:underline"
               >
-                <h3 style={{ margin: 0 }}>{faq.question}</h3>
-                <ChevronDown
-                  size={20}
-                  style={{
-                    transform: isOpen ? "rotate(180deg)" : "none",
-                    transition: "transform .2s ease",
-                    color: "var(--muted)",
-                    flex: "none",
-                  }}
-                />
-              </button>
-              {isOpen && (
-                <p className="muted" style={{ marginTop: 10 }}>
-                  {faq.answer}
-                </p>
-              )}
-            </article>
-          );
-        })}
-      </div>
+                support@equiply.example
+              </a>
+            </div>
 
-      <div className="grid3" style={{ marginTop: 34 }}>
-        <div className="card card-pad">
-          <span className="stat-icon">
-            <Mail size={19} />
-          </span>
-          <h3 className="h3" style={{ fontSize: 17, marginTop: 12 }}>
-            Email support
-          </h3>
-          <p className="muted" style={{ margin: "6px 0 0", fontSize: 14 }}>
-            support@equiply.example
-          </p>
+            <div className="rounded-2xl border border-[#E8DFD6] bg-white p-5">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F8F3EE] text-[#79563E]">
+                <Clock3 size={19} />
+              </span>
+              <h3 className="mt-4 text-sm font-semibold">Response time</h3>
+              <p className="mt-2 text-xs leading-5 text-[#82776D]">
+                Within one business day
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-[#E8DFD6] bg-white p-5">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F8F3EE] text-[#79563E]">
+                <MessageSquare size={19} />
+              </span>
+              <h3 className="mt-4 text-sm font-semibold">Booking help</h3>
+              <p className="mt-2 text-xs leading-5 text-[#82776D]">
+                Keep your booking reference handy
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Getting started CTA */}
+        <section className="relative mt-12 overflow-hidden rounded-2xl bg-[#6C665C] px-6 py-9 sm:px-9 sm:py-11">
+          <div className="pointer-events-none absolute -right-12 -top-20 h-64 w-64 rounded-full border border-white/10" />
+
+          <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <div className="mb-3 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[2px] text-[#E5CDB3]">
+                <ShieldCheck size={15} />
+                Welcome to Equiply
+              </div>
+
+              <h2 className="text-2xl font-semibold text-white">
+                Ready to get started?
+              </h2>
+
+              <p className="mt-3 max-w-xl text-sm leading-6 text-white/75">
+                Create an account to save favorites, request rentals and
+                follow every booking from your dashboard.
+              </p>
+            </div>
+
+            <Link
+              href="/register"
+              className="inline-flex h-12 shrink-0 items-center justify-center rounded-xl bg-[#F5F0E9] px-6 text-sm font-semibold text-[#46372C] transition hover:bg-white"
+            >
+              Create account
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </div>
+        </section>
+
+        {/* Back to marketplace */}
+        <div className="mt-8">
+          <Link
+            href="/equipment"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-[#79563E] transition hover:text-[#62432F]"
+          >
+            <PackageSearch size={17} />
+            Back to marketplace
+            <ArrowRight size={15} />
+          </Link>
         </div>
-
-        <div className="card card-pad">
-          <span className="stat-icon">
-            <MessageSquare size={19} />
-          </span>
-          <h3 className="h3" style={{ fontSize: 17, marginTop: 12 }}>
-            Response time
-          </h3>
-          <p className="muted" style={{ margin: "6px 0 0", fontSize: 14 }}>
-            Within one business day
-          </p>
-        </div>
-
-        <div className="card card-pad">
-          <span className="stat-icon">
-            <CircleHelp size={19} />
-          </span>
-          <h3 className="h3" style={{ fontSize: 17, marginTop: 12 }}>
-            Booking help
-          </h3>
-          <p className="muted" style={{ margin: "6px 0 0", fontSize: 14 }}>
-            Keep your booking reference handy
-          </p>
-        </div>
       </div>
-
-      <div className="notice" style={{ marginTop: 28 }}>
-        <strong style={{ display: "block", marginBottom: 4 }}>New to Equiply?</strong>
-        Create an account to save favorites, request rentals and follow every booking from
-        your dashboard.{" "}
-        <Link href="/register" style={{ fontWeight: 700 }}>
-          Get started →
-        </Link>
-      </div>
-
-      <div style={{ marginTop: 22 }}>
-        <Link className="btn btn-outline" href="/equipment">
-          <PackageSearch size={16} /> Back to marketplace
-        </Link>
-      </div>
-    </div>
+    </main>
   );
 }
