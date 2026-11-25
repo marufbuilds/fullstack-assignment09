@@ -2,61 +2,29 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   CheckCircle2,
   ArrowRight,
   Clock3,
   ShieldCheck,
   PackageCheck,
-  X,
 } from "lucide-react";
 
+import { useToast } from "@/lib/toast";
+
 export default function PaymentSuccessPage() {
-  const [showToast, setShowToast] = useState(true);
+  const { showToast } = useToast();
 
   useEffect(() => {
-    const timeout = window.setTimeout(() => {
-      setShowToast(false);
-    }, 5000);
-
-    return () => window.clearTimeout(timeout);
-  }, []);
+    showToast(
+      "Thank you! Your payment confirmation is being processed.",
+      "success"
+    );
+  }, [showToast]);
 
   return (
     <main className="relative min-h-[75vh] bg-[#FFFCFA] px-4 py-12 text-[#292723] sm:px-6 sm:py-20">
-
-      {/* Success Toast */}
-      {showToast && (
-        <div
-          role="status"
-          aria-live="polite"
-          className="fixed right-4 top-5 z-[100] flex w-[calc(100%-2rem)] max-w-sm items-start gap-3 rounded-2xl border border-[#E8DFD6] bg-white p-4 shadow-[0_12px_40px_rgba(60,40,20,0.12)] animate-in slide-in-from-top-3 fade-in duration-300"
-        >
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F8F3EE] text-[#79563E]">
-            <CheckCircle2 size={21} />
-          </div>
-
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-[#292723]">
-              Checkout completed!
-            </p>
-            <p className="mt-1 text-xs leading-5 text-[#82776D]">
-              Thank you! Your payment confirmation is being processed.
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setShowToast(false)}
-            aria-label="Close notification"
-            className="rounded-lg p-1 text-[#A0968D] transition hover:bg-[#F8F3EE] hover:text-[#79563E]"
-          >
-            <X size={17} />
-          </button>
-        </div>
-      )}
-
       <div className="mx-auto max-w-5xl">
 
         {/* Page Introduction */}
@@ -124,7 +92,6 @@ export default function PaymentSuccessPage() {
 
             {/* Payment Features */}
             <div className="grid gap-6 py-7 sm:grid-cols-2 sm:gap-10">
-
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F8F3EE] text-[#79563E]">
                   <ShieldCheck size={19} strokeWidth={1.6} />
@@ -154,12 +121,10 @@ export default function PaymentSuccessPage() {
                   </p>
                 </div>
               </div>
-
             </div>
 
             {/* Navigation Buttons */}
             <div className="flex flex-col gap-3 border-t border-[#F0EAE4] pt-7 sm:flex-row">
-
               <Link
                 href="/my-rentals"
                 className="group inline-flex min-h-12 flex-1 items-center justify-center gap-3 rounded-xl bg-[#79563E] px-6 py-4 text-xs font-semibold uppercase tracking-[0.1em] text-white transition hover:bg-[#62432F]"
@@ -178,7 +143,6 @@ export default function PaymentSuccessPage() {
               >
                 Explore equipment
               </Link>
-
             </div>
           </div>
         </section>
@@ -193,7 +157,6 @@ export default function PaymentSuccessPage() {
 
           <span className="h-px w-8 bg-[#E8DFD6]" />
         </div>
-
       </div>
     </main>
   );
