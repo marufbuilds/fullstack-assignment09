@@ -4,7 +4,7 @@
 // Owner form: submit a new listing to the marketplace for review.
 
 import Link from "next/link";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -17,6 +17,9 @@ import {
   Send,
   ShieldCheck,
   Tag,
+  AlertCircle,
+  X,
+  Check,
 } from "lucide-react";
 
 import { createEquipment, errorMessage } from "@/lib/api";
@@ -27,7 +30,7 @@ import {
 } from "@/lib/constants";
 
 import { AuthGuard } from "@/components/AuthGuard";
-import { Notice, Spinner } from "@/components/ui";
+import { Spinner } from "@/components/ui";
 
 const initialForm = {
   title: "",
@@ -39,12 +42,34 @@ const initialForm = {
   location: "",
 };
 
+type ToastType = "success" | "error";
+
 function AddEquipmentContent() {
   const router = useRouter();
 
   const [form, setForm] = useState(initialForm);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  const [toast, setToast] = useState<{
+    message: string;
+    type: ToastType;
+  } | null>(null);
+
+  // Automatically hide toast after 4 seconds.
+  useEffect(() => {
+    if (!toast) return;
+
+    const timeout = window.setTimeout(() => {
+      setToast(null);
+    }, 4000);
+
+    return () => window.clearTimeout(timeout);
+  }, [toast]);
+
+  function showToast(message: string, type: ToastType = "success") {
+    setToast({ message, type });
+  }
 
   function change(key: keyof typeof form, value: string) {
     setForm((current) => ({ ...current, [key]: value }));
@@ -58,17 +83,23 @@ function AddEquipmentContent() {
     const price = Number(form.price);
 
     if (!Number.isFinite(price) || price <= 0) {
-      setError("Enter a rental price greater than zero.");
+      const message = "Enter a rental price greater than zero.";
+      setError(message);
+      showToast(message, "error");
       return;
     }
 
     if (form.title.trim().length < 3) {
-      setError("The equipment name needs at least 3 characters.");
+      const message = "The equipment name needs at least 3 characters.";
+      setError(message);
+      showToast(message, "error");
       return;
     }
 
     if (form.description.trim().length < 10) {
-      setError("Describe the equipment in at least 10 characters.");
+      const message = "Describe the equipment in at least 10 characters.";
+      setError(message);
+      showToast(message, "error");
       return;
     }
 
@@ -85,9 +116,16 @@ function AddEquipmentContent() {
         image: form.image.trim() || FALLBACK_IMAGE,
       });
 
-      router.push("/owner/listings");
+      showToast("Your equipment listing was submitted successfully.");
+
+      // Allow the success toast to appear before navigating.
+      window.setTimeout(() => {
+        router.push("/owner/listings");
+      }, 1200);
     } catch (caught) {
-      setError(errorMessage(caught));
+      const message = errorMessage(caught);
+      setError(message);
+      showToast(message, "error");
       setSubmitting(false);
     }
   }
@@ -105,6 +143,49 @@ function AddEquipmentContent() {
 
   return (
     <main className="min-h-screen bg-[#FFFCFA] px-4 py-8 text-[#292723] sm:px-6 lg:px-8 lg:py-12">
+
+      {/* Toast notification */}
+      {toast && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed right-4 top-5 z-[100] flex w-[calc(100%-2rem)] max-w-sm items-start gap-3 rounded-2xl border border-[#E8DFD6] bg-white p-4 shadow-[0_12px_40px_rgba(60,40,20,0.12)] animate-in slide-in-from-top-3 fade-in duration-300"
+        >
+          <div
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
+              toast.type === "success"
+                ? "bg-[#F0F5ED] text-[#66805D]"
+                : "bg-red-50 text-red-600"
+            }`}
+          >
+            {toast.type === "success" ? (
+              <Check size={21} />
+            ) : (
+              <AlertCircle size={21} />
+            )}
+          </div>
+
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold text-[#292723]">
+              {toast.type === "success" ? "Success" : "Something went wrong"}
+            </p>
+
+            <p className="mt-1 text-xs leading-5 text-[#82776D]">
+              {toast.message}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setToast(null)}
+            aria-label="Close notification"
+            className="rounded-lg p-1 text-[#A0968D] transition hover:bg-[#F8F3EE] hover:text-[#79563E]"
+          >
+            <X size={17} />
+          </button>
+        </div>
+      )}
+
       <div className="mx-auto max-w-[1160px]">
 
         {/* Header */}
@@ -383,7 +464,9 @@ function AddEquipmentContent() {
 
               {/* Error */}
               {error && (
-                <Notice kind="error">{error}</Notice>
+                <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                  {error}
+                </div>
               )}
 
               {/* Submit */}
@@ -577,7 +660,6 @@ function AddEquipmentContent() {
                 </p>
               </div>
             </section>
-
           </aside>
         </div>
       </div>

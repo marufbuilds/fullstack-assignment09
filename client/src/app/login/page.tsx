@@ -11,10 +11,20 @@ import {
   ShieldCheck,
   CheckCircle2,
   ArrowRight,
+  X,
+  AlertCircle,
 } from "lucide-react";
 
 import { authClient, useAuth } from "@/lib/auth";
-import { Notice, Spinner } from "@/components/ui";
+import { Spinner } from "@/components/ui";
+
+type ToastType = "success" | "error" | "info";
+
+type ToastData = {
+  type: ToastType;
+  title: string;
+  description: string;
+};
 
 export default function Login() {
   const router = useRouter();
@@ -27,7 +37,10 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [target, setTarget] = useState("/");
+  const [toast, setToast] = useState<ToastData | null>(null);
+  const [loginSucceeded, setLoginSucceeded] = useState(false);
 
+  // Get redirect destination from URL.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const next = params.get("next");
@@ -37,31 +50,73 @@ export default function Login() {
     }
   }, []);
 
+  // Automatically hide toast after 4 seconds.
   useEffect(() => {
-    if (status === "authenticated") {
+    if (!toast) return;
+
+    const timeout = window.setTimeout(() => {
+      setToast(null);
+    }, 4000);
+
+    return () => window.clearTimeout(timeout);
+  }, [toast]);
+
+  // Redirect authenticated users.
+  useEffect(() => {
+    if (status === "authenticated" && !loginSucceeded) {
       router.replace(target);
     }
-  }, [status, target, router]);
+  }, [status, target, router, loginSucceeded]);
+
+  function showToast(
+    type: ToastType,
+    title: string,
+    description: string
+  ) {
+    setToast({ type, title, description });
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
     setMessage("");
+    setToast(null);
     setLoading(true);
 
     try {
       const result = await authClient.signIn.email({
-        email,
+        email: email.trim(),
         password,
       });
 
       if (result.error) {
-        setMessage(result.error.message || "Could not sign you in.");
+        const errorText =
+          result.error.message || "Could not sign you in.";
+
+        setMessage(errorText);
+        showToast("error", "Sign-in failed", errorText);
         return;
       }
 
-      router.replace(target);
-    } catch {
-      setMessage("Could not reach the Equiply API. Is the backend running?");
+      setLoginSucceeded(true);
+
+      showToast(
+        "success",
+        "Welcome back!",
+        "You have signed in successfully. Redirecting..."
+      );
+
+      window.setTimeout(() => {
+        router.replace(target);
+      }, 1200);
+    } catch (error) {
+      console.error("Login error:", error);
+
+      const errorText =
+        "Could not reach the Equiply API. Is the backend running?";
+
+      setMessage(errorText);
+      showToast("error", "Connection failed", errorText);
     } finally {
       setLoading(false);
     }
@@ -69,6 +124,7 @@ export default function Login() {
 
   async function handleGoogle() {
     setMessage("");
+    setToast(null);
     setGoogleLoading(true);
 
     try {
@@ -76,14 +132,64 @@ export default function Login() {
         provider: "google",
         callbackURL: `${window.location.origin}${target}`,
       });
-    } catch {
-      setMessage("Google sign-in could not be started.");
+    } catch (error) {
+      console.error("Google sign-in error:", error);
+
+      const errorText = "Google sign-in could not be started.";
+
+      setMessage(errorText);
+      showToast("error", "Google sign-in failed", errorText);
       setGoogleLoading(false);
     }
   }
 
   return (
-    <main className="min-h-screen bg-[#FFFCFA] px-4 py-6 text-[#292723] sm:px-6 lg:py-10">
+    <main className="relative min-h-screen bg-[#FFFCFA] px-4 py-6 text-[#292723] sm:px-6 lg:py-10">
+
+      {/* Toast Notification */}
+      {toast && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed right-4 top-5 z-[100] flex w-[calc(100%-2rem)] max-w-sm items-start gap-3 rounded-2xl border border-[#E8DFD6] bg-white p-4 shadow-[0_12px_40px_rgba(60,40,20,0.12)] animate-in slide-in-from-top-3 fade-in duration-300"
+        >
+          <div
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
+              toast.type === "success"
+                ? "bg-[#F1F5EF] text-[#54734D]"
+                : toast.type === "error"
+                  ? "bg-[#FDF0ED] text-[#B65E4B]"
+                  : "bg-[#F8F3EE] text-[#79563E]"
+            }`}
+          >
+            {toast.type === "success" ? (
+              <CheckCircle2 size={21} />
+            ) : (
+              <AlertCircle size={21} />
+            )}
+          </div>
+
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold text-[#292723]">
+              {toast.title}
+            </p>
+
+            <p className="mt-1 text-xs leading-5 text-[#82776D]">
+              {toast.description}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setToast(null)}
+            aria-label="Close notification"
+            className="rounded-lg p-1 text-[#A0968D] transition hover:bg-[#F8F3EE] hover:text-[#79563E]"
+          >
+            <X size={17} />
+          </button>
+        </div>
+      )}
+
       <div className="mx-auto grid min-h-[calc(100vh-48px)] max-w-[1250px] items-center gap-6 lg:grid-cols-2 lg:gap-12">
 
         {/* LEFT: Equipment image */}
@@ -103,6 +209,7 @@ export default function Login() {
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/20 text-xl font-bold backdrop-blur-sm">
               E
             </span>
+
             <span className="text-2xl font-bold tracking-tight">
               Equiply
             </span>
@@ -296,14 +403,17 @@ export default function Login() {
                         d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5Z"
                         transform="translate(0 4)"
                       />
+
                       <path
                         fill="#4285F4"
                         d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.77 7.18l7.73 6C44.41 38.05 46.98 31.91 46.98 24.55Z"
                       />
+
                       <path
                         fill="#FBBC05"
                         d="M10.53 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.87.93 7.53 2.56 10.78l7.97-6.19Z"
                       />
+
                       <path
                         fill="#34A853"
                         d="M24 48c6.48 0 11.93-2.13 15.9-5.8l-7.73-6c-2.14 1.44-4.89 2.3-8.17 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 43.62 14.62 48 24 48Z"
@@ -317,7 +427,9 @@ export default function Login() {
 
               {/* Error message */}
               {message && (
-                <Notice kind="error">{message}</Notice>
+                <p className="text-xs leading-5 text-[#B65E4B]">
+                  {message}
+                </p>
               )}
             </form>
 

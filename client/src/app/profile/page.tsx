@@ -19,6 +19,8 @@ import {
   Calendar,
   LockKeyhole,
   CircleUserRound,
+  AlertCircle,
+  X,
 } from "lucide-react";
 
 import {
@@ -35,6 +37,8 @@ import type { AuthUser } from "@/lib/types";
 import { AuthGuard } from "@/components/AuthGuard";
 import { Spinner } from "@/components/ui";
 
+type ToastType = "success" | "error";
+
 function ProfileContent() {
   const { user, role, refresh, signOut } = useAuth();
 
@@ -42,7 +46,10 @@ function ProfileContent() {
   const [name, setName] = useState("");
 
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [toast, setToast] = useState<{
+    message: string;
+    type: ToastType;
+  } | null>(null);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -66,6 +73,21 @@ function ProfileContent() {
 
   const email = profile?.email || user?.email || "";
 
+  // Automatically hide toast after 4 seconds.
+  useEffect(() => {
+    if (!toast) return;
+
+    const timeout = window.setTimeout(() => {
+      setToast(null);
+    }, 4000);
+
+    return () => window.clearTimeout(timeout);
+  }, [toast]);
+
+  function showToast(message: string, type: ToastType = "success") {
+    setToast({ message, type });
+  }
+
   useEffect(() => {
     setImageFailed(false);
   }, [profileImage]);
@@ -80,7 +102,9 @@ function ProfileContent() {
       setProfile(data);
       setName(data.name || "");
     } catch (caught) {
-      setError(errorMessage(caught));
+      const message = errorMessage(caught);
+      setError(message);
+      showToast(message, "error");
     } finally {
       setLoading(false);
     }
@@ -97,19 +121,20 @@ function ProfileContent() {
     const trimmedName = name.trim();
 
     if (trimmedName.length < 2 || trimmedName.length > 80) {
-      setError("Name must contain between 2 and 80 characters.");
+      showToast(
+        "Name must contain between 2 and 80 characters.",
+        "error"
+      );
       return;
     }
 
     if (trimmedName === (profile?.name || user?.name || "")) {
-      setSuccess("Your profile is already up to date.");
-      setError("");
+      showToast("Your profile is already up to date.");
       return;
     }
 
     setSaving(true);
     setError("");
-    setSuccess("");
 
     try {
       await updateProfile(trimmedName);
@@ -122,9 +147,9 @@ function ProfileContent() {
 
       await refresh();
 
-      setSuccess("Your profile was updated successfully.");
+      showToast("Your profile was updated successfully.");
     } catch (caught) {
-      setError(errorMessage(caught));
+      showToast(errorMessage(caught), "error");
     } finally {
       setSaving(false);
     }
@@ -136,7 +161,7 @@ function ProfileContent() {
     try {
       await signOut();
     } catch (caught) {
-      setError(errorMessage(caught));
+      showToast(errorMessage(caught), "error");
       setSigningOut(false);
     }
   }
@@ -220,6 +245,49 @@ function ProfileContent() {
 
   return (
     <div className="min-h-screen bg-[#FFFCFA] px-4 py-8 text-[#292723] sm:px-6 lg:px-8 lg:py-12">
+
+      {/* Toast notification */}
+      {toast && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed right-4 top-5 z-[100] flex w-[calc(100%-2rem)] max-w-sm items-start gap-3 rounded-2xl border border-[#E8DFD6] bg-white p-4 shadow-[0_12px_40px_rgba(60,40,20,0.12)] animate-in slide-in-from-top-3 fade-in duration-300"
+        >
+          <div
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
+              toast.type === "success"
+                ? "bg-[#F0F5ED] text-[#66805D]"
+                : "bg-red-50 text-red-600"
+            }`}
+          >
+            {toast.type === "success" ? (
+              <Check size={21} />
+            ) : (
+              <AlertCircle size={21} />
+            )}
+          </div>
+
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold text-[#292723]">
+              {toast.type === "success" ? "Success" : "Something went wrong"}
+            </p>
+
+            <p className="mt-1 text-xs leading-5 text-[#82776D]">
+              {toast.message}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setToast(null)}
+            aria-label="Close notification"
+            className="rounded-lg p-1 text-[#A0968D] transition hover:bg-[#F8F3EE] hover:text-[#79563E]"
+          >
+            <X size={17} />
+          </button>
+        </div>
+      )}
+
       <div className="mx-auto max-w-[1120px]">
 
         {/* Page heading */}
@@ -245,7 +313,7 @@ function ProfileContent() {
           </div>
         </div>
 
-        {/* Error and success messages */}
+        {/* Profile loading error */}
         {error && (
           <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">
             <p className="font-medium">{error}</p>
@@ -257,13 +325,6 @@ function ProfileContent() {
             >
               Try again
             </button>
-          </div>
-        )}
-
-        {success && (
-          <div className="mb-6 flex items-center gap-3 rounded-xl border border-green-200 bg-green-50 px-5 py-4 text-sm text-green-800">
-            <Check size={18} />
-            {success}
           </div>
         )}
 
@@ -339,7 +400,6 @@ function ProfileContent() {
                         value={name}
                         onChange={(event) => {
                           setName(event.target.value);
-                          setSuccess("");
                         }}
                         minLength={2}
                         maxLength={80}
@@ -588,7 +648,6 @@ function ProfileContent() {
                     })}
                 </div>
               </section>
-
             </div>
           </div>
         )}
