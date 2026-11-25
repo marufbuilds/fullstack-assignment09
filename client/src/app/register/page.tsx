@@ -1,17 +1,17 @@
+ 
 "use client";
 
-// Create an account through the Express API (Better Auth).
-
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 import { Eye, EyeOff, UserPlus } from "lucide-react";
 
 import { authClient, nextPath, useAuth } from "@/lib/auth";
 import { Notice, Spinner } from "@/components/ui";
 
-export default function Register() {
+function RegisterForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { status } = useAuth();
 
   const [name, setName] = useState("");
@@ -24,17 +24,15 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
-  const [target, setTarget] = useState("/dashboard");
+  const target = nextPath(searchParams.get("next"));
 
   useEffect(() => {
-    setTarget(nextPath());
-  }, []);
-
-  useEffect(() => {
-    if (status === "authenticated") router.replace(target);
+    if (status === "authenticated") {
+      router.replace(target);
+    }
   }, [status, target, router]);
 
-  async function handleSubmit(event: React.FormEvent) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setMessage("");
 
@@ -42,21 +40,33 @@ export default function Register() {
       setMessage("Both passwords must match.");
       return;
     }
+
     if (password.length < 8) {
       setMessage("Your password must be at least 8 characters.");
       return;
     }
 
     setLoading(true);
+
     try {
-      const result = await authClient.signUp.email({ name, email, password });
+      const result = await authClient.signUp.email({
+        name: name.trim(),
+        email: email.trim(),
+        password,
+      });
+
       if (result.error) {
-        setMessage(result.error.message || "Could not create your account.");
+        setMessage(
+          result.error.message || "Could not create your account.",
+        );
         return;
       }
-      // Owners still need an admin to grant the owner role.
+
+      // New accounts start as customers.
+      // Admin approval is required for owner permissions.
       router.replace(goal === "owner" ? "/add-equipment" : target);
-    } catch {
+    } catch (error) {
+      console.error("Registration error:", error);
       setMessage("Could not reach the Equiply API. Is the backend running?");
     } finally {
       setLoading(false);
@@ -66,12 +76,14 @@ export default function Register() {
   async function handleGoogle() {
     setMessage("");
     setGoogleLoading(true);
+
     try {
       await authClient.signIn.social({
         provider: "google",
         callbackURL: target,
       });
-    } catch {
+    } catch (error) {
+      console.error("Google registration error:", error);
       setMessage("Google sign-up could not be started.");
       setGoogleLoading(false);
     }
@@ -81,29 +93,42 @@ export default function Register() {
     <div className="wrap section authwrap">
       <div className="authside">
         <p className="eyebrow">Join the marketplace</p>
+
         <h1 className="h2">
           Rent what you need.
           <br />
           Share what you own.
         </h1>
+
         <p>
-          One account to discover equipment, request rentals or start earning from the
-          gear already sitting in your garage.
+          One account to discover equipment, request rentals or start earning
+          from the gear already sitting in your garage.
         </p>
-        <div className="authpill">✓ Free to join · No listing fees to start</div>
+
+        <div className="authpill">
+          ✓ Free to join · No listing fees to start
+        </div>
 
         <div className="notice" style={{ marginTop: 24 }}>
-          <strong style={{ display: "block", marginBottom: 4 }}>How roles work</strong>
-          New accounts start as <b>customers</b>. Choose “list equipment” and an
-          administrator will enable owner tools for your account from the admin panel.
+          <strong style={{ display: "block", marginBottom: 4 }}>
+            How roles work
+          </strong>
+          New accounts start as <b>customers</b>. Choose “list equipment” and
+          an administrator will enable owner tools for your account from the
+          admin panel.
         </div>
       </div>
 
       <div className="card authcard">
         <p className="eyebrow">Get started</p>
-        <h2 className="h2" style={{ fontSize: "1.9rem", marginTop: 6 }}>
+
+        <h2
+          className="h2"
+          style={{ fontSize: "1.9rem", marginTop: 6 }}
+        >
           Create account
         </h2>
+
         <p className="muted" style={{ marginTop: 6 }}>
           Fill in your details to join Equiply.
         </p>
@@ -145,6 +170,7 @@ export default function Register() {
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
               />
+
               <button
                 type="button"
                 className="textbutton"
@@ -171,13 +197,24 @@ export default function Register() {
 
           <label>
             I want to…
-            <select value={goal} onChange={(event) => setGoal(event.target.value)}>
-              <option value="customer">Rent equipment from other people</option>
-              <option value="owner">List my own equipment for rent</option>
+            <select
+              value={goal}
+              onChange={(event) => setGoal(event.target.value)}
+            >
+              <option value="customer">
+                Rent equipment from other people
+              </option>
+              <option value="owner">
+                List my own equipment for rent
+              </option>
             </select>
           </label>
 
-          <button className="btn btn-block" type="submit" disabled={loading}>
+          <button
+            className="btn btn-block"
+            type="submit"
+            disabled={loading || googleLoading}
+          >
             {loading ? (
               <>
                 <Spinner /> Creating account…
@@ -193,7 +230,7 @@ export default function Register() {
             className="btn btn-outline btn-block"
             type="button"
             onClick={handleGoogle}
-            disabled={googleLoading}
+            disabled={googleLoading || loading}
           >
             {googleLoading ? <Spinner dark /> : null}
             Sign up with Google
@@ -207,5 +244,19 @@ export default function Register() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function Register() {
+  return (
+    <Suspense
+      fallback={
+        <div className="wrap section">
+          Loading registration...
+        </div>
+      }
+    >
+      <RegisterForm />
+    </Suspense>
   );
 }

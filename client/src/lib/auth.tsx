@@ -19,6 +19,20 @@ export const authClient = createAuthClient({
   },
 });
 
+// Safely handle redirect paths after login or registration.
+export function nextPath(value: string | null | undefined): string {
+  if (
+    !value ||
+    !value.startsWith("/") ||
+    value.startsWith("//") ||
+    value.includes("\\")
+  ) {
+    return "/dashboard";
+  }
+
+  return value;
+}
+
 type AuthStatus = "loading" | "authenticated" | "unauthenticated";
 
 type AuthContextValue = {
@@ -67,7 +81,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setProfileLoading(true);
 
       try {
-        // Correct backend endpoint: GET /api/profile
+        // Backend endpoint: GET /api/profile
         const response = await fetch(`${API_URL}/profile`, {
           method: "GET",
           credentials: "include",
