@@ -1,78 +1,179 @@
-# Equiply Client
+# Equiply — Equipment Rental Platform
 
-Frontend for **Equiply**, an equipment-rental marketplace built with Next.js (App Router), React, TypeScript and Tailwind CSS v4. The UI talks to the Express API in `Equiply-server/assignment9/server`.
+Equiply is a full-stack equipment rental platform where customers can explore and rent equipment, equipment owners can manage their listings and bookings, and administrators can manage the platform.
 
-## Requirements
+The frontend is built with Next.js and provides a responsive interface for customers, owners, and administrators.
 
-- Node.js (current LTS)
-- npm
-- The Equiply Express API running on `http://localhost:5000`
+## Tech Stack
 
-## Setup
+- **Next.js** — App Router
+- **React**
+- **TypeScript**
+- **Tailwind CSS**
+- **shadcn/ui**
+- **Lucide React** — Icons
+- **Framer Motion** — Animations
+- **Better Auth** — Authentication
+- **Express.js** — Backend API
+- **MongoDB** — Database
+- **Stripe** — Payment integration
 
-1. Copy `.env.example` to `.env.local`.
-2. Set the API origin (defaults are fine for local development):
+## Main Features
 
-   ```
-   NEXT_PUBLIC_API_URL=http://localhost:5000/api
-   ```
+- Responsive landing page and equipment browsing
+- Equipment search, filtering, and sorting
+- Equipment details and booking flow
+- User authentication
+- Customer dashboard
+- Equipment owner dashboard
+- Admin dashboard
+- Equipment management
+- Booking and payment workflows
+- Favorites and user-related features
+- Light and dark theme support
 
-3. Install dependencies: `npm install`
-4. Start the frontend: `npm run dev` (it must run on `http://localhost:3000` so the API CORS allowlist accepts it).
-5. Start the backend in its own terminal: `npm run dev` inside `Equiply-server/assignment9/server`.
+## Project Structure
 
-## Demo accounts
+```text
+client/
+├── public/
+├── src/
+│   ├── app/
+│   │   ├── admin/
+│   │   ├── dashboard/
+│   │   ├── equipment/
+│   │   └── ...
+│   ├── components/
+│   ├── lib/
+│   └── ...
+├── src/proxy.ts
+├── package.json
+└── README.md
+```
 
-These accounts exist in the seeded development database:
+## Getting Started
 
-| Role     | Email                | Password       |
-| -------- | -------------------- | -------------- |
-| Admin    | `admin@equiply.dev`  | `Admin12345!`  |
-| Owner    | `owner@equiply.dev`  | `Owner12345!`  |
-| Customer | `renter@equiply.dev` | `Renter12345!` |
+### 1. Clone the repository
 
-## Features
+```bash
+git clone <your-frontend-repository-url>
+cd client
+```
 
-- **Marketplace** — live listings with search, category chips, location and price filters, sorting and pagination.
-- **Equipment details** — gallery, listing specs, owner card, date picker with a live total and a booking request flow.
-- **Authentication** — email/password sign-in and sign-up plus Google sign-in through Better Auth (cookies, `credentials: 'include'`).
-- **Customer dashboard** — active rentals, favorites, completed rentals and recent bookings.
-- **My rentals** — booking statuses, payment state and Stripe checkout (`Pay now`).
-- **Favorites** — synced with the API for signed-in users, browser storage for guests.
-- **Owner workspace** — analytics, earnings chart, incoming requests with approve/reject/complete actions.
-- **My listings** — create, edit and delete equipment (owner role required).
-- **Admin panel** — platform stats, listing moderation, all bookings and user role management.
-- **Profile** — view and update account details.
-- Payment result pages at `/payment/success` and `/payment/cancel` (Stripe redirects).
+### 2. Install dependencies
 
-## Commands
+```bash
+npm install
+```
 
-| Command                | Purpose                                 |
-| ---------------------- | --------------------------------------- |
-| `npm run dev`          | Start the local development server      |
-| `npm run build`        | Build for production                    |
-| `npm run start`        | Start the production server             |
-| `npm run typecheck`    | Run TypeScript checking                 |
-| `npm run format`       | Format project files with Prettier      |
-| `npm run format:check` | Check formatting without changing files |
+### 3. Configure environment variables
 
-## Structure
+Create a `.env.local` file in the frontend root:
 
-- `src/app/` — routes and page components (App Router)
-- `src/components/` — shared UI: `Shell`, `Navbar`, `Sidebar`, `Footer`, `EquipmentCard`, `AuthGuard`, `ui.tsx`
-- `src/lib/api.ts` — typed Express API client
-- `src/lib/auth.tsx` — Better Auth client and `useAuth()` context
-- `src/lib/favorites.tsx` — favorites context (API for members, storage for guests)
-- `src/lib/types.ts`, `src/lib/format.ts`, `src/lib/constants.ts` — shared types, formatters and options
-- `src/lib/demo-equipment.ts` — offline fallback data used only when the API is unreachable
-- `.env.example` — environment-variable names only; no secrets
+```env
+BACKEND_URL=http://localhost:5000/api
+```
 
-## Notes
+Use the appropriate deployed backend URL in your production environment.
 
-- Roles are controlled by the server: new accounts are `customers`, an `admin` promotes users to `owner` from the Admin panel.
-- Booking requests start as `pending`; payment through Stripe is required before an owner can confirm.
-- If the API is unreachable the marketplace shows the bundled demo listings with a warning instead of an empty screen.
+### 4. Start the development server
 
-## Formatting
+```bash
+npm run dev
+```
 
-Prettier configuration is included. Run `npm run format` after dependency installation to apply consistent formatting across the full codebase.
+Open [http://localhost:3000](http://localhost:3000).
+
+**Important:** The Express backend must also be running for API-dependent features to work.
+
+## Development Challenges and Lessons Learned
+
+Building Equiply involved more than creating pages and connecting components. Some of the biggest challenges came from making separate parts of the application work together reliably.
+
+### 1. Frontend and Backend Communication
+
+One major challenge was connecting the Next.js frontend with the separate Express backend.
+
+We had to deal with API endpoint mismatches, request methods, response handling, CORS configuration, and environment-specific backend URLs.
+
+**What we learned:** A frontend can look complete while its features still fail because the API integration is incorrect. Understanding the complete request-response flow is essential.
+
+### 2. Centralized API Proxy
+
+Managing backend URLs across multiple pages can make a project difficult to maintain.
+
+We worked toward a centralized Next.js API proxy so frontend requests could use consistent `/api/...` paths instead of directly depending on the backend URL.
+
+**What we learned:** Centralizing API communication makes the application easier to maintain, but authentication cookies, redirects, request headers, and production configuration must also be handled carefully.
+
+### 3. Authentication and Authorization
+
+Authentication was another challenging area. Signing in is only one part of the problem. The application also needs to understand who the user is and what that user is allowed to access.
+
+We had to consider:
+
+- Email and password authentication
+- Google authentication
+- Session handling
+- Protected pages
+- Customer, owner, and admin permissions
+
+**What we learned:** Authentication confirms a user's identity, while authorization controls what that user can do. Both are necessary for a secure platform.
+
+### 4. Role-Based Dashboards
+
+Equiply has different types of users, and each role requires different functionality.
+
+Creating customer, owner, and admin experiences meant handling different permissions, data, actions, and page layouts without mixing responsibilities.
+
+**What we learned:** Role-based applications require careful frontend and backend coordination. Hiding a button in the frontend is not enough; permissions must also be checked on the server.
+
+### 5. Booking and Payment Flow
+
+A rental platform needs more than an equipment listing page. Booking and payment involve multiple steps and depend on successful communication between the frontend, backend, database, and payment provider.
+
+We had to consider booking creation, checkout, payment confirmation, and handling failed requests.
+
+**What we learned:** Payment workflows require reliable server-side verification. A successful checkout redirect alone should not be treated as proof of payment.
+
+### 6. Consistent UI and Theme Management
+
+As the application grew, maintaining a consistent design across different pages became increasingly important.
+
+We worked on replacing scattered hardcoded colors with reusable semantic theme classes, keeping the brown-and-cream design consistent while supporting light and dark modes.
+
+**What we learned:** A centralized design system makes future changes easier and prevents individual pages from developing inconsistent styles.
+
+### 7. Debugging and Understanding Generated Code
+
+Another challenge was understanding how different files, components, API calls, and backend routes work together.
+
+Writing code is not the only difficult part of development. Debugging errors, following data flow, and understanding why a feature fails are equally important.
+
+**What we learned:** Building a real application requires patience, problem-solving, and the ability to understand the logic behind the code—not just make the code run.
+
+## What This Project Taught Us
+
+Equiply helped us understand several important full-stack development concepts:
+
+- Connecting a Next.js application to an independent backend
+- Organizing API communication
+- Working with authentication and user sessions
+- Implementing role-based access
+- Managing application state and API responses
+- Understanding booking and payment workflows
+- Maintaining consistent UI across multiple pages
+- Debugging integration problems
+- Configuring applications for deployment
+
+## Future Improvements
+
+- Improve error handling and loading states
+- Strengthen security and server-side validation
+- Improve automated testing
+- Optimize performance
+- Expand equipment discovery and booking features
+
+---
+
+**Equiply is a learning project focused on building a practical full-stack equipment rental platform and understanding the real challenges involved in developing and integrating a modern web application.**
