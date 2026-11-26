@@ -1,4 +1,3 @@
- 
 // Equiply API client.
 // Everything the frontend sends to the Express backend goes through here.
 
@@ -15,8 +14,7 @@ import type {
 } from "./types";
 
 /** Base URL of the Express API. */
-export const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
 export class ApiError extends Error {
   status: number;
@@ -29,10 +27,7 @@ export class ApiError extends Error {
 }
 
 /** Perform a JSON request against the API. */
-export async function api<T>(
-  path: string,
-  options: RequestInit = {},
-): Promise<T> {
+export async function api<T>(path: string, options: RequestInit = {}): Promise<T> {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     ...((options.headers as Record<string, string>) || {}),
@@ -167,9 +162,7 @@ function buildQuery(query: EquipmentQuery): string {
 export async function fetchEquipment(
   query: EquipmentQuery = {},
 ): Promise<Paginated<Equipment>> {
-  const data = await http.get<Paginated<Equipment>>(
-    `/equipment${buildQuery(query)}`,
-  );
+  const data = await http.get<Paginated<Equipment>>(`/equipment${buildQuery(query)}`);
 
   return {
     ...data,
@@ -185,10 +178,7 @@ export async function fetchEquipmentById(id: string): Promise<Equipment> {
 
 /** POST /equipment */
 export async function createEquipment(draft: ListingDraft) {
-  return http.post<{ message: string; equipment: Equipment }>(
-    "/equipment",
-    draft,
-  );
+  return http.post<{ message: string; equipment: Equipment }>("/equipment", draft);
 }
 
 /** GET /equipment/owner/mine */
@@ -202,10 +192,7 @@ export async function fetchMyListings(): Promise<Equipment[]> {
 }
 
 /** PATCH /equipment/:id */
-export async function updateEquipment(
-  id: string,
-  updates: Partial<ListingDraft>,
-) {
+export async function updateEquipment(id: string, updates: Partial<ListingDraft>) {
   return http.patch<{ message: string }>(`/equipment/${id}`, updates);
 }
 
@@ -246,9 +233,7 @@ export async function updateBookingStatus(
 
 /** POST /payments/checkout/:bookingId */
 export async function startCheckout(bookingId: string): Promise<string> {
-  const data = await http.post<{ url: string }>(
-    `/payments/checkout/${bookingId}`,
-  );
+  const data = await http.post<{ url: string }>(`/payments/checkout/${bookingId}`);
 
   return data.url;
 }
@@ -312,10 +297,7 @@ export async function setEquipmentStatus(
   id: string,
   status: "approved" | "rejected" | "pending",
 ) {
-  return http.patch<{ message: string }>(
-    `/admin/equipment/${id}/status`,
-    { status },
-  );
+  return http.patch<{ message: string }>(`/admin/equipment/${id}/status`, { status });
 }
 
 /** GET /admin/bookings */
@@ -329,9 +311,7 @@ export async function fetchAdminBookings(): Promise<Booking[]> {
 }
 
 /** GET /admin/users */
-export async function fetchAdminUsers(): Promise<
-  (AuthUser & { _id: string })[]
-> {
+export async function fetchAdminUsers(): Promise<(AuthUser & { _id: string })[]> {
   const data = await http.get<{
     users: (AuthUser & { _id: string })[];
     pagination?: unknown;

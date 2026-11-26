@@ -1,4 +1,3 @@
- 
 "use client";
 
 import Link from "next/link";
@@ -51,19 +50,21 @@ function ThemeToggle() {
         }
       }}
       aria-label="Toggle theme"
-      title={!mounted ? "Toggle theme" : isDark ? "Switch to light mode" : "Switch to dark mode"}
-      className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E8DFD6] bg-white text-[#79563E] transition hover:border-[#79563E] hover:bg-[#F7F1EB] dark:border-[#66503F] dark:bg-[#30251E] dark:text-[#F0D4B8] dark:hover:border-[#C49A73] dark:hover:bg-[#453326]"
+      title={
+        !mounted
+          ? "Toggle theme"
+          : isDark
+            ? "Switch to light mode"
+            : "Switch to dark mode"
+      }
+      className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-primary transition hover:border-primary hover:bg-secondary"
     >
       {!mounted || !isDark ? <Moon size={17} /> : <Sun size={17} />}
     </button>
   );
 }
 
-export function Navbar({
-  onToggleMenu,
-}: {
-  onToggleMenu: () => void;
-}) {
+export function Navbar({ onToggleMenu }: { onToggleMenu: () => void }) {
   const pathname = usePathname();
   const { user, status, role, signOut } = useAuth();
 
@@ -80,9 +81,7 @@ export function Navbar({
   const isOwner = ["owner", "admin"].includes(normalizedRole);
   const isAdmin = normalizedRole === "admin";
 
-  const profileImage = (
-    user as (typeof user & { image?: string | null }) | null
-  )?.image;
+  const profileImage = (user as (typeof user & { image?: string | null }) | null)?.image;
 
   useEffect(() => {
     setMenuOpen(false);
@@ -95,10 +94,7 @@ export function Navbar({
 
   useEffect(() => {
     function handleClick(event: MouseEvent) {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(event.target as Node)
-      ) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setMenuOpen(false);
       }
     }
@@ -116,47 +112,38 @@ export function Navbar({
       : pathname === href || pathname.startsWith(`${href}/`);
 
   const navLinkClass = (href: string) =>
-    `relative py-2 text-[13px] font-medium transition-colors ${
-      isActive(href)
-        ? "text-[#79563E] dark:text-[#F0CBA6]"
-        : "text-[#766E65] hover:text-[#79563E] dark:text-[#E0C8B2] dark:hover:text-[#FFFFFF]"
-    }`;
+    `relative py-2 text-[13px] font-medium transition-colors ${isActive(href) ? "text-primary dark:text-primary" : "text-muted-foreground hover:text-primary dark:text-muted-foreground dark:hover:text-[#FFFFFF]"}`;
 
   const dropdownLinkClass =
-    "flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-medium text-[#55483D] transition hover:bg-[#F7F1EB] hover:text-[#79563E] dark:text-[#F0DFCF] dark:hover:bg-[#453326] dark:hover:text-[#FFFFFF]";
+    "flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-medium text-foreground transition hover:bg-secondary hover:text-primary";
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-[#E8DFD6] bg-[#FFFCFA]/95 backdrop-blur-md dark:border-[#5B4637] dark:bg-[#211914]/95">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur-md">
       <div className="mx-auto flex h-[76px] max-w-[1440px] items-center justify-between gap-5 px-5 sm:px-8 lg:px-12">
-
         {/* Logo */}
         <Link
           href="/"
           className="flex shrink-0 items-center gap-2.5"
           aria-label="Equiply home"
         >
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#79563E] text-xl font-bold text-white dark:bg-[#A77A55] dark:text-white">
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-xl font-bold text-primary-foreground">
             E
           </span>
 
-          <span className="text-[23px] font-bold tracking-[-1px] text-[#292723] dark:text-[#F8EDE2]">
+          <span className="text-[23px] font-bold tracking-[-1px] text-foreground">
             Equiply
-            <span className="text-[#94765B] dark:text-[#D2A77E]">.</span>
+            <span className="text-primary">.</span>
           </span>
         </Link>
 
         {/* Desktop navigation */}
         <nav className="hidden items-center gap-8 lg:flex">
           {primaryLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={navLinkClass(link.href)}
-            >
+            <Link key={link.href} href={link.href} className={navLinkClass(link.href)}>
               {link.label}
 
               {isActive(link.href) && (
-                <span className="absolute -bottom-[2px] left-0 h-[2px] w-full rounded-full bg-[#79563E] dark:bg-[#D2A77E]" />
+                <span className="absolute -bottom-[2px] left-0 h-[2px] w-full rounded-full bg-primary" />
               )}
             </Link>
           ))}
@@ -169,7 +156,7 @@ export function Navbar({
           </div>
 
           {status === "loading" && (
-            <div className="h-10 w-24 animate-pulse rounded-full bg-[#F0EAE4] dark:bg-[#453326]" />
+            <div className="h-10 w-24 animate-pulse rounded-full bg-secondary" />
           )}
 
           {/* Guest actions */}
@@ -177,14 +164,14 @@ export function Navbar({
             <>
               <Link
                 href="/login"
-                className="hidden rounded-full px-5 py-2.5 text-[13px] font-semibold text-[#79563E] transition hover:bg-[#F7F1EB] dark:text-[#F0D4B8] dark:hover:bg-[#453326] sm:inline-flex"
+                className="hidden rounded-full px-5 py-2.5 text-[13px] font-semibold text-primary transition hover:bg-secondary sm:inline-flex"
               >
                 Log in
               </Link>
 
               <Link
                 href="/register"
-                className="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-[#79563E] px-5 text-[12px] font-semibold text-white transition hover:bg-[#5D402E] dark:bg-[#A77A55] dark:text-white dark:hover:bg-[#BD9068] sm:px-6"
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-primary px-5 text-[12px] font-semibold text-primary-foreground transition hover:bg-primary-hover sm:px-6"
               >
                 Get Started
                 <ArrowUpRight size={15} />
@@ -200,9 +187,9 @@ export function Navbar({
                 onClick={() => setMenuOpen((open) => !open)}
                 aria-expanded={menuOpen}
                 aria-haspopup="menu"
-                className="flex h-11 items-center gap-2 rounded-full border border-[#E8DFD6] bg-white py-1 pl-1 pr-3 transition hover:border-[#CDBBA8] hover:bg-[#FDF9F5] dark:border-[#66503F] dark:bg-[#30251E] dark:hover:border-[#A77A55] dark:hover:bg-[#453326]"
+                className="flex h-11 items-center gap-2 rounded-full border border-border bg-card py-1 pl-1 pr-3 transition hover:border-primary hover:bg-background"
               >
-                <span className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-[#EDE2D6] text-xs font-semibold text-[#79563E] dark:bg-[#514033] dark:text-[#F0D4B8]">
+                <span className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-accent text-xs font-semibold text-primary">
                   {profileImage && !imageFailed ? (
                     <img
                       src={profileImage}
@@ -215,24 +202,22 @@ export function Navbar({
                   )}
                 </span>
 
-                <span className="hidden max-w-[100px] truncate text-[12px] font-semibold text-[#302A24] dark:text-[#F8EDE2] sm:block">
+                <span className="hidden max-w-[100px] truncate text-[12px] font-semibold text-foreground sm:block">
                   {user.name.split(" ")[0]}
                 </span>
 
                 <ChevronDown
                   size={15}
-                  className={`text-[#8B837A] transition-transform dark:text-[#E0C8B2] ${
-                    menuOpen ? "rotate-180" : ""
-                  }`}
+                  className={`text-muted-foreground transition-transform ${menuOpen ? "rotate-180" : ""}`}
                 />
               </button>
 
               {/* Profile dropdown */}
               {menuOpen && (
-                <div className="absolute right-0 top-[calc(100%+12px)] z-50 w-[280px] overflow-hidden rounded-2xl border border-[#E8DFD6] bg-[#FFFCFA] shadow-[0_15px_45px_rgba(55,40,28,0.13)] dark:border-[#66503F] dark:bg-[#30251E] dark:shadow-black/40">
-                  <div className="border-b border-[#E8DFD6] bg-[#F7F1EB] p-4 dark:border-[#66503F] dark:bg-[#453326]">
+                <div className="absolute right-0 top-[calc(100%+12px)] z-50 w-[280px] overflow-hidden rounded-2xl border border-border bg-background shadow-[0_15px_45px_rgba(55,40,28,0.13)] dark:shadow-black/40">
+                  <div className="border-b border-border bg-secondary p-4">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#E6D8C9] text-sm font-semibold text-[#79563E] dark:bg-[#514033] dark:text-[#F0D4B8]">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-accent text-sm font-semibold text-primary">
                         {profileImage && !imageFailed ? (
                           <img
                             src={profileImage}
@@ -246,17 +231,17 @@ export function Navbar({
                       </div>
 
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-semibold text-[#302A24] dark:text-[#F8EDE2]">
+                        <p className="truncate text-sm font-semibold text-foreground">
                           {user.name}
                         </p>
 
-                        <p className="truncate text-xs text-[#82776D] dark:text-[#E0C8B2]">
+                        <p className="truncate text-xs text-muted-foreground">
                           {user.email}
                         </p>
                       </div>
                     </div>
 
-                    <span className="mt-3 inline-flex rounded-full bg-white px-3 py-1 text-[10px] font-semibold capitalize tracking-wide text-[#79563E] dark:bg-[#30251E] dark:text-[#F0D4B8]">
+                    <span className="mt-3 inline-flex rounded-full bg-card px-3 py-1 text-[10px] font-semibold capitalize tracking-wide text-primary">
                       {normalizedRole || "member"}
                     </span>
                   </div>
@@ -284,7 +269,7 @@ export function Navbar({
 
                     {isOwner && (
                       <>
-                        <div className="my-2 border-t border-[#E8DFD6] dark:border-[#66503F]" />
+                        <div className="my-2 border-t border-border" />
 
                         <Link href="/add-equipment" className={dropdownLinkClass}>
                           <PackagePlus size={17} />
@@ -310,7 +295,7 @@ export function Navbar({
                       </Link>
                     )}
 
-                    <div className="my-2 border-t border-[#E8DFD6] dark:border-[#66503F]" />
+                    <div className="my-2 border-t border-border" />
 
                     <button
                       type="button"
@@ -318,7 +303,7 @@ export function Navbar({
                         setMenuOpen(false);
                         await signOut();
                       }}
-                      className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13px] font-semibold text-[#A34D40] transition hover:bg-[#FCEFEB] dark:text-[#F0A99C] dark:hover:bg-[#512F28]"
+                      className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13px] font-semibold text-destructive transition hover:bg-destructive/10"
                     >
                       <LogOut size={17} />
                       Sign out
@@ -338,7 +323,7 @@ export function Navbar({
             }}
             aria-label="Toggle navigation menu"
             aria-expanded={mobileLinksOpen}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E8DFD6] bg-white text-[#79563E] transition hover:bg-[#F7F1EB] dark:border-[#66503F] dark:bg-[#30251E] dark:text-[#F0D4B8] dark:hover:bg-[#453326] lg:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-primary transition hover:bg-secondary lg:hidden"
           >
             {mobileLinksOpen ? <X size={19} /> : <Menu size={19} />}
           </button>
@@ -347,24 +332,20 @@ export function Navbar({
 
       {/* Mobile navigation links */}
       {mobileLinksOpen && (
-        <div className="border-t border-[#E8DFD6] bg-[#FFFCFA] px-5 py-4 dark:border-[#5B4637] dark:bg-[#211914] lg:hidden">
+        <div className="border-t border-border bg-background px-5 py-4 lg:hidden">
           <nav className="mx-auto flex max-w-[1440px] flex-col gap-1">
             {primaryLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`rounded-xl px-4 py-3 text-sm font-medium transition ${
-                  isActive(link.href)
-                    ? "bg-[#F7F1EB] text-[#79563E] dark:bg-[#453326] dark:text-[#F0CBA6]"
-                    : "text-[#766E65] hover:bg-[#F7F1EB] hover:text-[#79563E] dark:text-[#E0C8B2] dark:hover:bg-[#453326] dark:hover:text-white"
-                }`}
+                className={`rounded-xl px-4 py-3 text-sm font-medium transition ${isActive(link.href) ? "bg-secondary text-primary dark:bg-card dark:text-primary" : "text-muted-foreground hover:bg-secondary hover:text-primary dark:hover:text-white"}`}
               >
                 {link.label}
               </Link>
             ))}
 
-            <div className="mt-2 flex items-center justify-between border-t border-[#E8DFD6] pt-3 dark:border-[#66503F]">
-              <span className="text-xs font-medium text-[#82776D] dark:text-[#E0C8B2]">
+            <div className="mt-2 flex items-center justify-between border-t border-border pt-3">
+              <span className="text-xs font-medium text-muted-foreground">
                 Appearance
               </span>
 

@@ -1,4 +1,3 @@
- 
 "use client";
 
 import { useEffect, useState } from "react";
@@ -28,23 +27,12 @@ import {
 } from "@/lib/api";
 
 import { useAuth } from "@/lib/auth";
-import {
-  formatDate,
-  formatDateRange,
-  money,
-  LISTING_STATUS_LABELS,
-} from "@/lib/format";
+import { formatDate, formatDateRange, money, LISTING_STATUS_LABELS } from "@/lib/format";
 
 import type { AdminStats, Booking, Equipment } from "@/lib/types";
 import { AuthGuard } from "@/components/AuthGuard";
 
-import {
-  EmptyState,
-  ErrorState,
-  Notice,
-  Spinner,
-  StatusBadge,
-} from "@/components/ui";
+import { EmptyState, ErrorState, Notice, Spinner, StatusBadge } from "@/components/ui";
 
 const TABS = ["Overview", "Listings", "Bookings", "Users"] as const;
 type Tab = (typeof TABS)[number];
@@ -92,13 +80,12 @@ function AdminContent() {
     setError("");
 
     try {
-      const [statRows, listingRows, bookingRows, userRows] =
-        await Promise.all([
-          fetchAdminStats(),
-          fetchAdminEquipment(),
-          fetchAdminBookings(),
-          fetchAdminUsers(),
-        ]);
+      const [statRows, listingRows, bookingRows, userRows] = await Promise.all([
+        fetchAdminStats(),
+        fetchAdminEquipment(),
+        fetchAdminBookings(),
+        fetchAdminUsers(),
+      ]);
 
       setStats(statRows as ExtendedStats);
       setEquipment(listingRows);
@@ -118,16 +105,11 @@ function AdminContent() {
 
   const pending = equipment.filter((item) => item.status === "pending");
 
-  const completed = bookings.filter(
-    (booking) => booking.status === "completed"
-  );
+  const completed = bookings.filter((booking) => booking.status === "completed");
 
-  async function moderate(
-    item: Equipment,
-    status: "approved" | "rejected"
-  ) {
+  async function moderate(item: Equipment, status: "approved" | "rejected") {
     const confirmed = window.confirm(
-      `Are you sure you want to ${status} "${item.title}"?`
+      `Are you sure you want to ${status} "${item.title}"?`,
     );
 
     if (!confirmed) return;
@@ -139,9 +121,7 @@ function AdminContent() {
       await setEquipmentStatus(item._id, status);
 
       setEquipment((current) =>
-        current.map((row) =>
-          row._id === item._id ? { ...row, status } : row
-        )
+        current.map((row) => (row._id === item._id ? { ...row, status } : row)),
       );
 
       setNoticeKind("success");
@@ -161,9 +141,7 @@ function AdminContent() {
       return;
     }
 
-    const confirmed = window.confirm(
-      `Change ${row.name}'s role to ${role}?`
-    );
+    const confirmed = window.confirm(`Change ${row.name}'s role to ${role}?`);
 
     if (!confirmed) return;
 
@@ -174,9 +152,7 @@ function AdminContent() {
       await setUserRole(row._id, role);
 
       setUsers((current) =>
-        current.map((item) =>
-          item._id === row._id ? { ...item, role } : item
-        )
+        current.map((item) => (item._id === row._id ? { ...item, role } : item)),
       );
 
       setNoticeKind("success");
@@ -249,7 +225,6 @@ function AdminContent() {
   return (
     <main className="min-h-screen bg-background px-4 py-7 text-foreground sm:px-6 lg:px-8 lg:py-10">
       <div className="mx-auto max-w-[1440px] space-y-8">
-
         {/* Header */}
         <section className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -263,8 +238,8 @@ function AdminContent() {
             </h1>
 
             <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">
-              Manage users, equipment listings, bookings and platform activity
-              from one place.
+              Manage users, equipment listings, bookings and platform activity from one
+              place.
             </p>
           </div>
 
@@ -279,10 +254,7 @@ function AdminContent() {
               disabled={loading}
               className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-semibold text-primary transition hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <RefreshCw
-                size={15}
-                className={loading ? "animate-spin" : ""}
-              />
+              <RefreshCw size={15} className={loading ? "animate-spin" : ""} />
               Refresh
             </button>
           </div>
@@ -322,9 +294,7 @@ function AdminContent() {
         </div>
 
         {/* Error */}
-        {error && (
-          <ErrorState message={error} onRetry={() => void load()} />
-        )}
+        {error && <ErrorState message={error} onRetry={() => void load()} />}
 
         {/* Loading */}
         {!error && loading && (
@@ -341,7 +311,6 @@ function AdminContent() {
         {/* Dashboard content */}
         {!error && !loading && (
           <div className="space-y-7">
-
             {/* Overview */}
             {tab === "Overview" && (
               <>
@@ -366,9 +335,7 @@ function AdminContent() {
                         {value}
                       </h2>
 
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {description}
-                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">{description}</p>
                     </div>
                   ))}
                 </section>
@@ -511,12 +478,12 @@ function AdminContent() {
                       {monthlyBookings.map((item) => {
                         const maximum = Math.max(
                           ...monthlyBookings.map((row) => row.count),
-                          1
+                          1,
                         );
 
                         const monthName = new Date(
                           item.year,
-                          item.month - 1
+                          item.month - 1,
                         ).toLocaleString("en", {
                           month: "short",
                         });
@@ -618,11 +585,7 @@ function AdminContent() {
                             </p>
                             <StatusBadge
                               status={item.status || "pending"}
-                              label={
-                                LISTING_STATUS_LABELS[
-                                  item.status || "pending"
-                                ]
-                              }
+                              label={LISTING_STATUS_LABELS[item.status || "pending"]}
                             />
                           </div>
 
@@ -711,10 +674,7 @@ function AdminContent() {
                               Rental dates
                             </p>
                             <span className="text-sm text-muted-foreground">
-                              {formatDateRange(
-                                booking.startDate,
-                                booking.endDate
-                              )}
+                              {formatDateRange(booking.startDate, booking.endDate)}
                             </span>
                           </div>
 
@@ -745,9 +705,7 @@ function AdminContent() {
                                   : "bg-muted text-muted-foreground"
                               }`}
                             >
-                              {booking.paymentStatus === "paid"
-                                ? "Paid"
-                                : "Unpaid"}
+                              {booking.paymentStatus === "paid" ? "Paid" : "Unpaid"}
                             </span>
                           </div>
                         </div>
@@ -836,10 +794,7 @@ function AdminContent() {
                             </p>
                             <select
                               value={row.role || "customer"}
-                              disabled={
-                                actingId === row._id ||
-                                row._id === user?.id
-                              }
+                              disabled={actingId === row._id || row._id === user?.id}
                               onChange={(event) =>
                                 void changeRole(row, event.target.value)
                               }

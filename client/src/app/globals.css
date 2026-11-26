@@ -63,6 +63,7 @@
 
   --primary: #79563e;
   --primary-foreground: #ffffff;
+  --primary-hover: #5d402e;
 
   --secondary: #f7f1eb;
   --secondary-foreground: #684832;
@@ -130,22 +131,23 @@
   --background: #211914;
   --foreground: #f8ede2;
 
-  --card: #30251e;
+  --card: #453326;
   --card-foreground: #f8ede2;
 
-  --popover: #30251e;
+  --popover: #453326;
   --popover-foreground: #f8ede2;
 
   --primary: #a77a55;
   --primary-foreground: #211914;
+  --primary-hover: #916747;
 
-  --secondary: #453326;
+  --secondary: #30251e;
   --secondary-foreground: #f8ede2;
 
   --muted: #30251e;
   --muted-foreground: #e0c8b2;
 
-  --accent: #453326;
+  --accent: #514033;
   --accent-foreground: #f8ede2;
 
   --destructive: #ef7770;
@@ -154,19 +156,19 @@
   --input: #66503f;
   --ring: #a77a55;
 
-  --sidebar: #30251e;
+  --sidebar: #453326;
   --sidebar-foreground: #f8ede2;
   --sidebar-primary: #a77a55;
   --sidebar-primary-foreground: #211914;
-  --sidebar-accent: #453326;
+  --sidebar-accent: #30251e;
   --sidebar-accent-foreground: #f8ede2;
   --sidebar-border: #5b4637;
   --sidebar-ring: #a77a55;
 
   --ink: #f8ede2;
   --paper: #211914;
-  --surface: #30251e;
-  --surface-soft: #453326;
+  --surface: #453326;
+  --surface-soft: #30251e;
   --text: #f8ede2;
   --line: #5b4637;
   --line-strong: #66503f;
@@ -207,6 +209,7 @@
 
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
 
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
@@ -465,7 +468,7 @@ button {
   justify-content: center;
   gap: 9px;
   background: var(--brand);
-  color: #ffffff;
+  color: var(--primary-foreground);
   border: 1px solid transparent;
   border-radius: 10px;
   padding: 11px 21px;
@@ -519,25 +522,19 @@ button {
 }
 
 .btn-accent {
-  background: #a77a55;
-  color: #ffffff;
+  background: var(--primary);
+  color: var(--primary-foreground);
 }
 
 .btn-accent:hover {
-  background: #8d6546;
-  color: #ffffff;
+  background: var(--primary-hover);
+  color: var(--primary-foreground);
 }
 
 .btn-danger {
-  background: #fdf0ee;
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
   color: var(--danger);
-  border: 1px solid #f6d7d2;
-}
-
-.dark .btn-danger {
-  background: #482522;
-  color: #ffaaa3;
-  border-color: #693a35;
+  border: 1px solid color-mix(in srgb, var(--danger) 28%, transparent);
 }
 
 .btn-danger:hover {
@@ -748,15 +745,9 @@ label > textarea {
 }
 
 .badge-accent {
-  background: #f7f1eb;
-  color: #684832;
-  border-color: #eee3d8;
-}
-
-.dark .badge-accent {
-  background: #453326;
-  color: #f8ede2;
-  border-color: #5b4637;
+  background: var(--secondary);
+  color: var(--secondary-foreground);
+  border-color: var(--line);
 }
 
 .status {
@@ -851,7 +842,7 @@ label > textarea {
 .chip.active {
   background: var(--brand);
   border-color: var(--brand);
-  color: #ffffff;
+  color: var(--primary-foreground);
 }
 
 /* =========================================================
@@ -920,7 +911,7 @@ label > textarea {
 
 .listing-fav:hover,
 .listing-fav.saved {
-  color: #d6455f;
+  color: var(--danger);
 }
 
 .listing-body {
@@ -1059,7 +1050,7 @@ label > textarea {
 
 .tabactive {
   background: var(--brand);
-  color: #ffffff;
+  color: var(--primary-foreground);
   border-color: var(--brand);
 }
 
@@ -1361,7 +1352,7 @@ label > textarea {
 .hero-search {
   display: flex;
   gap: 10px;
-  background: #ffffff;
+  background: var(--card);
   border-radius: 999px;
   padding: 8px 8px 8px 20px;
   align-items: center;
@@ -1375,7 +1366,7 @@ label > textarea {
   background: transparent;
   padding: 10px 0;
   box-shadow: none;
-  color: #292723;
+  color: var(--text);
 }
 
 .hero-search input:focus {
@@ -1386,7 +1377,7 @@ label > textarea {
   display: grid;
   grid-template-columns: 1.4fr 1fr 1fr auto;
   gap: 0;
-  background: #ffffff;
+  background: var(--card);
   border-radius: 16px;
   padding: 10px;
   align-items: stretch;
@@ -1404,11 +1395,11 @@ label > textarea {
 }
 
 .hero-field + .hero-field {
-  border-left: 1px solid #e8dfd6;
+  border-left: 1px solid var(--line);
 }
 
 .hero-field svg {
-  color: #79563e;
+  color: var(--brand);
   flex: none;
   margin-top: 2px;
 }
@@ -1421,7 +1412,7 @@ label > textarea {
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #766e65;
+  color: var(--muted-foreground);
 }
 
 .hero-field input {
@@ -1432,7 +1423,7 @@ label > textarea {
   box-shadow: none;
   font-size: 15px;
   font-weight: 500;
-  color: #292723;
+  color: var(--text);
   width: 100%;
 }
 
@@ -1538,8 +1529,8 @@ label > textarea {
 }
 
 .cta-panel {
-  background: linear-gradient(120deg, #573b2a, #79563e);
-  color: #ffffff;
+  background: linear-gradient(120deg, var(--brand-dark), var(--brand));
+  color: var(--primary-foreground);
   border-radius: 20px;
   padding: clamp(32px, 5vw, 56px);
   display: flex;
@@ -1551,7 +1542,7 @@ label > textarea {
 }
 
 .cta-panel p {
-  color: rgba(255, 255, 255, 0.84);
+  color: color-mix(in srgb, var(--primary-foreground) 84%, transparent);
   max-width: 560px;
   font-size: 16px;
   line-height: 1.7;
@@ -1725,7 +1716,7 @@ label > textarea {
 }
 
 .user-popover .danger:hover {
-  background: #fdf0ee;
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
   color: var(--danger);
 }
 
@@ -1966,7 +1957,7 @@ label > textarea {
 
 .footer-socials a:hover {
   background: var(--brand);
-  color: #ffffff;
+  color: var(--primary-foreground);
 }
 
 /* =========================================================
@@ -2096,7 +2087,7 @@ label > textarea {
   margin-top: 20px;
   border-radius: 12px;
   background: var(--brand);
-  color: #ffffff;
+  color: var(--primary-foreground);
   font-weight: 700;
   text-decoration: none;
   transition:
@@ -2175,12 +2166,12 @@ label > textarea {
 .search-panel-ref {
   display: grid;
   grid-template-columns: 1.2fr 1fr 1fr auto;
-  background: #ffffff;
+  background: var(--card);
   border-radius: 14px;
   padding: 8px;
   gap: 6px;
   max-width: 900px;
-  color: #292723;
+  color: var(--text);
   box-shadow: 0 16px 40px rgba(33, 25, 20, 0.22);
 }
 
@@ -2189,13 +2180,13 @@ label > textarea {
   align-items: center;
   gap: 12px;
   padding: 12px;
-  border-right: 1px solid #e8dfd6;
-  color: #79563e;
+  border-right: 1px solid var(--line);
+  color: var(--brand);
 }
 
 .search-panel-ref label span {
   font-size: 10px;
-  color: #766e65;
+  color: var(--muted-foreground);
   font-weight: 700;
   display: block;
   flex: 1;
@@ -2207,7 +2198,7 @@ label > textarea {
   outline: none;
   width: 100%;
   font-size: 13px;
-  color: #292723;
+  color: var(--text);
   background: transparent;
   margin-top: 4px;
 }
@@ -2219,8 +2210,8 @@ label > textarea {
   justify-content: center;
   gap: 8px;
   border: 0;
-  background: linear-gradient(120deg, #684832, #a77a55);
-  color: #ffffff;
+  background: linear-gradient(120deg, var(--brand-dark), var(--brand));
+  color: var(--primary-foreground);
   padding: 0 20px;
   border-radius: 10px;
   font-weight: 700;
@@ -2321,10 +2312,10 @@ label > textarea {
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: #ffffff;
+  background: var(--card);
   display: grid;
   place-items: center;
-  color: #79563e;
+  color: var(--brand);
 }
 
 .category-tile-ref strong,
@@ -2520,7 +2511,7 @@ label > textarea {
 
   .hero-field:nth-child(2),
   .hero-field:nth-child(4) {
-    border-left: 1px solid #e8dfd6;
+    border-left: 1px solid var(--line);
   }
 }
 
@@ -2629,7 +2620,7 @@ label > textarea {
 
   .hero-field + .hero-field {
     border-left: 0;
-    border-top: 1px solid #e8dfd6;
+    border-top: 1px solid var(--line);
   }
 
   .hero-panel .btn {
@@ -2682,7 +2673,7 @@ label > textarea {
 
   .search-panel-ref label {
     border-right: 0;
-    border-bottom: 1px solid #e8dfd6;
+    border-bottom: 1px solid var(--line);
   }
 
   .search-panel-ref button {

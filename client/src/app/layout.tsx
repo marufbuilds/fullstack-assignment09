@@ -1,4 +1,3 @@
- 
 import "./globals.css";
 import type { Metadata } from "next";
 
@@ -23,17 +22,9 @@ export const metadata: Metadata = {
   description: "Equiply is a modern equipment rental marketplace.",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={cn("font-sans", geist.variable)}
-    >
+    <html lang="en" suppressHydrationWarning className={cn("font-sans", geist.variable)}>
       <body>
         <ThemeProvider>
           <ToastProvider>

@@ -1,4 +1,3 @@
- 
 "use client";
 
 import Link from "next/link";
@@ -34,11 +33,7 @@ import type { Booking, Equipment } from "@/lib/types";
 
 import { AuthGuard } from "@/components/AuthGuard";
 
-import {
-  EmptyState,
-  ErrorState,
-  StatusBadge,
-} from "@/components/ui";
+import { EmptyState, ErrorState, StatusBadge } from "@/components/ui";
 
 function DashboardContent() {
   const { user, role, status } = useAuth();
@@ -105,29 +100,20 @@ function DashboardContent() {
   }
 
   const active = bookings.filter(
-    (booking) =>
-      booking.status === "pending" ||
-      booking.status === "confirmed"
+    (booking) => booking.status === "pending" || booking.status === "confirmed",
   );
 
-  const completed = bookings.filter(
-    (booking) => booking.status === "completed"
-  );
+  const completed = bookings.filter((booking) => booking.status === "completed");
 
   const paidAmount = bookings
     .filter((booking) => booking.paymentStatus === "paid")
-    .reduce(
-      (sum, booking) => sum + Number(booking.amount || 0),
-      0
-    );
+    .reduce((sum, booking) => sum + Number(booking.amount || 0), 0);
 
   const stats = [
     {
       label: isOwner ? "Incoming requests" : "Active rentals",
       value: loading ? "…" : active.length,
-      hint: isOwner
-        ? "Pending or confirmed requests"
-        : "Pending or confirmed",
+      hint: isOwner ? "Pending or confirmed requests" : "Pending or confirmed",
       icon: CalendarDays,
     },
     {
@@ -191,7 +177,6 @@ function DashboardContent() {
   return (
     <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-6 lg:px-8 lg:py-12">
       <div className="mx-auto max-w-[1160px]">
-
         {/* Welcome header */}
         <section className="mb-9 flex flex-col justify-between gap-6 border-b border-border pb-8 lg:flex-row lg:items-end">
           <div>
@@ -242,10 +227,7 @@ function DashboardContent() {
         {/* Error state */}
         {error && (
           <div className="mb-7">
-            <ErrorState
-              message={error}
-              onRetry={() => void load()}
-            />
+            <ErrorState message={error} onRetry={() => void load()} />
           </div>
         )}
 
@@ -286,9 +268,7 @@ function DashboardContent() {
                         {stat.value}
                       </h3>
 
-                      <p className="mt-2 text-xs text-muted-foreground">
-                        {stat.hint}
-                      </p>
+                      <p className="mt-2 text-xs text-muted-foreground">{stat.hint}</p>
                     </article>
                   );
                 })}
@@ -297,7 +277,6 @@ function DashboardContent() {
 
             {/* Main dashboard */}
             <div className="mt-8 grid items-start gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-
               {/* Recent bookings */}
               <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
                 <div className="flex flex-col justify-between gap-3 border-b border-border px-5 py-5 sm:flex-row sm:items-center sm:px-7">
@@ -307,9 +286,7 @@ function DashboardContent() {
                     </p>
 
                     <h2 className="mt-2 text-lg font-semibold text-card-foreground">
-                      {isOwner
-                        ? "Incoming rental requests"
-                        : "Your latest bookings"}
+                      {isOwner ? "Incoming rental requests" : "Your latest bookings"}
                     </h2>
                   </div>
 
@@ -337,11 +314,7 @@ function DashboardContent() {
                   {!loading && bookings.length === 0 && (
                     <EmptyState
                       icon={<CalendarDays size={28} />}
-                      title={
-                        isOwner
-                          ? "No rental requests yet"
-                          : "No bookings yet"
-                      }
+                      title={isOwner ? "No rental requests yet" : "No bookings yet"}
                       description={
                         isOwner
                           ? "When customers request your equipment, their bookings will appear here."
@@ -372,10 +345,7 @@ function DashboardContent() {
                             </h3>
 
                             <p className="mt-1 text-xs text-muted-foreground">
-                              {formatDateRange(
-                                booking.startDate,
-                                booking.endDate
-                              )}
+                              {formatDateRange(booking.startDate, booking.endDate)}
                             </p>
                           </div>
 
@@ -395,7 +365,6 @@ function DashboardContent() {
 
               {/* Right column */}
               <div className="space-y-6">
-
                 {/* Quick actions */}
                 <section className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-7">
                   <div className="mb-5">
@@ -413,34 +382,32 @@ function DashboardContent() {
                   </div>
 
                   <div className="space-y-2">
-                    {quickLinks.map(
-                      ({ title, description, href, icon: Icon }) => (
-                        <Link
-                          key={title}
-                          href={href}
-                          className="group flex items-center gap-3 rounded-xl border border-transparent p-3 transition hover:border-border hover:bg-background"
-                        >
-                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary text-primary transition group-hover:bg-primary group-hover:text-primary-foreground">
-                            <Icon size={18} />
-                          </div>
+                    {quickLinks.map(({ title, description, href, icon: Icon }) => (
+                      <Link
+                        key={title}
+                        href={href}
+                        className="group flex items-center gap-3 rounded-xl border border-transparent p-3 transition hover:border-border hover:bg-background"
+                      >
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary text-primary transition group-hover:bg-primary group-hover:text-primary-foreground">
+                          <Icon size={18} />
+                        </div>
 
-                          <div className="min-w-0 flex-1">
-                            <p className="text-sm font-semibold text-card-foreground">
-                              {title}
-                            </p>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-semibold text-card-foreground">
+                            {title}
+                          </p>
 
-                            <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                              {description}
-                            </p>
-                          </div>
+                          <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                            {description}
+                          </p>
+                        </div>
 
-                          <ArrowUpRight
-                            size={16}
-                            className="shrink-0 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-primary"
-                          />
-                        </Link>
-                      )
-                    )}
+                        <ArrowUpRight
+                          size={16}
+                          className="shrink-0 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-primary"
+                        />
+                      </Link>
+                    ))}
                   </div>
                 </section>
 
@@ -464,8 +431,8 @@ function DashboardContent() {
                     </div>
 
                     <p className="mt-4 text-sm leading-6 text-muted-foreground">
-                      Manage incoming rental requests and your
-                      equipment from your owner workspace.
+                      Manage incoming rental requests and your equipment from your owner
+                      workspace.
                     </p>
 
                     <Link
@@ -489,23 +456,19 @@ function DashboardContent() {
                     </div>
 
                     <p className="mt-4 text-sm leading-6 text-muted-foreground">
-                      Have equipment you don't use every day?
-                      Ask an administrator to enable owner tools
-                      for your account, then list your first item.
+                      Have equipment you don't use every day? Ask an administrator to
+                      enable owner tools for your account, then list your first item.
                     </p>
                   </section>
                 )}
 
                 {/* Account note */}
                 <div className="flex items-start gap-3 rounded-xl border border-border bg-card p-4">
-                  <CheckCircle2
-                    size={18}
-                    className="mt-0.5 shrink-0 text-primary"
-                  />
+                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-primary" />
 
                   <p className="text-xs leading-5 text-muted-foreground">
-                    Your dashboard keeps your rental activity,
-                    saved equipment and account shortcuts together.
+                    Your dashboard keeps your rental activity, saved equipment and account
+                    shortcuts together.
                   </p>
                 </div>
               </div>

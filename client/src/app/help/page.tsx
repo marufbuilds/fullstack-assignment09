@@ -1,4 +1,3 @@
- 
 "use client";
 
 import Link from "next/link";
@@ -52,12 +51,11 @@ export default function HelpPage() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <main className="min-h-screen bg-[#FFFCFA] text-[#292723]">
+    <main className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-[1000px] px-4 py-10 sm:px-8 md:py-14">
-
         {/* Page heading */}
         <div className="mb-10">
-          <div className="mb-4 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[2px] text-[#9A7656]">
+          <div className="mb-4 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[2px] text-primary">
             <CircleHelp size={15} />
             Help center
           </div>
@@ -66,9 +64,9 @@ export default function HelpPage() {
             How can we help?
           </h1>
 
-          <p className="mt-3 max-w-2xl text-sm leading-7 text-[#82776D] sm:text-base">
-            Find answers to common questions about using Equiply, booking
-            equipment, payments and listing your own equipment.
+          <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+            Find answers to common questions about using Equiply, booking equipment,
+            payments and listing your own equipment.
           </p>
         </div>
 
@@ -77,12 +75,12 @@ export default function HelpPage() {
           <div className="mb-5 flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold">Frequently asked questions</h2>
-              <p className="mt-1 text-xs text-[#82776D]">
+              <p className="mt-1 text-xs text-muted-foreground">
                 Everything you need to know to get started.
               </p>
             </div>
 
-            <span className="hidden rounded-full bg-[#F5EEE8] px-3 py-1.5 text-xs font-semibold text-[#79563E] sm:inline-flex">
+            <span className="hidden rounded-full bg-secondary px-3 py-1.5 text-xs font-semibold text-primary sm:inline-flex">
               {faqs.length} questions
             </span>
           </div>
@@ -94,11 +92,7 @@ export default function HelpPage() {
               return (
                 <article
                   key={faq.question}
-                  className={`overflow-hidden rounded-2xl border bg-white transition ${
-                    isOpen
-                      ? "border-[#D9C5B2] shadow-[0_5px_20px_rgba(60,40,20,0.045)]"
-                      : "border-[#E8DFD6]"
-                  }`}
+                  className={`overflow-hidden rounded-2xl border bg-card transition ${isOpen ? "border-border shadow-[0_5px_20px_rgba(60,40,20,0.045)]" : "border-border"}`}
                 >
                   <button
                     type="button"
@@ -107,26 +101,24 @@ export default function HelpPage() {
                     aria-expanded={isOpen}
                   >
                     <span className="flex items-center gap-4">
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F8F3EE] text-xs font-semibold text-[#79563E]">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-secondary text-xs font-semibold text-primary">
                         {String(index + 1).padStart(2, "0")}
                       </span>
 
-                      <span className="text-sm font-semibold text-[#292723] sm:text-base">
+                      <span className="text-sm font-semibold text-foreground sm:text-base">
                         {faq.question}
                       </span>
                     </span>
 
                     <ChevronDown
                       size={19}
-                      className={`shrink-0 text-[#9A7656] transition-transform duration-200 ${
-                        isOpen ? "rotate-180" : ""
-                      }`}
+                      className={`shrink-0 text-primary transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
                     />
                   </button>
 
                   {isOpen && (
-                    <div className="border-t border-[#F0EAE4] px-5 pb-5 pt-4 sm:px-6 sm:pl-[76px]">
-                      <p className="text-sm leading-7 text-[#82776D]">
+                    <div className="border-t border-border px-5 pb-5 pt-4 sm:px-6 sm:pl-[76px]">
+                      <p className="text-sm leading-7 text-muted-foreground">
                         {faq.answer}
                       </p>
                     </div>
@@ -140,44 +132,42 @@ export default function HelpPage() {
         {/* Support information */}
         <section className="mt-12">
           <div className="mb-5">
-            <p className="text-[10px] font-bold uppercase tracking-[2px] text-[#9A7656]">
+            <p className="text-[10px] font-bold uppercase tracking-[2px] text-primary">
               Need more help?
             </p>
-            <h2 className="mt-2 text-xl font-semibold">
-              We're here to help
-            </h2>
+            <h2 className="mt-2 text-xl font-semibold">We're here to help</h2>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-2xl border border-[#E8DFD6] bg-white p-5">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F8F3EE] text-[#79563E]">
+            <div className="rounded-2xl border border-border bg-card p-5">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-primary">
                 <Mail size={19} />
               </span>
               <h3 className="mt-4 text-sm font-semibold">Email support</h3>
               <a
                 href="mailto:support@equiply.example"
-                className="mt-2 block break-all text-xs text-[#79563E] hover:underline"
+                className="mt-2 block break-all text-xs text-primary hover:underline"
               >
                 support@equiply.example
               </a>
             </div>
 
-            <div className="rounded-2xl border border-[#E8DFD6] bg-white p-5">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F8F3EE] text-[#79563E]">
+            <div className="rounded-2xl border border-border bg-card p-5">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-primary">
                 <Clock3 size={19} />
               </span>
               <h3 className="mt-4 text-sm font-semibold">Response time</h3>
-              <p className="mt-2 text-xs leading-5 text-[#82776D]">
+              <p className="mt-2 text-xs leading-5 text-muted-foreground">
                 Within one business day
               </p>
             </div>
 
-            <div className="rounded-2xl border border-[#E8DFD6] bg-white p-5">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F8F3EE] text-[#79563E]">
+            <div className="rounded-2xl border border-border bg-card p-5">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-primary">
                 <MessageSquare size={19} />
               </span>
               <h3 className="mt-4 text-sm font-semibold">Booking help</h3>
-              <p className="mt-2 text-xs leading-5 text-[#82776D]">
+              <p className="mt-2 text-xs leading-5 text-muted-foreground">
                 Keep your booking reference handy
               </p>
             </div>
@@ -195,19 +185,17 @@ export default function HelpPage() {
                 Welcome to Equiply
               </div>
 
-              <h2 className="text-2xl font-semibold text-white">
-                Ready to get started?
-              </h2>
+              <h2 className="text-2xl font-semibold text-white">Ready to get started?</h2>
 
               <p className="mt-3 max-w-xl text-sm leading-6 text-white/75">
-                Create an account to save favorites, request rentals and
-                follow every booking from your dashboard.
+                Create an account to save favorites, request rentals and follow every
+                booking from your dashboard.
               </p>
             </div>
 
             <Link
               href="/register"
-              className="inline-flex h-12 shrink-0 items-center justify-center rounded-xl bg-[#F5F0E9] px-6 text-sm font-semibold text-[#46372C] transition hover:bg-white"
+              className="inline-flex h-12 shrink-0 items-center justify-center rounded-xl bg-secondary px-6 text-sm font-semibold text-foreground transition hover:bg-card"
             >
               Create account
               <ArrowRight className="ml-2 h-4 w-4" />
@@ -219,7 +207,7 @@ export default function HelpPage() {
         <div className="mt-8">
           <Link
             href="/equipment"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#79563E] transition hover:text-[#62432F]"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-primary transition hover:text-primary"
           >
             <PackageSearch size={17} />
             Back to marketplace

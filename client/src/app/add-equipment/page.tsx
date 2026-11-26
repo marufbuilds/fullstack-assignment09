@@ -1,4 +1,3 @@
- 
 "use client";
 
 // Owner form: submit a new listing to the marketplace for review.
@@ -20,11 +19,7 @@ import {
 } from "lucide-react";
 
 import { createEquipment, errorMessage } from "@/lib/api";
-import {
-  CATEGORIES,
-  FALLBACK_IMAGE,
-  RENTAL_TYPES,
-} from "@/lib/constants";
+import { CATEGORIES, FALLBACK_IMAGE, RENTAL_TYPES } from "@/lib/constants";
 
 import { AuthGuard } from "@/components/AuthGuard";
 import { Spinner } from "@/components/ui";
@@ -93,10 +88,7 @@ function AddEquipmentContent() {
         image: form.image.trim() || FALLBACK_IMAGE,
       });
 
-      showToast(
-        "Your equipment listing was submitted successfully.",
-        "success"
-      );
+      showToast("Your equipment listing was submitted successfully.", "success");
 
       window.setTimeout(() => {
         router.push("/owner/listings");
@@ -110,8 +102,10 @@ function AddEquipmentContent() {
   }
 
   const rentalLabel =
-    RENTAL_TYPES.find((type) => type.value === form.rentalType)
-      ?.label.replace("Per ", "") || "day";
+    RENTAL_TYPES.find((type) => type.value === form.rentalType)?.label.replace(
+      "Per ",
+      "",
+    ) || "day";
 
   const previewPrice = form.price
     ? Number(form.price).toLocaleString("en-US", {
@@ -149,8 +143,8 @@ function AddEquipmentContent() {
               </h1>
 
               <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
-                Share your equipment with people who need it. Add the details
-                below and submit your listing for review.
+                Share your equipment with people who need it. Add the details below and
+                submit your listing for review.
               </p>
             </div>
 
@@ -190,8 +184,7 @@ function AddEquipmentContent() {
               {/* Equipment name */}
               <div>
                 <label htmlFor="equipment-title" className={labelClass}>
-                  Equipment name{" "}
-                  <span className="text-destructive">*</span>
+                  Equipment name <span className="text-destructive">*</span>
                 </label>
 
                 <input
@@ -223,9 +216,7 @@ function AddEquipmentContent() {
                       id="equipment-category"
                       required
                       value={form.category}
-                      onChange={(event) =>
-                        change("category", event.target.value)
-                      }
+                      onChange={(event) => change("category", event.target.value)}
                       className={`${inputClass} appearance-none pl-11`}
                     >
                       <option value="">Select category</option>
@@ -254,9 +245,7 @@ function AddEquipmentContent() {
                       id="equipment-location"
                       required
                       value={form.location}
-                      onChange={(event) =>
-                        change("location", event.target.value)
-                      }
+                      onChange={(event) => change("location", event.target.value)}
                       placeholder="City or area"
                       className={`${inputClass} pl-11`}
                     />
@@ -267,10 +256,7 @@ function AddEquipmentContent() {
               {/* Description */}
               <div>
                 <div className="mb-2 flex items-center justify-between gap-3">
-                  <label
-                    htmlFor="equipment-description"
-                    className={labelClass}
-                  >
+                  <label htmlFor="equipment-description" className={labelClass}>
                     Description <span className="text-destructive">*</span>
                   </label>
 
@@ -286,9 +272,7 @@ function AddEquipmentContent() {
                   maxLength={3000}
                   rows={5}
                   value={form.description}
-                  onChange={(event) =>
-                    change("description", event.target.value)
-                  }
+                  onChange={(event) => change("description", event.target.value)}
                   placeholder="Describe condition, features, accessories and anything a renter should know..."
                   className="w-full resize-y rounded-xl border border-input bg-background px-4 py-3 text-sm leading-6 text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-ring/20"
                 />
@@ -298,8 +282,7 @@ function AddEquipmentContent() {
               <div className="grid gap-5 sm:grid-cols-2">
                 <div>
                   <label htmlFor="equipment-price" className={labelClass}>
-                    Rental price (USD){" "}
-                    <span className="text-destructive">*</span>
+                    Rental price (USD) <span className="text-destructive">*</span>
                   </label>
 
                   <div className="relative">
@@ -314,9 +297,7 @@ function AddEquipmentContent() {
                       step="0.01"
                       required
                       value={form.price}
-                      onChange={(event) =>
-                        change("price", event.target.value)
-                      }
+                      onChange={(event) => change("price", event.target.value)}
                       placeholder="45"
                       className={`${inputClass} pl-9`}
                     />
@@ -331,9 +312,7 @@ function AddEquipmentContent() {
                   <select
                     id="equipment-rental-type"
                     value={form.rentalType}
-                    onChange={(event) =>
-                      change("rentalType", event.target.value)
-                    }
+                    onChange={(event) => change("rentalType", event.target.value)}
                     className={inputClass}
                   >
                     {RENTAL_TYPES.map((type) => (
@@ -349,9 +328,7 @@ function AddEquipmentContent() {
               <div>
                 <label htmlFor="equipment-image" className={labelClass}>
                   Equipment photo URL{" "}
-                  <span className="font-normal text-muted-foreground">
-                    (optional)
-                  </span>
+                  <span className="font-normal text-muted-foreground">(optional)</span>
                 </label>
 
                 <div className="relative">
@@ -371,8 +348,8 @@ function AddEquipmentContent() {
                 </div>
 
                 <p className="mt-2 text-xs leading-5 text-muted-foreground">
-                  Add a direct image URL. If you leave this empty, Equiply will
-                  use its default equipment image.
+                  Add a direct image URL. If you leave this empty, Equiply will use its
+                  default equipment image.
                 </p>
               </div>
 
@@ -412,8 +389,8 @@ function AddEquipmentContent() {
               </div>
 
               <p className="text-xs leading-5 text-muted-foreground">
-                Your listing will be reviewed by an administrator before
-                appearing in the public marketplace.
+                Your listing will be reviewed by an administrator before appearing in the
+                public marketplace.
               </p>
             </form>
           </section>
@@ -424,9 +401,7 @@ function AddEquipmentContent() {
             <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
               <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4 sm:px-6">
                 <div>
-                  <h2 className="font-semibold text-card-foreground">
-                    Live preview
-                  </h2>
+                  <h2 className="font-semibold text-card-foreground">Live preview</h2>
 
                   <p className="mt-1 text-xs text-muted-foreground">
                     Your listing appearance
@@ -470,9 +445,7 @@ function AddEquipmentContent() {
 
                 <div className="mt-6 flex flex-wrap items-end justify-between gap-3 border-t border-border pt-5">
                   <div>
-                    <p className="text-xs text-muted-foreground">
-                      Rental price
-                    </p>
+                    <p className="text-xs text-muted-foreground">Rental price</p>
 
                     <p className="mt-1 text-2xl font-semibold text-primary">
                       ${previewPrice}
@@ -559,14 +532,11 @@ function AddEquipmentContent() {
               </div>
 
               <div className="mt-6 flex items-start gap-2 rounded-xl border border-border bg-muted p-4">
-                <CheckCircle2
-                  size={17}
-                  className="mt-0.5 shrink-0 text-primary"
-                />
+                <CheckCircle2 size={17} className="mt-0.5 shrink-0 text-primary" />
 
                 <p className="text-xs leading-5 text-muted-foreground">
-                  Your listing starts as pending review. It will become visible
-                  to renters after approval.
+                  Your listing starts as pending review. It will become visible to renters
+                  after approval.
                 </p>
               </div>
             </section>

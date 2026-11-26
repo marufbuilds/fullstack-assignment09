@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -29,16 +28,13 @@ const ToastContext = createContext<ToastContextType | null>(null);
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toast, setToast] = useState<ToastData | null>(null);
 
-  const showToast = useCallback(
-    (message: string, type: ToastType = "success") => {
-      setToast({
-        id: Date.now(),
-        message,
-        type,
-      });
-    },
-    []
-  );
+  const showToast = useCallback((message: string, type: ToastType = "success") => {
+    setToast({
+      id: Date.now(),
+      message,
+      type,
+    });
+  }, []);
 
   useEffect(() => {
     if (!toast) return;
@@ -63,7 +59,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     },
     info: {
       icon: <Info size={21} />,
-      iconStyle: "bg-[#F5EEE8] text-[#79563E]",
+      iconStyle: "bg-secondary text-primary",
       title: "Information",
     },
   };
@@ -77,7 +73,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           key={toast.id}
           role="status"
           aria-live="polite"
-          className="fixed right-4 top-5 z-[9999] flex w-[calc(100%-2rem)] max-w-sm items-start gap-3 rounded-2xl border border-[#E8DFD6] bg-white p-4 shadow-[0_12px_40px_rgba(60,40,20,0.12)] animate-in slide-in-from-top-3 fade-in duration-300"
+          className="fixed right-4 top-5 z-[9999] flex w-[calc(100%-2rem)] max-w-sm items-start gap-3 rounded-2xl border border-border bg-card p-4 shadow-[0_12px_40px_rgba(60,40,20,0.12)] animate-in slide-in-from-top-3 fade-in duration-300"
         >
           <div
             className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${styles[toast.type].iconStyle}`}
@@ -86,11 +82,11 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           </div>
 
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-[#292723]">
+            <p className="text-sm font-semibold text-foreground">
               {styles[toast.type].title}
             </p>
 
-            <p className="mt-1 text-xs leading-5 text-[#82776D]">
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">
               {toast.message}
             </p>
           </div>
@@ -99,7 +95,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             type="button"
             onClick={() => setToast(null)}
             aria-label="Close notification"
-            className="rounded-lg p-1 text-[#A0968D] transition hover:bg-[#F8F3EE] hover:text-[#79563E]"
+            className="rounded-lg p-1 text-muted-foreground transition hover:bg-secondary hover:text-primary"
           >
             <X size={17} />
           </button>

@@ -1,4 +1,3 @@
- 
 "use client";
 
 import Link from "next/link";
@@ -87,8 +86,7 @@ function getEquipmentImages(item: EquipmentWithContact) {
     ...(item.gallery || []),
     ...(item.imageUrls || []),
   ].filter(
-    (image): image is string =>
-      typeof image === "string" && image.trim().length > 0
+    (image): image is string => typeof image === "string" && image.trim().length > 0,
   );
 
   return [...new Set(images)].slice(0, 3);
@@ -142,11 +140,7 @@ export default function EquipmentDetails() {
 
         if (cancelled) return;
 
-        setRelated(
-          similar.items
-            .filter((row) => row._id !== data._id)
-            .slice(0, 3)
-        );
+        setRelated(similar.items.filter((row) => row._id !== data._id).slice(0, 3));
       } catch (error) {
         if (cancelled) return;
 
@@ -164,13 +158,11 @@ export default function EquipmentDetails() {
             setSelectedImage(demoItem.image || FALLBACK_IMAGE);
           } else {
             setLoadError(
-              "The Equiply API is unreachable and this listing is not part of the demo data."
+              "The Equiply API is unreachable and this listing is not part of the demo data.",
             );
           }
         } else if (error instanceof ApiError && error.status === 404) {
-          setLoadError(
-            "This listing does not exist or is no longer available."
-          );
+          setLoadError("This listing does not exist or is no longer available.");
         } else {
           setLoadError(errorMessage(error));
         }
@@ -225,9 +217,7 @@ export default function EquipmentDetails() {
     }
 
     if (status === "unauthenticated") {
-      router.push(
-        `/login?next=${encodeURIComponent(`/equipment/${params.id}`)}`
-      );
+      router.push(`/login?next=${encodeURIComponent(`/equipment/${params.id}`)}`);
       return;
     }
 
@@ -252,7 +242,7 @@ export default function EquipmentDetails() {
 
         if (!booking?._id) {
           throw new Error(
-            "The server did not return a booking ID. Please check your rentals before trying again."
+            "The server did not return a booking ID. Please check your rentals before trying again.",
           );
         }
 
@@ -266,9 +256,7 @@ export default function EquipmentDetails() {
       const checkoutUrl = await startCheckout(currentBookingId);
 
       if (!checkoutUrl) {
-        throw new Error(
-          "The payment service did not return a checkout URL."
-        );
+        throw new Error("The payment service did not return a checkout URL.");
       }
 
       window.location.assign(checkoutUrl);
@@ -277,7 +265,7 @@ export default function EquipmentDetails() {
 
       if (bookingId) {
         setMessage(
-          `Your booking has been created, but payment could not start. You can retry payment. ${errorMessage(error)}`
+          `Your booking has been created, but payment could not start. You can retry payment. ${errorMessage(error)}`,
         );
       } else {
         setMessage(errorMessage(error));
@@ -326,17 +314,14 @@ export default function EquipmentDetails() {
   const galleryImages = getEquipmentImages(item);
   const mainImage = selectedImage || galleryImages[0] || FALLBACK_IMAGE;
 
-  const days =
-    start && end && end > start ? daysBetween(start, end) : 0;
+  const days = start && end && end > start ? daysBetween(start, end) : 0;
 
   const total = days * item.price;
   const unit = rentalUnit(item.rentalType);
 
-  const contactPhone =
-    item.ownerPhone || item.contactPhone || item.phone;
+  const contactPhone = item.ownerPhone || item.contactPhone || item.phone;
 
-  const location =
-    item.address || item.ownerAddress || item.location;
+  const location = item.address || item.ownerAddress || item.location;
 
   const mapUrl = location
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`
@@ -345,7 +330,6 @@ export default function EquipmentDetails() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-[1280px] px-4 py-7 sm:px-6 lg:px-8 lg:py-10">
-
         {/* Breadcrumb */}
         <Link
           href="/equipment"
@@ -356,10 +340,8 @@ export default function EquipmentDetails() {
         </Link>
 
         <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_390px]">
-
           {/* Main content */}
           <div className="min-w-0 space-y-7">
-
             {/* Equipment gallery */}
             <section className="space-y-4">
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1.65fr_1fr]">
@@ -477,20 +459,14 @@ export default function EquipmentDetails() {
                     {item.rating ? (
                       <span className="flex items-center gap-1.5">
                         <Star size={15} className="fill-amber-400 text-amber-400" />
-                        <strong className="text-foreground">
-                          {item.rating}
-                        </strong>
+                        <strong className="text-foreground">{item.rating}</strong>
                         <span>({item.reviews || 0} reviews)</span>
                       </span>
                     ) : null}
                   </div>
                 </div>
 
-                <FavoriteButton
-                  item={item}
-                  withLabel
-                  className="shrink-0"
-                />
+                <FavoriteButton item={item} withLabel className="shrink-0" />
               </div>
 
               <Separator className="my-6 bg-border" />
@@ -499,9 +475,7 @@ export default function EquipmentDetails() {
                 <span className="text-3xl font-semibold tracking-tight text-primary sm:text-4xl">
                   {money(item.price)}
                 </span>
-                <span className="pb-1 text-sm text-muted-foreground">
-                  / {unit}
-                </span>
+                <span className="pb-1 text-sm text-muted-foreground">/ {unit}</span>
               </div>
             </section>
 
@@ -530,9 +504,7 @@ export default function EquipmentDetails() {
                 <CardTitle className="text-xl font-semibold text-card-foreground">
                   Equipment information
                 </CardTitle>
-                <CardDescription>
-                  Important details about this listing.
-                </CardDescription>
+                <CardDescription>Important details about this listing.</CardDescription>
               </CardHeader>
 
               <CardContent className="grid gap-6 sm:grid-cols-2">
@@ -564,9 +536,7 @@ export default function EquipmentDetails() {
                     </div>
                     <div className="min-w-0">
                       <p className="text-sm text-muted-foreground">{label}</p>
-                      <p className="mt-1 font-semibold text-card-foreground">
-                        {value}
-                      </p>
+                      <p className="mt-1 font-semibold text-card-foreground">{value}</p>
                     </div>
                   </div>
                 ))}
@@ -647,9 +617,7 @@ export default function EquipmentDetails() {
                       <p className="font-semibold text-card-foreground">
                         {item.owner || "Equipment owner"}
                       </p>
-                      <p className="text-sm text-muted-foreground">
-                        Equipment provider
-                      </p>
+                      <p className="text-sm text-muted-foreground">Equipment provider</p>
                     </div>
                   </div>
 
@@ -686,8 +654,8 @@ export default function EquipmentDetails() {
             <Alert className="border-border bg-secondary text-foreground">
               <ShieldCheck size={19} className="text-primary" />
               <AlertDescription className="ml-2 text-sm leading-6 text-muted-foreground">
-                Before renting, confirm the equipment condition, pickup
-                location, and rental terms with the owner.
+                Before renting, confirm the equipment condition, pickup location, and
+                rental terms with the owner.
               </AlertDescription>
             </Alert>
 
@@ -746,18 +714,14 @@ export default function EquipmentDetails() {
                   <span className="text-3xl font-semibold tracking-tight text-primary">
                     {money(item.price)}
                   </span>
-                  <span className="pb-1 text-sm text-muted-foreground">
-                    / {unit}
-                  </span>
+                  <span className="pb-1 text-sm text-muted-foreground">/ {unit}</span>
                 </div>
 
                 <Separator className="bg-border" />
 
                 {/* Start date */}
                 <div className="space-y-2">
-                  <Label htmlFor="start-date">
-                    Start rental date
-                  </Label>
+                  <Label htmlFor="start-date">Start rental date</Label>
                   <Input
                     id="start-date"
                     type="date"
@@ -773,9 +737,7 @@ export default function EquipmentDetails() {
 
                 {/* End date */}
                 <div className="space-y-2">
-                  <Label htmlFor="end-date">
-                    End rental date
-                  </Label>
+                  <Label htmlFor="end-date">End rental date</Label>
                   <Input
                     id="end-date"
                     type="date"
@@ -891,9 +853,7 @@ export default function EquipmentDetails() {
                   {submitting ? (
                     <>
                       <Loader2 size={17} className="animate-spin" />
-                      {bookingId
-                        ? "Preparing payment..."
-                        : "Creating booking..."}
+                      {bookingId ? "Preparing payment..." : "Creating booking..."}
                     </>
                   ) : bookingId ? (
                     <>
@@ -911,18 +871,14 @@ export default function EquipmentDetails() {
                 {/* Booking feedback */}
                 {message && (
                   <Alert
-                    variant={
-                      messageKind === "success" ? "default" : "destructive"
-                    }
+                    variant={messageKind === "success" ? "default" : "destructive"}
                     className={
                       messageKind === "success"
                         ? "border-border bg-secondary text-foreground"
                         : ""
                     }
                   >
-                    {messageKind === "success" && (
-                      <CheckCircle2 size={16} />
-                    )}
+                    {messageKind === "success" && <CheckCircle2 size={16} />}
                     <AlertDescription>{message}</AlertDescription>
                   </Alert>
                 )}
@@ -946,16 +902,12 @@ export default function EquipmentDetails() {
 
                   <div className="flex items-start gap-2">
                     <CreditCard size={16} className="mt-0.5 shrink-0 text-primary" />
-                    <span>
-                      Secure payment is handled through Stripe Checkout.
-                    </span>
+                    <span>Secure payment is handled through Stripe Checkout.</span>
                   </div>
 
                   <div className="flex items-start gap-2">
                     <Clock3 size={16} className="mt-0.5 shrink-0 text-primary" />
-                    <span>
-                      The owner can confirm the requested rental dates.
-                    </span>
+                    <span>The owner can confirm the requested rental dates.</span>
                   </div>
                 </div>
               </CardContent>
@@ -972,9 +924,7 @@ export default function EquipmentDetails() {
                   <p className="font-semibold text-card-foreground">
                     {item.owner || "Equipment owner"}
                   </p>
-                  <p className="text-xs text-muted-foreground">
-                    Equipment provider
-                  </p>
+                  <p className="text-xs text-muted-foreground">Equipment provider</p>
                 </div>
 
                 {contactPhone && (

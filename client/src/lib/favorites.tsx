@@ -1,4 +1,3 @@
- 
 "use client";
 
 // Favorites work for signed-in users through the API
@@ -13,11 +12,7 @@ import {
   type ReactNode,
 } from "react";
 
-import {
-  addFavorite,
-  fetchFavorites,
-  removeFavorite,
-} from "./api";
+import { addFavorite, fetchFavorites, removeFavorite } from "./api";
 
 import { useAuth } from "./auth";
 import type { Equipment } from "./types";
@@ -36,9 +31,7 @@ type FavoritesContextValue = {
   ids: string[];
   loading: boolean;
   has: (id: string) => boolean;
-  toggle: (
-    item: Equipment,
-  ) => Promise<{ saved: boolean; message: string }>;
+  toggle: (item: Equipment) => Promise<{ saved: boolean; message: string }>;
   remove: (id: string) => Promise<void>;
 };
 
@@ -57,9 +50,7 @@ function readStored(): StoredFavorite[] {
   if (typeof window === "undefined") return [];
 
   try {
-    const data = JSON.parse(
-      localStorage.getItem(STORAGE_KEY) || "[]",
-    );
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 
     return Array.isArray(data) ? data : [];
   } catch {
@@ -70,17 +61,10 @@ function readStored(): StoredFavorite[] {
 function writeStored(items: StoredFavorite[]) {
   if (typeof window === "undefined") return;
 
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(items),
-  );
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 }
 
-export function FavoritesProvider({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export function FavoritesProvider({ children }: { children: ReactNode }) {
   const { isAuthenticated } = useAuth();
 
   const [ids, setIds] = useState<string[]>([]);
@@ -98,17 +82,13 @@ export function FavoritesProvider({
           const rows = await fetchFavorites();
 
           if (!cancelled) {
-            const favoriteIds = rows.map((row) =>
-              String(row.equipmentId),
-            );
+            const favoriteIds = rows.map((row) => String(row.equipmentId));
 
             setIds([...new Set(favoriteIds)]);
           }
         } else {
           if (!cancelled) {
-            const storedIds = readStored().map(
-              (row) => row.id,
-            );
+            const storedIds = readStored().map((row) => row.id);
 
             setIds([...new Set(storedIds)]);
           }
@@ -132,10 +112,7 @@ export function FavoritesProvider({
   }, [isAuthenticated]);
 
   // Check whether an item is already a favorite.
-  const has = useCallback(
-    (id: string) => ids.includes(id),
-    [ids],
-  );
+  const has = useCallback((id: string) => ids.includes(id), [ids]);
 
   // Add or remove a favorite using the heart button.
   const toggle = useCallback(
@@ -147,9 +124,7 @@ export function FavoritesProvider({
           if (saved) {
             await removeFavorite(item._id);
 
-            setIds((current) =>
-              current.filter((id) => id !== item._id),
-            );
+            setIds((current) => current.filter((id) => id !== item._id));
 
             return {
               saved: false,
@@ -160,9 +135,7 @@ export function FavoritesProvider({
           await addFavorite(item._id);
 
           setIds((current) =>
-            current.includes(item._id)
-              ? current
-              : [...current, item._id],
+            current.includes(item._id) ? current : [...current, item._id],
           );
 
           return {
@@ -173,9 +146,7 @@ export function FavoritesProvider({
           return {
             saved,
             message:
-              error instanceof Error
-                ? error.message
-                : "Could not update favorites",
+              error instanceof Error ? error.message : "Could not update favorites",
           };
         }
       }
@@ -184,13 +155,9 @@ export function FavoritesProvider({
       const stored = readStored();
 
       if (saved) {
-        writeStored(
-          stored.filter((row) => row.id !== item._id),
-        );
+        writeStored(stored.filter((row) => row.id !== item._id));
 
-        setIds((current) =>
-          current.filter((id) => id !== item._id),
-        );
+        setIds((current) => current.filter((id) => id !== item._id));
 
         return {
           saved: false,
@@ -198,9 +165,7 @@ export function FavoritesProvider({
         };
       }
 
-      const alreadyStored = stored.some(
-        (row) => row.id === item._id,
-      );
+      const alreadyStored = stored.some((row) => row.id === item._id);
 
       if (!alreadyStored) {
         writeStored([
@@ -216,9 +181,7 @@ export function FavoritesProvider({
       }
 
       setIds((current) =>
-        current.includes(item._id)
-          ? current
-          : [...current, item._id],
+        current.includes(item._id) ? current : [...current, item._id],
       );
 
       return {
@@ -238,14 +201,10 @@ export function FavoritesProvider({
       } else {
         const stored = readStored();
 
-        writeStored(
-          stored.filter((row) => row.id !== id),
-        );
+        writeStored(stored.filter((row) => row.id !== id));
       }
 
-      setIds((current) =>
-        current.filter((value) => value !== id),
-      );
+      setIds((current) => current.filter((value) => value !== id));
     },
     [isAuthenticated],
   );

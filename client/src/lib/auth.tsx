@@ -1,13 +1,6 @@
- 
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { createAuthClient } from "better-auth/react";
 import { API_URL } from "./api";
 import type { AuthUser } from "./types";
@@ -54,14 +47,15 @@ const AuthContext = createContext<AuthContextValue>({
 });
 
 function normalizeRole(value: unknown): string {
-  return String(value ?? "").trim().toLowerCase();
+  return String(value ?? "")
+    .trim()
+    .toLowerCase();
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const session = authClient.useSession();
 
-  const sessionUser =
-    (session.data?.user as unknown as AuthUser | undefined) ?? null;
+  const sessionUser = (session.data?.user as unknown as AuthUser | undefined) ?? null;
 
   const [profileUser, setProfileUser] = useState<AuthUser | null>(null);
   const [profileLoading, setProfileLoading] = useState(false);
@@ -125,12 +119,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, [
-    sessionUser?.id,
-    sessionUser?.email,
-    sessionUser?.role,
-    profileReloadKey,
-  ]);
+  }, [sessionUser?.id, sessionUser?.email, sessionUser?.role, profileReloadKey]);
 
   const user: AuthUser | null = sessionUser
     ? ({
@@ -145,11 +134,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const role = normalizeRole(user?.role);
 
-  const status: AuthStatus = session.isPending || profileLoading
-    ? "loading"
-    : sessionUser
-      ? "authenticated"
-      : "unauthenticated";
+  const status: AuthStatus =
+    session.isPending || profileLoading
+      ? "loading"
+      : sessionUser
+        ? "authenticated"
+        : "unauthenticated";
 
   async function refresh() {
     setProfileUser(null);

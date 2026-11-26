@@ -1,4 +1,3 @@
- 
 "use client";
 
 import Link from "next/link";
@@ -20,18 +19,18 @@ export function AuthGuard({ children, require }: AuthGuardProps) {
   const pathname = usePathname();
   const router = useRouter();
 
-  const contextRole = String(role ?? "").trim().toLowerCase();
-  const userRole = String(user?.role ?? "").trim().toLowerCase();
+  const contextRole = String(role ?? "")
+    .trim()
+    .toLowerCase();
+  const userRole = String(user?.role ?? "")
+    .trim()
+    .toLowerCase();
 
   // Recognize admin from either auth source.
   const isAdmin = contextRole === "admin" || userRole === "admin";
   const isOwner = contextRole === "owner" || userRole === "owner";
 
-  const currentRole = isAdmin
-    ? "admin"
-    : isOwner
-      ? "owner"
-      : contextRole || userRole;
+  const currentRole = isAdmin ? "admin" : isOwner ? "owner" : contextRole || userRole;
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -52,13 +51,14 @@ export function AuthGuard({ children, require }: AuthGuardProps) {
     return (
       <div className="wrap section" style={{ maxWidth: 720 }}>
         <div className="card empty">
-          <span className="empty-icon" style={{ background: "#fff6e6", color: "#9a6700" }}>
+          <span
+            className="empty-icon"
+            style={{ background: "#fff6e6", color: "#9a6700" }}
+          >
             <ShieldAlert size={28} />
           </span>
           <h1 className="h3">Admin access required</h1>
-          <p className="muted">
-            Your account does not have administrator permissions.
-          </p>
+          <p className="muted">Your account does not have administrator permissions.</p>
           <Link className="btn" href="/dashboard">
             Back to dashboard
           </Link>
@@ -71,13 +71,16 @@ export function AuthGuard({ children, require }: AuthGuardProps) {
     return (
       <div className="wrap section" style={{ maxWidth: 720 }}>
         <div className="card empty">
-          <span className="empty-icon" style={{ background: "#fff6e6", color: "#9a6700" }}>
+          <span
+            className="empty-icon"
+            style={{ background: "#fff6e6", color: "#9a6700" }}
+          >
             <Lock size={28} />
           </span>
           <h1 className="h3">Owner access required</h1>
           <p className="muted">
-            Your current account role is <b>{currentRole || "unknown"}</b>.
-            You need an owner or admin account to access this page.
+            Your current account role is <b>{currentRole || "unknown"}</b>. You need an
+            owner or admin account to access this page.
           </p>
           <Link className="btn" href="/dashboard">
             Back to dashboard

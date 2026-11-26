@@ -1,4 +1,3 @@
- 
 "use client";
 
 import Link from "next/link";
@@ -112,38 +111,34 @@ function RentalsContent() {
   const filtered = bookings.filter((booking) => matchesTab(booking, tab));
 
   const needsPayment = bookings.filter(
-    (booking) =>
-      booking.status === "pending" && booking.paymentStatus !== "paid",
+    (booking) => booking.status === "pending" && booking.paymentStatus !== "paid",
   );
 
-  const paidBookings = bookings.filter(
-    (booking) => booking.paymentStatus === "paid",
-  );
+  const paidBookings = bookings.filter((booking) => booking.paymentStatus === "paid");
 
   return (
-    <main className="min-h-screen bg-[#f5f1eb] px-4 py-10 sm:px-6 sm:py-14">
+    <main className="min-h-screen bg-secondary px-4 py-10 sm:px-6 sm:py-14">
       <div className="mx-auto max-w-6xl">
-
         {/* Page heading */}
-        <div className="flex flex-col gap-6 border-b border-[#ded5ca] pb-8 sm:flex-row sm:items-end sm:justify-between">
+        <div className="flex flex-col gap-6 border-b border-border pb-8 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#98795e]">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-primary">
               Your Equiply account
             </p>
 
-            <h1 className="mt-3 text-3xl font-semibold tracking-tight text-[#302a23] sm:text-4xl">
+            <h1 className="mt-3 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
               My rentals
             </h1>
 
-            <p className="mt-3 max-w-xl text-sm leading-7 text-[#82786c]">
-              Everything you've rented, all in one place. Manage your bookings
-              and keep track of your rental journey.
+            <p className="mt-3 max-w-xl text-sm leading-7 text-muted-foreground">
+              Everything you've rented, all in one place. Manage your bookings and keep
+              track of your rental journey.
             </p>
           </div>
 
           <Link
             href="/equipment"
-            className="inline-flex items-center justify-center gap-2 self-start bg-[#806247] px-6 py-3.5 text-xs font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-[#684e39] sm:self-auto"
+            className="inline-flex items-center justify-center gap-2 self-start bg-primary px-6 py-3.5 text-xs font-semibold uppercase tracking-[0.12em] text-primary-foreground transition hover:bg-primary-hover sm:self-auto"
           >
             Explore equipment
             <ArrowRight size={16} />
@@ -153,38 +148,38 @@ function RentalsContent() {
         {/* Overview cards */}
         {!loading && !error && (
           <section className="grid grid-cols-2 gap-3 py-7 sm:grid-cols-3 sm:gap-5">
-            <div className="border border-[#e6ddd2] bg-[#fffdfa] p-5">
-              <div className="flex items-center gap-2 text-[#98795e]">
+            <div className="border border-border bg-background p-5">
+              <div className="flex items-center gap-2 text-primary">
                 <PackageOpen size={17} />
                 <span className="text-[10px] font-semibold uppercase tracking-[0.15em]">
                   Total rentals
                 </span>
               </div>
-              <p className="mt-4 text-3xl font-semibold tracking-tight text-[#302a23]">
+              <p className="mt-4 text-3xl font-semibold tracking-tight text-foreground">
                 {bookings.length}
               </p>
             </div>
 
-            <div className="border border-[#e6ddd2] bg-[#fffdfa] p-5">
-              <div className="flex items-center gap-2 text-[#98795e]">
+            <div className="border border-border bg-background p-5">
+              <div className="flex items-center gap-2 text-primary">
                 <Clock3 size={17} />
                 <span className="text-[10px] font-semibold uppercase tracking-[0.15em]">
                   Awaiting payment
                 </span>
               </div>
-              <p className="mt-4 text-3xl font-semibold tracking-tight text-[#302a23]">
+              <p className="mt-4 text-3xl font-semibold tracking-tight text-foreground">
                 {needsPayment.length}
               </p>
             </div>
 
-            <div className="col-span-2 border border-[#e6ddd2] bg-[#fffdfa] p-5 sm:col-span-1">
-              <div className="flex items-center gap-2 text-[#98795e]">
+            <div className="col-span-2 border border-border bg-background p-5 sm:col-span-1">
+              <div className="flex items-center gap-2 text-primary">
                 <CheckCircle2 size={17} />
                 <span className="text-[10px] font-semibold uppercase tracking-[0.15em]">
                   Payments completed
                 </span>
               </div>
-              <p className="mt-4 text-3xl font-semibold tracking-tight text-[#302a23]">
+              <p className="mt-4 text-3xl font-semibold tracking-tight text-foreground">
                 {paidBookings.length}
               </p>
             </div>
@@ -199,13 +194,11 @@ function RentalsContent() {
             </div>
 
             <div>
-              <p className="text-sm font-semibold text-[#604a32]">
-                Payment required
-              </p>
+              <p className="text-sm font-semibold text-[#604a32]">Payment required</p>
               <p className="mt-1 text-xs leading-6 text-[#8c7964]">
                 You have {needsPayment.length} booking
-                {needsPayment.length === 1 ? "" : "s"} waiting for payment.
-                Complete checkout to continue the rental process.
+                {needsPayment.length === 1 ? "" : "s"} waiting for payment. Complete
+                checkout to continue the rental process.
               </p>
             </div>
           </div>
@@ -221,21 +214,21 @@ function RentalsContent() {
         {/* Booking section heading */}
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#98795e]">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-primary">
               Rental management
             </p>
-            <h2 className="mt-2 text-xl font-semibold text-[#302a23] sm:text-2xl">
+            <h2 className="mt-2 text-xl font-semibold text-foreground sm:text-2xl">
               Your booking history
             </h2>
           </div>
 
-          <p className="text-xs text-[#928779]">
+          <p className="text-xs text-muted-foreground">
             {filtered.length} booking{filtered.length === 1 ? "" : "s"} found
           </p>
         </div>
 
         {/* Tabs */}
-        <div className="mt-6 flex gap-2 overflow-x-auto border-b border-[#ded5ca] pb-3">
+        <div className="mt-6 flex gap-2 overflow-x-auto border-b border-border pb-3">
           {TABS.map((value) => {
             const active = tab === value;
 
@@ -243,11 +236,7 @@ function RentalsContent() {
               <button
                 key={value}
                 onClick={() => setTab(value)}
-                className={`shrink-0 px-5 py-2.5 text-xs font-semibold transition ${
-                  active
-                    ? "bg-[#806247] text-white"
-                    : "border border-[#ded5ca] bg-[#faf8f4] text-[#766b5e] hover:bg-[#eee7dd]"
-                }`}
+                className={`shrink-0 px-5 py-2.5 text-xs font-semibold transition ${active ? "bg-primary text-primary-foreground" : "border border-border bg-background text-muted-foreground hover:bg-secondary"}`}
               >
                 {value}
               </button>
@@ -261,7 +250,7 @@ function RentalsContent() {
             {[1, 2, 3].map((item) => (
               <div
                 key={item}
-                className="h-40 animate-pulse border border-[#e6ddd2] bg-[#fffdfa]"
+                className="h-40 animate-pulse border border-border bg-background"
               />
             ))}
           </div>
@@ -269,15 +258,15 @@ function RentalsContent() {
 
         {/* Error */}
         {!loading && error && (
-          <div className="mt-8 border border-[#e6ddd2] bg-[#fffdfa] px-6 py-12 text-center">
-            <p className="text-lg font-semibold text-[#302a23]">
+          <div className="mt-8 border border-border bg-background px-6 py-12 text-center">
+            <p className="text-lg font-semibold text-foreground">
               Unable to load your rentals
             </p>
-            <p className="mt-2 text-sm text-[#82786c]">{error}</p>
+            <p className="mt-2 text-sm text-muted-foreground">{error}</p>
 
             <button
               onClick={() => void load()}
-              className="mt-6 bg-[#806247] px-6 py-3 text-xs font-semibold uppercase tracking-wider text-white transition hover:bg-[#684e39]"
+              className="mt-6 bg-primary px-6 py-3 text-xs font-semibold uppercase tracking-wider text-primary-foreground transition hover:bg-primary-hover"
             >
               Try again
             </button>
@@ -286,18 +275,18 @@ function RentalsContent() {
 
         {/* Empty state */}
         {!loading && !error && filtered.length === 0 && (
-          <div className="mt-8 border border-[#e6ddd2] bg-[#fffdfa] px-6 py-16 text-center">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#f3eee6] text-[#98795e]">
+          <div className="mt-8 border border-border bg-background px-6 py-16 text-center">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-secondary text-primary">
               <PackageOpen size={28} strokeWidth={1.5} />
             </div>
 
-            <h3 className="mt-6 text-xl font-semibold text-[#302a23]">
+            <h3 className="mt-6 text-xl font-semibold text-foreground">
               {tab === "All"
                 ? "Your rental journey starts here"
                 : `No ${tab.toLowerCase()} rentals`}
             </h3>
 
-            <p className="mx-auto mt-3 max-w-md text-sm leading-7 text-[#82786c]">
+            <p className="mx-auto mt-3 max-w-md text-sm leading-7 text-muted-foreground">
               {tab === "All"
                 ? "Discover useful equipment, choose your rental dates and manage everything from this page."
                 : "There are no bookings in this category right now."}
@@ -305,7 +294,7 @@ function RentalsContent() {
 
             <Link
               href="/equipment"
-              className="mt-7 inline-flex items-center gap-2 bg-[#806247] px-6 py-3.5 text-xs font-semibold uppercase tracking-wider text-white transition hover:bg-[#684e39]"
+              className="mt-7 inline-flex items-center gap-2 bg-primary px-6 py-3.5 text-xs font-semibold uppercase tracking-wider text-primary-foreground transition hover:bg-primary-hover"
             >
               Discover equipment
               <ArrowRight size={16} />
@@ -318,20 +307,18 @@ function RentalsContent() {
           <div className="mt-6 space-y-4">
             {filtered.map((booking) => {
               const awaitingPayment =
-                booking.status === "pending" &&
-                booking.paymentStatus !== "paid";
+                booking.status === "pending" && booking.paymentStatus !== "paid";
 
               return (
                 <article
                   key={booking._id}
-                  className="border border-[#e6ddd2] bg-[#fffdfa] p-5 transition-shadow hover:shadow-[0_8px_30px_rgba(73,57,39,0.05)] sm:p-7"
+                  className="border border-border bg-background p-5 transition-shadow hover:shadow-[0_8px_30px_rgba(73,57,39,0.05)] sm:p-7"
                 >
                   <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
-
                     {/* Booking information */}
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="bg-[#f3eee6] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#806247]">
+                        <span className="bg-secondary px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-primary">
                           Rental booking
                         </span>
 
@@ -354,32 +341,31 @@ function RentalsContent() {
                         </span>
                       </div>
 
-                      <h3 className="mt-4 break-words text-xl font-semibold tracking-tight text-[#302a23]">
+                      <h3 className="mt-4 break-words text-xl font-semibold tracking-tight text-foreground">
                         {booking.equipmentTitle || "Equipment rental"}
                       </h3>
 
-                      <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-3 text-xs text-[#82786c]">
+                      <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-3 text-xs text-muted-foreground">
                         <span className="flex items-center gap-2">
-                          <CalendarDays size={15} className="text-[#98795e]" />
-                          {formatDateRange(
-                            booking.startDate,
-                            booking.endDate,
-                          )}
+                          <CalendarDays size={15} className="text-primary" />
+                          {formatDateRange(booking.startDate, booking.endDate)}
                         </span>
 
                         <span className="flex items-center gap-2">
-                          <MapPin size={15} className="text-[#98795e]" />
+                          <MapPin size={15} className="text-primary" />
                           {booking.days} day{booking.days === 1 ? "" : "s"}
                         </span>
                       </div>
 
-                      <p className="mt-3 text-[11px] text-[#a09587]">
+                      <p className="mt-3 text-[11px] text-muted-foreground">
                         Requested{" "}
                         {booking.createdAt
                           ? new Date(booking.createdAt).toLocaleDateString()
                           : "—"}
                         {awaitingPayment && booking.expiresAt
-                          ? ` · Payment hold until ${new Date(booking.expiresAt).toLocaleTimeString([], {
+                          ? ` · Payment hold until ${new Date(
+                              booking.expiresAt,
+                            ).toLocaleTimeString([], {
                               hour: "2-digit",
                               minute: "2-digit",
                             })}`
@@ -388,13 +374,13 @@ function RentalsContent() {
                     </div>
 
                     {/* Price and actions */}
-                    <div className="flex flex-row items-center justify-between gap-4 border-t border-[#eee7de] pt-5 lg:min-w-[230px] lg:flex-col lg:items-end lg:border-l lg:border-t-0 lg:pl-7 lg:pt-0">
+                    <div className="flex flex-row items-center justify-between gap-4 border-t border-border pt-5 lg:min-w-[230px] lg:flex-col lg:items-end lg:border-l lg:border-t-0 lg:pl-7 lg:pt-0">
                       <div className="lg:text-right">
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#a09587]">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                           Rental total
                         </p>
 
-                        <p className="mt-1 text-2xl font-semibold tracking-tight text-[#302a23]">
+                        <p className="mt-1 text-2xl font-semibold tracking-tight text-foreground">
                           {money(booking.amount)}
                         </p>
                       </div>
@@ -403,7 +389,7 @@ function RentalsContent() {
                         {/* View Details */}
                         <Link
                           href={`/equipment/${booking.equipmentId}`}
-                          className="inline-flex items-center justify-center gap-2 border border-[#dcd2c6] px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#806247] transition hover:bg-[#f5f0e9]"
+                          className="inline-flex items-center justify-center gap-2 border border-border px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-primary transition hover:bg-secondary"
                         >
                           View details
                           <ArrowRight size={15} />
@@ -414,7 +400,7 @@ function RentalsContent() {
                           <button
                             onClick={() => void handlePay(booking)}
                             disabled={payingId === booking._id}
-                            className="inline-flex items-center justify-center gap-2 bg-[#806247] px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-[#684e39] disabled:cursor-not-allowed disabled:opacity-60"
+                            className="inline-flex items-center justify-center gap-2 bg-primary px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
                           >
                             {payingId === booking._id ? (
                               <>
@@ -429,7 +415,7 @@ function RentalsContent() {
                             )}
                           </button>
                         ) : (
-                          <span className="inline-flex items-center justify-center gap-2 border border-[#e6ddd2] px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#806b55]">
+                          <span className="inline-flex items-center justify-center gap-2 border border-border px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
                             <Wallet size={14} />
                             {booking.paymentStatus === "paid"
                               ? "Payment received"
@@ -446,9 +432,9 @@ function RentalsContent() {
         )}
 
         {/* Footer */}
-        <div className="mt-10 flex flex-col items-center justify-center gap-2 border-t border-[#ded5ca] pt-6 text-center sm:flex-row">
-          <ShieldCheck size={15} className="text-[#98795e]" />
-          <p className="text-[10px] uppercase tracking-[0.13em] text-[#988c7e]">
+        <div className="mt-10 flex flex-col items-center justify-center gap-2 border-t border-border pt-6 text-center sm:flex-row">
+          <ShieldCheck size={15} className="text-primary" />
+          <p className="text-[10px] uppercase tracking-[0.13em] text-muted-foreground">
             Your bookings are securely managed by Equiply · Payments powered by Stripe
           </p>
         </div>

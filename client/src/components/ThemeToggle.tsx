@@ -1,4 +1,3 @@
- 
 "use client";
 
 import Link from "next/link";
@@ -68,11 +67,7 @@ function ThemeToggle() {
   );
 }
 
-export function Navbar({
-  onToggleMenu,
-}: {
-  onToggleMenu: () => void;
-}) {
+export function Navbar({ onToggleMenu }: { onToggleMenu: () => void }) {
   const pathname = usePathname();
   const { user, status, role, signOut } = useAuth();
 
@@ -89,9 +84,7 @@ export function Navbar({
   const isOwner = ["owner", "admin"].includes(normalizedRole);
   const isAdmin = normalizedRole === "admin";
 
-  const profileImage = (
-    user as (typeof user & { image?: string | null }) | null
-  )?.image;
+  const profileImage = (user as (typeof user & { image?: string | null }) | null)?.image;
 
   useEffect(() => {
     setMenuOpen(false);
@@ -104,10 +97,7 @@ export function Navbar({
 
   useEffect(() => {
     function handleClick(event: MouseEvent) {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(event.target as Node)
-      ) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setMenuOpen(false);
       }
     }
@@ -126,9 +116,7 @@ export function Navbar({
 
   const navLinkClass = (href: string) =>
     `relative py-2 text-[13px] font-medium transition-colors ${
-      isActive(href)
-        ? "text-primary"
-        : "text-muted-foreground hover:text-primary"
+      isActive(href) ? "text-primary" : "text-muted-foreground hover:text-primary"
     }`;
 
   const dropdownLinkClass =
@@ -137,7 +125,6 @@ export function Navbar({
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur-md">
       <div className="mx-auto flex h-[76px] max-w-[1440px] items-center justify-between gap-5 px-5 sm:px-8 lg:px-12">
-
         {/* Logo */}
         <Link
           href="/"
@@ -157,11 +144,7 @@ export function Navbar({
         {/* Desktop navigation */}
         <nav className="hidden items-center gap-8 lg:flex">
           {primaryLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={navLinkClass(link.href)}
-            >
+            <Link key={link.href} href={link.href} className={navLinkClass(link.href)}>
               {link.label}
 
               {isActive(link.href) && (

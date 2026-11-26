@@ -1,4 +1,3 @@
- 
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
@@ -19,7 +18,7 @@ export function Shell({ children }: { children: ReactNode }) {
   }, [pathname]);
 
   return (
-    <div className="min-h-screen w-full bg-[#FFFCFA] text-[#292723]">
+    <div className="min-h-screen w-full bg-background text-foreground">
       <Navbar
         onToggleMenu={() => {
           if (!isHomePage) {
@@ -29,12 +28,7 @@ export function Shell({ children }: { children: ReactNode }) {
       />
 
       <div className="flex min-h-[calc(100vh-72px)] w-full">
-        {!isHomePage && (
-          <Sidebar
-            open={menuOpen}
-            onClose={() => setMenuOpen(false)}
-          />
-        )}
+        {!isHomePage && <Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} />}
 
         <div className="min-w-0 w-full flex-1">
           <main className="min-h-[60vh] w-full">{children}</main>

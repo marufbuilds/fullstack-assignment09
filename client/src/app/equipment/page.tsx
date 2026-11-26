@@ -1,4 +1,3 @@
- 
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
@@ -21,24 +20,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import {
-  ApiError,
-  errorMessage,
-  fetchEquipment,
-  normalizeEquipment,
-} from "@/lib/api";
+import { ApiError, errorMessage, fetchEquipment, normalizeEquipment } from "@/lib/api";
 
 import { CATEGORIES, SORT_OPTIONS } from "@/lib/constants";
 import { demoEquipment } from "@/lib/demo-equipment";
 import type { Equipment, Paginated } from "@/lib/types";
 
 import { EquipmentCard } from "@/components/EquipmentCard";
-import {
-  CardSkeleton,
-  EmptyState,
-  ErrorState,
-  Notice,
-} from "@/components/ui";
+import { CardSkeleton, EmptyState, ErrorState, Notice } from "@/components/ui";
 
 const EMPTY: Paginated<Equipment> = {
   items: [],
@@ -65,8 +54,7 @@ function demoResult(
           `${item.title} ${item.category} ${item.location}`
             .toLowerCase()
             .includes(term)) &&
-        (!location ||
-          item.location.toLowerCase().includes(location.toLowerCase())) &&
+        (!location || item.location.toLowerCase().includes(location.toLowerCase())) &&
         (!maxPrice || item.price <= Number(maxPrice)),
     );
 
@@ -90,9 +78,7 @@ function EquipmentBrowser() {
   const searchParams = useSearchParams();
 
   const [q, setQ] = useState(searchParams.get("q") || "");
-  const [category, setCategory] = useState(
-    searchParams.get("category") || "All",
-  );
+  const [category, setCategory] = useState(searchParams.get("category") || "All");
   const [location, setLocation] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [sort, setSort] = useState("newest");
@@ -131,9 +117,7 @@ function EquipmentBrowser() {
           if (cancelled) return;
 
           if (caught instanceof ApiError && caught.status === 0) {
-            setResults(
-              demoResult(q, category, location, maxPrice, sort),
-            );
+            setResults(demoResult(q, category, location, maxPrice, sort));
             setDemoMode(true);
           } else {
             setError(errorMessage(caught));
@@ -172,10 +156,7 @@ function EquipmentBrowser() {
   }
 
   const hasFilters =
-    Boolean(q) ||
-    category !== "All" ||
-    Boolean(location) ||
-    Boolean(maxPrice);
+    Boolean(q) || category !== "All" || Boolean(location) || Boolean(maxPrice);
 
   const activeFilterCount = [
     Boolean(q),
@@ -205,14 +186,12 @@ function EquipmentBrowser() {
             <h1 className="text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl md:text-5xl">
               Find the right equipment.
               <br />
-              <span className="text-[#E5CDB3]">
-                Get more done.
-              </span>
+              <span className="text-[#E5CDB3]">Get more done.</span>
             </h1>
 
             <p className="mt-5 max-w-lg text-sm leading-7 text-white/75 sm:text-base">
-              Explore equipment from local owners, compare rental prices
-              and find what your next project needs.
+              Explore equipment from local owners, compare rental prices and find what
+              your next project needs.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-5 text-xs text-white/80">
@@ -243,8 +222,8 @@ function EquipmentBrowser() {
             </h2>
 
             <p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">
-              Find equipment for construction, transportation, photography,
-              outdoor activities and more.
+              Find equipment for construction, transportation, photography, outdoor
+              activities and more.
             </p>
           </div>
 
@@ -299,9 +278,7 @@ function EquipmentBrowser() {
         {/* Category shortcuts */}
         <div className="mb-9">
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-foreground">
-              Explore categories
-            </h3>
+            <h3 className="text-sm font-semibold text-foreground">Explore categories</h3>
             <span className="text-xs text-muted-foreground">
               {CATEGORIES.length} categories
             </span>
@@ -356,9 +333,7 @@ function EquipmentBrowser() {
 
             {/* Category */}
             <div className="border-b border-border pb-6">
-              <h4 className="mb-4 text-xs font-semibold text-foreground">
-                Category
-              </h4>
+              <h4 className="mb-4 text-xs font-semibold text-foreground">Category</h4>
 
               <div className="space-y-3">
                 <label className="flex cursor-pointer items-center justify-between text-xs text-secondary-foreground">
@@ -468,9 +443,8 @@ function EquipmentBrowser() {
             {demoMode && (
               <div className="mb-5">
                 <Notice kind="warning">
-                  The Equiply API could not be reached, so these demo listings
-                  are shown instead. Start the Express backend on port 5000 to
-                  see live data.
+                  The Equiply API could not be reached, so these demo listings are shown
+                  instead. Start the Express backend on port 5000 to see live data.
                 </Notice>
               </div>
             )}
@@ -522,9 +496,7 @@ function EquipmentBrowser() {
                       type="button"
                       variant="outline"
                       disabled={page <= 1}
-                      onClick={() =>
-                        setPage((value) => Math.max(1, value - 1))
-                      }
+                      onClick={() => setPage((value) => Math.max(1, value - 1))}
                       className="h-10 rounded-xl border-border text-xs text-primary hover:bg-secondary"
                     >
                       <ChevronLeft className="mr-1 h-4 w-4" />
@@ -567,8 +539,8 @@ function EquipmentBrowser() {
             </h2>
 
             <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">
-              Create a listing, connect with renters and make your equipment
-              useful to more people.
+              Create a listing, connect with renters and make your equipment useful to
+              more people.
             </p>
           </div>
 

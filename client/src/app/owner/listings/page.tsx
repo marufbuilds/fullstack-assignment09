@@ -1,4 +1,3 @@
- 
 "use client";
 
 import Link from "next/link";
@@ -25,13 +24,7 @@ import { CATEGORIES, RENTAL_TYPES } from "@/lib/constants";
 import { LISTING_STATUS_LABELS, money } from "@/lib/format";
 import type { Equipment } from "@/lib/types";
 import { AuthGuard } from "@/components/AuthGuard";
-import {
-  EmptyState,
-  ErrorState,
-  Notice,
-  Spinner,
-  StatusBadge,
-} from "@/components/ui";
+import { EmptyState, ErrorState, Notice, Spinner, StatusBadge } from "@/components/ui";
 
 const emptyForm = {
   title: "",
@@ -151,7 +144,7 @@ function ListingsContent() {
       setForm(emptyForm);
 
       setNotice(
-        "Listing updated successfully. Your changes may require admin review before the listing becomes public again."
+        "Listing updated successfully. Your changes may require admin review before the listing becomes public again.",
       );
 
       await load();
@@ -166,7 +159,7 @@ function ListingsContent() {
     if (removingId) return;
 
     const confirmed = window.confirm(
-      `Remove "${item.title}" from your listings? This cannot be undone.`
+      `Remove "${item.title}" from your listings? This cannot be undone.`,
     );
 
     if (!confirmed) return;
@@ -177,9 +170,7 @@ function ListingsContent() {
     try {
       await deleteEquipment(item._id);
 
-      setItems((current) =>
-        current.filter((row) => row._id !== item._id)
-      );
+      setItems((current) => current.filter((row) => row._id !== item._id));
 
       if (editing?._id === item._id) {
         cancelEdit();
@@ -194,13 +185,12 @@ function ListingsContent() {
   }
 
   return (
-    <main className="min-h-screen bg-[#FFFCFA] px-4 py-8 text-[#292723] sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-6 lg:px-8">
       <div className="mx-auto max-w-[1250px]">
-
         {/* Page heading */}
         <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>
-            <p className="mb-2 text-[10px] font-bold uppercase tracking-[2px] text-[#9A7656]">
+            <p className="mb-2 text-[10px] font-bold uppercase tracking-[2px] text-primary">
               Owner workspace
             </p>
 
@@ -208,15 +198,15 @@ function ListingsContent() {
               My equipment listings
             </h1>
 
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-[#82776D]">
-              Manage your equipment, update listing information, track
-              approval status and remove items you no longer want to rent out.
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
+              Manage your equipment, update listing information, track approval status and
+              remove items you no longer want to rent out.
             </p>
           </div>
 
           <Link
             href="/add-equipment"
-            className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#79563E] px-5 text-sm font-semibold text-white transition hover:bg-[#62432F]"
+            className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover"
           >
             <PlusCircle size={17} />
             Add equipment
@@ -234,24 +224,22 @@ function ListingsContent() {
         {editing && (
           <form
             onSubmit={saveEdit}
-            className="mb-8 rounded-3xl border border-[#E8DFD6] bg-white p-5 shadow-[0_8px_30px_rgba(60,40,20,0.04)] sm:p-8"
+            className="mb-8 rounded-3xl border border-border bg-card p-5 shadow-[0_8px_30px_rgba(60,40,20,0.04)] sm:p-8"
           >
             <div className="mb-7 flex flex-wrap items-center justify-between gap-4">
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[2px] text-[#9A7656]">
+                <p className="text-[10px] font-bold uppercase tracking-[2px] text-primary">
                   Update your equipment
                 </p>
 
-                <h2 className="mt-2 text-xl font-semibold">
-                  {editing.title}
-                </h2>
+                <h2 className="mt-2 text-xl font-semibold">{editing.title}</h2>
               </div>
 
               <button
                 type="button"
                 onClick={cancelEdit}
                 disabled={saving}
-                className="inline-flex h-9 items-center gap-2 rounded-lg border border-[#E8DFD6] px-3 text-xs font-semibold text-[#82776D] transition hover:bg-[#F8F3EE] disabled:opacity-50"
+                className="inline-flex h-9 items-center gap-2 rounded-lg border border-border px-3 text-xs font-semibold text-muted-foreground transition hover:bg-secondary disabled:opacity-50"
               >
                 <X size={15} />
                 Close
@@ -259,40 +247,41 @@ function ListingsContent() {
             </div>
 
             <div className="grid gap-5 sm:grid-cols-2">
-
               {/* Equipment name */}
               <div className="sm:col-span-2">
-                <label htmlFor="title" className="mb-2 block text-xs font-semibold text-[#463B32]">
+                <label
+                  htmlFor="title"
+                  className="mb-2 block text-xs font-semibold text-foreground"
+                >
                   Equipment name
                 </label>
 
                 <input
                   id="title"
                   value={form.title}
-                  onChange={(event) =>
-                    setForm({ ...form, title: event.target.value })
-                  }
+                  onChange={(event) => setForm({ ...form, title: event.target.value })}
                   required
                   minLength={3}
                   maxLength={120}
-                  className="h-12 w-full rounded-xl border border-[#E8DFD6] bg-[#FFFCFA] px-4 text-sm outline-none focus:border-[#79563E] focus:ring-2 focus:ring-[#79563E]/10"
+                  className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
                 />
               </div>
 
               {/* Category */}
               <div>
-                <label htmlFor="category" className="mb-2 block text-xs font-semibold text-[#463B32]">
+                <label
+                  htmlFor="category"
+                  className="mb-2 block text-xs font-semibold text-foreground"
+                >
                   Category
                 </label>
 
                 <select
                   id="category"
                   value={form.category}
-                  onChange={(event) =>
-                    setForm({ ...form, category: event.target.value })
-                  }
+                  onChange={(event) => setForm({ ...form, category: event.target.value })}
                   required
-                  className="h-12 w-full rounded-xl border border-[#E8DFD6] bg-[#FFFCFA] px-4 text-sm outline-none focus:border-[#79563E]"
+                  className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm outline-none focus:border-primary"
                 >
                   {CATEGORIES.map((category) => (
                     <option key={category} value={category}>
@@ -304,24 +293,28 @@ function ListingsContent() {
 
               {/* Location */}
               <div>
-                <label htmlFor="location" className="mb-2 block text-xs font-semibold text-[#463B32]">
+                <label
+                  htmlFor="location"
+                  className="mb-2 block text-xs font-semibold text-foreground"
+                >
                   Location
                 </label>
 
                 <input
                   id="location"
                   value={form.location}
-                  onChange={(event) =>
-                    setForm({ ...form, location: event.target.value })
-                  }
+                  onChange={(event) => setForm({ ...form, location: event.target.value })}
                   required
-                  className="h-12 w-full rounded-xl border border-[#E8DFD6] bg-[#FFFCFA] px-4 text-sm outline-none focus:border-[#79563E]"
+                  className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm outline-none focus:border-primary"
                 />
               </div>
 
               {/* Price */}
               <div>
-                <label htmlFor="price" className="mb-2 block text-xs font-semibold text-[#463B32]">
+                <label
+                  htmlFor="price"
+                  className="mb-2 block text-xs font-semibold text-foreground"
+                >
                   Price (USD)
                 </label>
 
@@ -331,17 +324,18 @@ function ListingsContent() {
                   min="0.01"
                   step="0.01"
                   value={form.price}
-                  onChange={(event) =>
-                    setForm({ ...form, price: event.target.value })
-                  }
+                  onChange={(event) => setForm({ ...form, price: event.target.value })}
                   required
-                  className="h-12 w-full rounded-xl border border-[#E8DFD6] bg-[#FFFCFA] px-4 text-sm outline-none focus:border-[#79563E]"
+                  className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm outline-none focus:border-primary"
                 />
               </div>
 
               {/* Rental type */}
               <div>
-                <label htmlFor="rentalType" className="mb-2 block text-xs font-semibold text-[#463B32]">
+                <label
+                  htmlFor="rentalType"
+                  className="mb-2 block text-xs font-semibold text-foreground"
+                >
                   Rental unit
                 </label>
 
@@ -352,7 +346,7 @@ function ListingsContent() {
                     setForm({ ...form, rentalType: event.target.value })
                   }
                   required
-                  className="h-12 w-full rounded-xl border border-[#E8DFD6] bg-[#FFFCFA] px-4 text-sm outline-none focus:border-[#79563E]"
+                  className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm outline-none focus:border-primary"
                 >
                   {RENTAL_TYPES.map((type) => (
                     <option key={type.value} value={type.value}>
@@ -364,7 +358,10 @@ function ListingsContent() {
 
               {/* Description */}
               <div className="sm:col-span-2">
-                <label htmlFor="description" className="mb-2 block text-xs font-semibold text-[#463B32]">
+                <label
+                  htmlFor="description"
+                  className="mb-2 block text-xs font-semibold text-foreground"
+                >
                   Description
                 </label>
 
@@ -380,13 +377,16 @@ function ListingsContent() {
                   }
                   required
                   minLength={10}
-                  className="w-full resize-y rounded-xl border border-[#E8DFD6] bg-[#FFFCFA] px-4 py-3 text-sm outline-none focus:border-[#79563E]"
+                  className="w-full resize-y rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary"
                 />
               </div>
 
               {/* Image URL */}
               <div className="sm:col-span-2">
-                <label htmlFor="image" className="mb-2 block text-xs font-semibold text-[#463B32]">
+                <label
+                  htmlFor="image"
+                  className="mb-2 block text-xs font-semibold text-foreground"
+                >
                   Photo URL
                 </label>
 
@@ -394,11 +394,9 @@ function ListingsContent() {
                   id="image"
                   type="url"
                   value={form.image}
-                  onChange={(event) =>
-                    setForm({ ...form, image: event.target.value })
-                  }
+                  onChange={(event) => setForm({ ...form, image: event.target.value })}
                   placeholder="https://example.com/equipment.jpg"
-                  className="h-12 w-full rounded-xl border border-[#E8DFD6] bg-[#FFFCFA] px-4 text-sm outline-none focus:border-[#79563E]"
+                  className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm outline-none focus:border-primary"
                 />
               </div>
             </div>
@@ -413,7 +411,7 @@ function ListingsContent() {
               <button
                 type="submit"
                 disabled={saving}
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#79563E] px-5 text-sm font-semibold text-white transition hover:bg-[#62432F] disabled:opacity-60"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover disabled:opacity-60"
               >
                 {saving ? (
                   <>
@@ -432,7 +430,7 @@ function ListingsContent() {
                 type="button"
                 onClick={cancelEdit}
                 disabled={saving}
-                className="h-11 rounded-xl border border-[#E8DFD6] px-5 text-sm font-semibold text-[#82776D] transition hover:bg-[#F8F3EE] disabled:opacity-50"
+                className="h-11 rounded-xl border border-border px-5 text-sm font-semibold text-muted-foreground transition hover:bg-secondary disabled:opacity-50"
               >
                 Discard
               </button>
@@ -441,12 +439,7 @@ function ListingsContent() {
         )}
 
         {/* Error */}
-        {error && (
-          <ErrorState
-            message={error}
-            onRetry={() => void load()}
-          />
-        )}
+        {error && <ErrorState message={error} onRetry={() => void load()} />}
 
         {/* Loading */}
         {!error && loading && (
@@ -454,7 +447,7 @@ function ListingsContent() {
             {[0, 1, 2].map((row) => (
               <div
                 key={row}
-                className="h-24 animate-pulse rounded-2xl border border-[#E8DFD6] bg-white"
+                className="h-24 animate-pulse rounded-2xl border border-border bg-card"
               />
             ))}
           </div>
@@ -462,8 +455,8 @@ function ListingsContent() {
 
         {/* Empty state */}
         {!error && !loading && items.length === 0 && (
-          <div className="rounded-3xl border border-dashed border-[#DCCFC2] bg-white px-6 py-16 text-center">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F8F3EE] text-[#79563E]">
+          <div className="rounded-3xl border border-dashed border-border bg-card px-6 py-16 text-center">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-secondary text-primary">
               <Package size={30} />
             </div>
 
@@ -471,14 +464,14 @@ function ListingsContent() {
               You have not listed anything yet
             </h2>
 
-            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#82776D]">
-              Add your first piece of equipment and start earning from gear
-              that would otherwise sit idle.
+            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-muted-foreground">
+              Add your first piece of equipment and start earning from gear that would
+              otherwise sit idle.
             </p>
 
             <Link
               href="/add-equipment"
-              className="mt-6 inline-flex h-11 items-center gap-2 rounded-xl bg-[#79563E] px-5 text-sm font-semibold text-white transition hover:bg-[#62432F]"
+              className="mt-6 inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover"
             >
               <PlusCircle size={17} />
               Add your first listing
@@ -488,10 +481,9 @@ function ListingsContent() {
 
         {/* Listings */}
         {!error && !loading && items.length > 0 && (
-          <div className="overflow-hidden rounded-3xl border border-[#E8DFD6] bg-white shadow-[0_8px_30px_rgba(60,40,20,0.035)]">
-
+          <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-[0_8px_30px_rgba(60,40,20,0.035)]">
             {/* Table heading */}
-            <div className="hidden grid-cols-[minmax(200px,1.6fr)_1fr_1fr_1fr_auto] gap-4 border-b border-[#E8DFD6] bg-[#F8F3EE] px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-[#82776D] lg:grid">
+            <div className="hidden grid-cols-[minmax(200px,1.6fr)_1fr_1fr_1fr_auto] gap-4 border-b border-border bg-secondary px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-muted-foreground lg:grid">
               <span>Equipment</span>
               <span>Category</span>
               <span>Price</span>
@@ -502,21 +494,21 @@ function ListingsContent() {
             {items.map((item) => (
               <div
                 key={item._id}
-                className="grid gap-4 border-b border-[#F0EAE4] px-5 py-5 last:border-b-0 sm:px-6 lg:grid-cols-[minmax(200px,1.6fr)_1fr_1fr_1fr_auto] lg:items-center"
+                className="grid gap-4 border-b border-border px-5 py-5 last:border-b-0 sm:px-6 lg:grid-cols-[minmax(200px,1.6fr)_1fr_1fr_1fr_auto] lg:items-center"
               >
                 {/* Equipment */}
                 <div className="min-w-0">
                   <div className="flex items-start gap-3">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#F8F3EE] text-[#79563E]">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-secondary text-primary">
                       <Package size={20} />
                     </div>
 
                     <div className="min-w-0">
-                      <h3 className="truncate text-sm font-semibold text-[#292723]">
+                      <h3 className="truncate text-sm font-semibold text-foreground">
                         {item.title}
                       </h3>
 
-                      <p className="mt-1 flex items-center gap-1 truncate text-xs text-[#82776D]">
+                      <p className="mt-1 flex items-center gap-1 truncate text-xs text-muted-foreground">
                         <MapPin size={12} />
                         {item.location}
                       </p>
@@ -526,25 +518,21 @@ function ListingsContent() {
 
                 {/* Category */}
                 <div className="flex items-center justify-between lg:block">
-                  <span className="text-xs text-[#A0968D] lg:hidden">
+                  <span className="text-xs text-muted-foreground lg:hidden">
                     Category
                   </span>
-                  <span className="text-sm text-[#463B32]">
-                    {item.category}
-                  </span>
+                  <span className="text-sm text-foreground">{item.category}</span>
                 </div>
 
                 {/* Price */}
                 <div className="flex items-center justify-between lg:block">
-                  <span className="text-xs text-[#A0968D] lg:hidden">
-                    Price
-                  </span>
+                  <span className="text-xs text-muted-foreground lg:hidden">Price</span>
                   <div>
-                    <span className="text-sm font-semibold text-[#292723]">
+                    <span className="text-sm font-semibold text-foreground">
                       {money(item.price)}
                     </span>
 
-                    <span className="text-xs text-[#82776D]">
+                    <span className="text-xs text-muted-foreground">
                       {" / "}
                       {getRentalUnit(item.rentalType)}
                     </span>
@@ -553,9 +541,7 @@ function ListingsContent() {
 
                 {/* Status */}
                 <div className="flex items-center justify-between lg:block">
-                  <span className="text-xs text-[#A0968D] lg:hidden">
-                    Status
-                  </span>
+                  <span className="text-xs text-muted-foreground lg:hidden">Status</span>
 
                   <StatusBadge
                     status={item.status || "pending"}
@@ -568,12 +554,12 @@ function ListingsContent() {
                 </div>
 
                 {/* Actions */}
-                <div className="flex flex-wrap items-center gap-2 border-t border-[#F0EAE4] pt-4 lg:border-0 lg:pt-0">
+                <div className="flex flex-wrap items-center gap-2 border-t border-border pt-4 lg:border-0 lg:pt-0">
                   <Link
                     href={`/equipment/${item._id}`}
                     title="View listing"
                     aria-label={`View ${item.title}`}
-                    className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#E8DFD6] text-[#79563E] transition hover:bg-[#F8F3EE]"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-primary transition hover:bg-secondary"
                   >
                     <Eye size={15} />
                   </Link>
@@ -582,7 +568,7 @@ function ListingsContent() {
                     type="button"
                     onClick={() => startEdit(item)}
                     disabled={Boolean(removingId)}
-                    className="inline-flex h-9 items-center gap-2 rounded-lg border border-[#E8DFD6] px-3 text-xs font-semibold text-[#79563E] transition hover:bg-[#F8F3EE] disabled:opacity-50"
+                    className="inline-flex h-9 items-center gap-2 rounded-lg border border-border px-3 text-xs font-semibold text-primary transition hover:bg-secondary disabled:opacity-50"
                   >
                     <Pencil size={14} />
                     Edit
@@ -594,13 +580,9 @@ function ListingsContent() {
                     disabled={Boolean(removingId)}
                     title="Remove listing"
                     aria-label={`Remove ${item.title}`}
-                    className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#E8DFD6] text-[#A15D4B] transition hover:border-[#A15D4B] hover:bg-[#FBF2EF] disabled:opacity-50"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-destructive transition hover:border-destructive/40 hover:bg-destructive/10 disabled:opacity-50"
                   >
-                    {removingId === item._id ? (
-                      <Spinner />
-                    ) : (
-                      <Trash2 size={15} />
-                    )}
+                    {removingId === item._id ? <Spinner /> : <Trash2 size={15} />}
                   </button>
                 </div>
               </div>
@@ -610,9 +592,9 @@ function ListingsContent() {
 
         {/* Bottom note */}
         {!error && !loading && items.length > 0 && (
-          <p className="mt-5 text-xs leading-5 text-[#9A8D81]">
-            Listing changes may require administrator review before your
-            equipment becomes publicly available again.
+          <p className="mt-5 text-xs leading-5 text-muted-foreground">
+            Listing changes may require administrator review before your equipment becomes
+            publicly available again.
           </p>
         )}
       </div>

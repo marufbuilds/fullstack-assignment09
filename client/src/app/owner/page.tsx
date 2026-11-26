@@ -1,4 +1,3 @@
- 
 "use client";
 
 import Link from "next/link";
@@ -28,25 +27,25 @@ import {
 
 import { formatDateRange, money } from "@/lib/format";
 
-import type {
-  Booking,
-  Equipment,
-  OwnerAnalytics,
-} from "@/lib/types";
+import type { Booking, Equipment, OwnerAnalytics } from "@/lib/types";
 
 import { AuthGuard } from "@/components/AuthGuard";
 
-import {
-  EmptyState,
-  ErrorState,
-  Notice,
-  Spinner,
-  StatusBadge,
-} from "@/components/ui";
+import { EmptyState, ErrorState, Notice, Spinner, StatusBadge } from "@/components/ui";
 
 const MONTHS = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ];
 
 type BookingAction = "confirmed" | "rejected" | "completed";
@@ -145,7 +144,7 @@ function OwnerContent() {
           : "mark as completed";
 
     const confirmed = window.confirm(
-      `Are you sure you want to ${actionLabel} this booking?`
+      `Are you sure you want to ${actionLabel} this booking?`,
     );
 
     if (!confirmed) return;
@@ -157,9 +156,7 @@ function OwnerContent() {
       await updateBookingStatus(booking._id, status);
 
       setBookings((current) =>
-        current.map((row) =>
-          row._id === booking._id ? { ...row, status } : row
-        )
+        current.map((row) => (row._id === booking._id ? { ...row, status } : row)),
       );
 
       setNoticeKind("success");
@@ -172,34 +169,24 @@ function OwnerContent() {
     }
   }
 
-  const pending = bookings.filter(
-    (booking) => booking.status === "pending"
-  );
+  const pending = bookings.filter((booking) => booking.status === "pending");
 
-  const paidPending = pending.filter(
-    (booking) => booking.paymentStatus === "paid"
-  );
+  const paidPending = pending.filter((booking) => booking.paymentStatus === "paid");
 
   const recent = bookings.slice(0, 6);
   const monthly = (analytics?.monthlyEarnings || []).slice(-6);
 
-  const bestSeller = [...listings]
-    .sort((a, b) => b.price - a.price)
-    .slice(0, 4);
+  const bestSeller = [...listings].sort((a, b) => b.price - a.price).slice(0, 4);
 
-  const maxMonthlyEarnings = Math.max(
-    ...monthly.map((row) => row.earnings),
-    1
-  );
+  const maxMonthlyEarnings = Math.max(...monthly.map((row) => row.earnings), 1);
 
   return (
-    <main className="min-h-screen bg-[#FFFCFA] px-4 py-8 text-[#292723] sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-6 lg:px-8">
       <div className="mx-auto max-w-[1300px]">
-
         {/* Header */}
         <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>
-            <p className="mb-2 text-[10px] font-bold uppercase tracking-[2px] text-[#9A7656]">
+            <p className="mb-2 text-[10px] font-bold uppercase tracking-[2px] text-primary">
               Owner workspace
             </p>
 
@@ -207,16 +194,16 @@ function OwnerContent() {
               Manage your equipment
             </h1>
 
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-[#82776D]">
-              Approve paid rental requests, monitor your earnings and manage
-              your equipment listings.
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
+              Approve paid rental requests, monitor your earnings and manage your
+              equipment listings.
             </p>
           </div>
 
           <div className="flex flex-wrap gap-3">
             <Link
               href="/add-equipment"
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#79563E] px-5 text-sm font-semibold text-white transition hover:bg-[#62432F]"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover"
             >
               <PackagePlus size={17} />
               Add equipment
@@ -224,7 +211,7 @@ function OwnerContent() {
 
             <Link
               href="/owner/listings"
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-[#E8DFD6] bg-white px-5 text-sm font-semibold text-[#79563E] transition hover:bg-[#F8F3EE]"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border bg-card px-5 text-sm font-semibold text-primary transition hover:bg-secondary"
             >
               My listings
               <ArrowRight size={15} />
@@ -240,21 +227,16 @@ function OwnerContent() {
         )}
 
         {/* Error */}
-        {error && (
-          <ErrorState message={error} onRetry={() => void load()} />
-        )}
+        {error && <ErrorState message={error} onRetry={() => void load()} />}
 
         {/* Loading */}
         {!error && loading && (
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {[0, 1, 2, 3].map((row) => (
-              <div
-                key={row}
-                className="rounded-2xl border border-[#E8DFD6] bg-white p-6"
-              >
-                <div className="h-4 w-24 animate-pulse rounded bg-[#F0EAE4]" />
-                <div className="mt-5 h-8 w-32 animate-pulse rounded bg-[#F0EAE4]" />
-                <div className="mt-4 h-3 w-28 animate-pulse rounded bg-[#F0EAE4]" />
+              <div key={row} className="rounded-2xl border border-border bg-card p-6">
+                <div className="h-4 w-24 animate-pulse rounded bg-secondary" />
+                <div className="mt-5 h-8 w-32 animate-pulse rounded bg-secondary" />
+                <div className="mt-4 h-3 w-28 animate-pulse rounded bg-secondary" />
               </div>
             ))}
           </div>
@@ -264,71 +246,66 @@ function OwnerContent() {
           <>
             {/* Statistics */}
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-
-              <div className="rounded-2xl border border-[#E8DFD6] bg-white p-5 shadow-[0_5px_20px_rgba(60,40,20,0.025)]">
+              <div className="rounded-2xl border border-border bg-card p-5 shadow-[0_5px_20px_rgba(60,40,20,0.025)]">
                 <div className="flex items-center justify-between">
-                  <p className="text-xs font-medium text-[#82776D]">
+                  <p className="text-xs font-medium text-muted-foreground">
                     Total listings
                   </p>
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F8F3EE] text-[#79563E]">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-primary">
                     <Package size={19} />
                   </span>
                 </div>
                 <h2 className="mt-5 text-3xl font-semibold tracking-tight">
                   {analytics?.listingCount ?? listings.length}
                 </h2>
-                <p className="mt-2 text-xs text-[#A0968D]">
-                  Equipment you own
-                </p>
+                <p className="mt-2 text-xs text-muted-foreground">Equipment you own</p>
               </div>
 
-              <div className="rounded-2xl border border-[#E8DFD6] bg-white p-5 shadow-[0_5px_20px_rgba(60,40,20,0.025)]">
+              <div className="rounded-2xl border border-border bg-card p-5 shadow-[0_5px_20px_rgba(60,40,20,0.025)]">
                 <div className="flex items-center justify-between">
-                  <p className="text-xs font-medium text-[#82776D]">
+                  <p className="text-xs font-medium text-muted-foreground">
                     Total earnings
                   </p>
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F8F3EE] text-[#79563E]">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-primary">
                     <BadgeDollarSign size={19} />
                   </span>
                 </div>
                 <h2 className="mt-5 text-3xl font-semibold tracking-tight">
                   {money(analytics?.totalEarnings || 0)}
                 </h2>
-                <p className="mt-2 text-xs text-[#A0968D]">
-                  From paid bookings
-                </p>
+                <p className="mt-2 text-xs text-muted-foreground">From paid bookings</p>
               </div>
 
-              <div className="rounded-2xl border border-[#E8DFD6] bg-white p-5 shadow-[0_5px_20px_rgba(60,40,20,0.025)]">
+              <div className="rounded-2xl border border-border bg-card p-5 shadow-[0_5px_20px_rgba(60,40,20,0.025)]">
                 <div className="flex items-center justify-between">
-                  <p className="text-xs font-medium text-[#82776D]">
+                  <p className="text-xs font-medium text-muted-foreground">
                     Paid rentals
                   </p>
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F8F3EE] text-[#79563E]">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-primary">
                     <CalendarCheck size={19} />
                   </span>
                 </div>
                 <h2 className="mt-5 text-3xl font-semibold tracking-tight">
                   {analytics?.paidRentals ?? 0}
                 </h2>
-                <p className="mt-2 text-xs text-[#A0968D]">
+                <p className="mt-2 text-xs text-muted-foreground">
                   {analytics?.completedRentals ?? 0} completed
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-[#E8DFD6] bg-white p-5 shadow-[0_5px_20px_rgba(60,40,20,0.025)]">
+              <div className="rounded-2xl border border-border bg-card p-5 shadow-[0_5px_20px_rgba(60,40,20,0.025)]">
                 <div className="flex items-center justify-between">
-                  <p className="text-xs font-medium text-[#82776D]">
+                  <p className="text-xs font-medium text-muted-foreground">
                     Requests waiting
                   </p>
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F8F3EE] text-[#79563E]">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-primary">
                     <Trophy size={19} />
                   </span>
                 </div>
                 <h2 className="mt-5 text-3xl font-semibold tracking-tight">
                   {pending.length}
                 </h2>
-                <p className="mt-2 text-xs text-[#A0968D]">
+                <p className="mt-2 text-xs text-muted-foreground">
                   {paidPending.length} paid and ready for review
                 </p>
               </div>
@@ -336,20 +313,17 @@ function OwnerContent() {
 
             {/* Main dashboard */}
             <div className="mt-7 grid items-start gap-6 xl:grid-cols-[1.5fr_1fr]">
-
               {/* Incoming bookings */}
-              <section className="rounded-3xl border border-[#E8DFD6] bg-white p-5 shadow-[0_5px_20px_rgba(60,40,20,0.025)] sm:p-7">
+              <section className="rounded-3xl border border-border bg-card p-5 shadow-[0_5px_20px_rgba(60,40,20,0.025)] sm:p-7">
                 <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[2px] text-[#9A7656]">
+                    <p className="text-[10px] font-bold uppercase tracking-[2px] text-primary">
                       Rental requests
                     </p>
-                    <h2 className="mt-2 text-xl font-semibold">
-                      Incoming bookings
-                    </h2>
+                    <h2 className="mt-2 text-xl font-semibold">Incoming bookings</h2>
                   </div>
 
-                  <span className="rounded-full bg-[#F8F3EE] px-3 py-1.5 text-xs font-medium text-[#79563E]">
+                  <span className="rounded-full bg-secondary px-3 py-1.5 text-xs font-medium text-primary">
                     {bookings.length} total
                   </span>
                 </div>
@@ -361,7 +335,7 @@ function OwnerContent() {
                     description="Once renters book your equipment, their requests will appear here."
                     action={
                       <Link
-                        className="inline-flex h-10 items-center gap-2 rounded-xl bg-[#79563E] px-4 text-sm font-semibold text-white"
+                        className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground"
                         href="/add-equipment"
                       >
                         Add equipment
@@ -374,14 +348,13 @@ function OwnerContent() {
                   const isPaid = booking.paymentStatus === "paid";
                   const isPending = booking.status === "pending";
                   const isConfirmed = booking.status === "confirmed";
-                  const rentalEnded =
-                    new Date(booking.endDate) <= new Date();
+                  const rentalEnded = new Date(booking.endDate) <= new Date();
                   const isActing = actingId === booking._id;
 
                   return (
                     <div
                       key={booking._id}
-                      className="border-b border-[#F0EAE4] py-5 last:border-b-0"
+                      className="border-b border-border py-5 last:border-b-0"
                     >
                       <div className="flex flex-wrap items-start justify-between gap-3">
                         <div className="min-w-0">
@@ -389,11 +362,8 @@ function OwnerContent() {
                             {booking.equipmentTitle || "Equipment"}
                           </h3>
 
-                          <p className="mt-2 text-xs text-[#82776D]">
-                            {formatDateRange(
-                              booking.startDate,
-                              booking.endDate
-                            )}
+                          <p className="mt-2 text-xs text-muted-foreground">
+                            {formatDateRange(booking.startDate, booking.endDate)}
                             {" · "}
                             {booking.days} day
                             {booking.days === 1 ? "" : "s"}
@@ -401,9 +371,7 @@ function OwnerContent() {
                         </div>
 
                         <div className="text-right">
-                          <p className="text-sm font-semibold">
-                            {money(booking.amount)}
-                          </p>
+                          <p className="text-sm font-semibold">{money(booking.amount)}</p>
                           <div className="mt-2">
                             <StatusBadge status={booking.status} />
                           </div>
@@ -411,22 +379,20 @@ function OwnerContent() {
                       </div>
 
                       <div className="mt-4 flex flex-wrap items-center gap-2">
-                        <Wallet size={15} className="text-[#9A7656]" />
-                        <span className="text-xs font-semibold text-[#82776D]">
+                        <Wallet size={15} className="text-primary" />
+                        <span className="text-xs font-semibold text-muted-foreground">
                           Payment:
                         </span>
-                        <StatusBadge
-                          status={booking.paymentStatus || "unpaid"}
-                        />
+                        <StatusBadge status={booking.paymentStatus || "unpaid"} />
 
                         {isPending && !isPaid && (
-                          <span className="text-xs text-[#A0968D]">
+                          <span className="text-xs text-muted-foreground">
                             Waiting for customer payment
                           </span>
                         )}
 
                         {isPending && isPaid && (
-                          <span className="text-xs text-[#79563E]">
+                          <span className="text-xs text-primary">
                             Ready for your approval
                           </span>
                         )}
@@ -438,18 +404,10 @@ function OwnerContent() {
                             type="button"
                             disabled={!isPaid || Boolean(actingId)}
                             onClick={() => void act(booking, "confirmed")}
-                            title={
-                              isPaid
-                                ? "Approve booking"
-                                : "Customer must pay first"
-                            }
-                            className="inline-flex h-9 items-center gap-2 rounded-lg bg-[#79563E] px-3 text-xs font-semibold text-white transition hover:bg-[#62432F] disabled:cursor-not-allowed disabled:opacity-40"
+                            title={isPaid ? "Approve booking" : "Customer must pay first"}
+                            className="inline-flex h-9 items-center gap-2 rounded-lg bg-primary px-3 text-xs font-semibold text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-40"
                           >
-                            {isActing ? (
-                              <Spinner />
-                            ) : (
-                              <CheckCircle2 size={15} />
-                            )}
+                            {isActing ? <Spinner /> : <CheckCircle2 size={15} />}
                             Approve
                           </button>
 
@@ -462,14 +420,14 @@ function OwnerContent() {
                                 ? "Refund required before rejection"
                                 : "Reject unpaid request"
                             }
-                            className="inline-flex h-9 items-center gap-2 rounded-lg border border-[#E8DFD6] px-3 text-xs font-semibold text-[#A15D4B] transition hover:bg-[#FBF2EF] disabled:cursor-not-allowed disabled:opacity-40"
+                            className="inline-flex h-9 items-center gap-2 rounded-lg border border-border px-3 text-xs font-semibold text-destructive transition hover:bg-destructive/10 disabled:cursor-not-allowed disabled:opacity-40"
                           >
                             <XCircle size={15} />
                             Reject
                           </button>
 
                           {isPaid && (
-                            <span className="text-xs text-[#A0968D]">
+                            <span className="text-xs text-muted-foreground">
                               Refund required before rejection
                             </span>
                           )}
@@ -487,18 +445,14 @@ function OwnerContent() {
                                 ? "Mark rental as completed"
                                 : "Available after the rental end date"
                             }
-                            className="inline-flex h-9 items-center gap-2 rounded-lg border border-[#E8DFD6] px-3 text-xs font-semibold text-[#79563E] transition hover:bg-[#F8F3EE] disabled:cursor-not-allowed disabled:opacity-40"
+                            className="inline-flex h-9 items-center gap-2 rounded-lg border border-border px-3 text-xs font-semibold text-primary transition hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-40"
                           >
-                            {isActing ? (
-                              <Spinner />
-                            ) : (
-                              <CheckCircle2 size={15} />
-                            )}
+                            {isActing ? <Spinner /> : <CheckCircle2 size={15} />}
                             Mark completed
                           </button>
 
                           {!rentalEnded && (
-                            <span className="flex items-center gap-1 text-xs text-[#A0968D]">
+                            <span className="flex items-center gap-1 text-xs text-muted-foreground">
                               <Clock size={13} />
                               Rental in progress
                             </span>
@@ -510,7 +464,7 @@ function OwnerContent() {
                 })}
 
                 {bookings.length > 6 && (
-                  <p className="mt-4 text-xs text-[#A0968D]">
+                  <p className="mt-4 text-xs text-muted-foreground">
                     Showing the 6 most recent bookings.
                   </p>
                 )}
@@ -518,12 +472,11 @@ function OwnerContent() {
 
               {/* Right column */}
               <div className="grid gap-6">
-
                 {/* Earnings chart */}
-                <section className="rounded-3xl border border-[#E8DFD6] bg-white p-5 shadow-[0_5px_20px_rgba(60,40,20,0.025)] sm:p-7">
+                <section className="rounded-3xl border border-border bg-card p-5 shadow-[0_5px_20px_rgba(60,40,20,0.025)] sm:p-7">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-[10px] font-bold uppercase tracking-[2px] text-[#9A7656]">
+                      <p className="text-[10px] font-bold uppercase tracking-[2px] text-primary">
                         Earnings
                       </p>
                       <h2 className="mt-2 text-xl font-semibold">
@@ -531,13 +484,13 @@ function OwnerContent() {
                       </h2>
                     </div>
 
-                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F8F3EE] text-[#79563E]">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-primary">
                       <TrendingUp size={19} />
                     </span>
                   </div>
 
                   {monthly.length === 0 ? (
-                    <p className="mt-6 text-sm leading-6 text-[#82776D]">
+                    <p className="mt-6 text-sm leading-6 text-muted-foreground">
                       Earnings appear here after your first successful payment.
                     </p>
                   ) : (
@@ -545,19 +498,19 @@ function OwnerContent() {
                       {monthly.map((row) => (
                         <div key={`${row.year}-${row.month}`}>
                           <div className="mb-2 flex justify-between gap-3 text-xs">
-                            <span className="text-[#82776D]">
+                            <span className="text-muted-foreground">
                               {MONTHS[row.month - 1] || "Unknown"} {row.year}
                             </span>
                             <strong>{money(row.earnings)}</strong>
                           </div>
 
-                          <div className="h-2 overflow-hidden rounded-full bg-[#F0EAE4]">
+                          <div className="h-2 overflow-hidden rounded-full bg-secondary">
                             <div
-                              className="h-full rounded-full bg-[#79563E] transition-all"
+                              className="h-full rounded-full bg-primary transition-all"
                               style={{
                                 width: `${Math.max(
                                   0,
-                                  (row.earnings / maxMonthlyEarnings) * 100
+                                  (row.earnings / maxMonthlyEarnings) * 100,
                                 )}%`,
                               }}
                             />
@@ -569,20 +522,18 @@ function OwnerContent() {
                 </section>
 
                 {/* Listings */}
-                <section className="rounded-3xl border border-[#E8DFD6] bg-white p-5 shadow-[0_5px_20px_rgba(60,40,20,0.025)] sm:p-7">
+                <section className="rounded-3xl border border-border bg-card p-5 shadow-[0_5px_20px_rgba(60,40,20,0.025)] sm:p-7">
                   <div className="flex items-center justify-between gap-3">
                     <div>
-                      <p className="text-[10px] font-bold uppercase tracking-[2px] text-[#9A7656]">
+                      <p className="text-[10px] font-bold uppercase tracking-[2px] text-primary">
                         Your catalogue
                       </p>
-                      <h2 className="mt-2 text-xl font-semibold">
-                        Your listings
-                      </h2>
+                      <h2 className="mt-2 text-xl font-semibold">Your listings</h2>
                     </div>
 
                     <Link
                       href="/owner/listings"
-                      className="inline-flex items-center gap-1 text-xs font-semibold text-[#79563E] hover:underline"
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
                     >
                       Manage
                       <ArrowRight size={14} />
@@ -590,31 +541,27 @@ function OwnerContent() {
                   </div>
 
                   {bestSeller.length === 0 ? (
-                    <p className="mt-5 text-sm leading-6 text-[#82776D]">
+                    <p className="mt-5 text-sm leading-6 text-muted-foreground">
                       No listings yet. Add your first item to get started.
                     </p>
                   ) : (
-                    <div className="mt-5 divide-y divide-[#F0EAE4]">
+                    <div className="mt-5 divide-y divide-border">
                       {bestSeller.map((item) => (
                         <div
                           className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0"
                           key={item._id}
                         >
                           <div className="min-w-0">
-                            <p className="truncate text-sm font-medium">
-                              {item.title}
-                            </p>
-                            <p className="mt-1 flex items-center gap-1 text-xs text-[#A0968D]">
+                            <p className="truncate text-sm font-medium">{item.title}</p>
+                            <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
                               <MapPin size={11} />
                               {item.location}
                             </p>
                           </div>
 
                           <div className="shrink-0 text-right">
-                            <p className="text-sm font-semibold">
-                              {money(item.price)}
-                            </p>
-                            <p className="mt-1 text-xs text-[#82776D]">
+                            <p className="text-sm font-semibold">{money(item.price)}</p>
+                            <p className="mt-1 text-xs text-muted-foreground">
                               / {getRentalUnit(item.rentalType)}
                             </p>
                           </div>
@@ -625,7 +572,7 @@ function OwnerContent() {
 
                   <Link
                     href="/add-equipment"
-                    className="mt-6 flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-[#E8DFD6] text-sm font-semibold text-[#79563E] transition hover:bg-[#F8F3EE]"
+                    className="mt-6 flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-border text-sm font-semibold text-primary transition hover:bg-secondary"
                   >
                     <PackagePlus size={16} />
                     Add another listing

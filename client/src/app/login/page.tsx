@@ -1,17 +1,9 @@
- 
 "use client";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
-import {
-  Eye,
-  EyeOff,
-  LogIn,
-  ShieldCheck,
-  CheckCircle2,
-  ArrowRight,
-} from "lucide-react";
+import { Eye, EyeOff, LogIn, ShieldCheck, CheckCircle2, ArrowRight } from "lucide-react";
 
 import { authClient, useAuth } from "@/lib/auth";
 import { useToast } from "@/lib/toast";
@@ -61,8 +53,7 @@ export default function Login() {
       });
 
       if (result.error) {
-        const errorText =
-          result.error.message || "Could not sign you in.";
+        const errorText = result.error.message || "Could not sign you in.";
 
         setMessage(errorText);
         showToast(errorText, "error");
@@ -71,10 +62,7 @@ export default function Login() {
 
       setLoginSucceeded(true);
 
-      showToast(
-        "You have signed in successfully. Redirecting...",
-        "success"
-      );
+      showToast("You have signed in successfully. Redirecting...", "success");
 
       window.setTimeout(() => {
         router.replace(target);
@@ -82,8 +70,7 @@ export default function Login() {
     } catch (error) {
       console.error("Login error:", error);
 
-      const errorText =
-        "Could not reach the Equiply API. Is the backend running?";
+      const errorText = "Could not reach the Equiply API. Is the backend running?";
 
       setMessage(errorText);
       showToast(errorText, "error");
@@ -113,9 +100,8 @@ export default function Login() {
   }
 
   return (
-    <main className="relative min-h-screen bg-[#FFFCFA] px-4 py-6 text-[#292723] sm:px-6 lg:py-10">
+    <main className="relative min-h-screen bg-background px-4 py-6 text-foreground sm:px-6 lg:py-10">
       <div className="mx-auto grid min-h-[calc(100vh-48px)] max-w-[1250px] items-center gap-6 lg:grid-cols-2 lg:gap-12">
-
         {/* LEFT: Equipment image */}
         <section className="relative flex min-h-[300px] flex-col justify-between overflow-hidden rounded-3xl bg-[#6C5543] p-6 sm:min-h-[380px] sm:p-9 lg:min-h-[680px] lg:p-11">
           <img
@@ -134,9 +120,7 @@ export default function Login() {
               E
             </span>
 
-            <span className="text-2xl font-bold tracking-tight">
-              Equiply
-            </span>
+            <span className="text-2xl font-bold tracking-tight">Equiply</span>
           </Link>
 
           <div className="relative z-10 mt-12 max-w-lg text-white">
@@ -151,8 +135,8 @@ export default function Login() {
             </h1>
 
             <p className="mt-5 max-w-md text-sm leading-7 text-white/85 sm:text-base">
-              Sign in to request rentals, track bookings, manage your listings
-              and keep your favorites in sync across devices.
+              Sign in to request rentals, track bookings, manage your listings and keep
+              your favorites in sync across devices.
             </p>
 
             <div className="mt-7 flex flex-wrap gap-x-5 gap-y-3 text-xs font-medium text-white/90">
@@ -176,10 +160,9 @@ export default function Login() {
 
         {/* RIGHT: Login form */}
         <section className="mx-auto w-full max-w-[480px] py-4 lg:py-10">
-          <div className="rounded-3xl border border-[#E8DFD6] bg-white p-6 shadow-[0_12px_45px_rgba(60,40,20,0.055)] sm:p-9">
-
+          <div className="rounded-3xl border border-border bg-card p-6 shadow-[0_12px_45px_rgba(60,40,20,0.055)] sm:p-9">
             <div className="mb-8">
-              <p className="text-[10px] font-bold uppercase tracking-[2px] text-[#9A7656]">
+              <p className="text-[10px] font-bold uppercase tracking-[2px] text-primary">
                 Welcome back
               </p>
 
@@ -187,18 +170,17 @@ export default function Login() {
                 Sign in
               </h2>
 
-              <p className="mt-3 text-sm leading-6 text-[#82776D]">
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">
                 Enter your details to access your Equiply account.
               </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
-
               {/* Email */}
               <div>
                 <label
                   htmlFor="email"
-                  className="mb-2 block text-xs font-semibold text-[#463B32]"
+                  className="mb-2 block text-xs font-semibold text-foreground"
                 >
                   Email address
                 </label>
@@ -211,7 +193,7 @@ export default function Login() {
                   autoComplete="email"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
-                  className="h-12 w-full rounded-xl border border-[#E8DFD6] bg-[#FFFCFA] px-4 text-sm outline-none transition placeholder:text-[#B0A69D] focus:border-[#79563E] focus:ring-2 focus:ring-[#79563E]/10"
+                  className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10"
                 />
               </div>
 
@@ -219,7 +201,7 @@ export default function Login() {
               <div>
                 <label
                   htmlFor="password"
-                  className="mb-2 block text-xs font-semibold text-[#463B32]"
+                  className="mb-2 block text-xs font-semibold text-foreground"
                 >
                   Password
                 </label>
@@ -234,38 +216,34 @@ export default function Login() {
                     autoComplete="current-password"
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
-                    className="h-12 w-full rounded-xl border border-[#E8DFD6] bg-[#FFFCFA] px-4 pr-12 text-sm outline-none transition placeholder:text-[#B0A69D] focus:border-[#79563E] focus:ring-2 focus:ring-[#79563E]/10"
+                    className="h-12 w-full rounded-xl border border-border bg-background px-4 pr-12 text-sm outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10"
                   />
 
                   <button
                     type="button"
                     onClick={() => setShow((value) => !value)}
                     aria-label={show ? "Hide password" : "Show password"}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#82776D] transition hover:text-[#79563E]"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-primary"
                   >
-                    {show ? (
-                      <EyeOff size={17} />
-                    ) : (
-                      <Eye size={17} />
-                    )}
+                    {show ? <EyeOff size={17} /> : <Eye size={17} />}
                   </button>
                 </div>
               </div>
 
               {/* Remember and forgot password */}
               <div className="flex items-center justify-between gap-3">
-                <label className="flex items-center gap-2 text-xs text-[#82776D]">
+                <label className="flex items-center gap-2 text-xs text-muted-foreground">
                   <input
                     type="checkbox"
                     defaultChecked
-                    className="h-4 w-4 accent-[#79563E]"
+                    className="h-4 w-4 accent-primary"
                   />
                   Keep me signed in
                 </label>
 
                 <a
                   href="mailto:support@equiply.example"
-                  className="text-xs font-medium text-[#79563E] transition hover:underline"
+                  className="text-xs font-medium text-primary transition hover:underline"
                 >
                   Forgot password?
                 </a>
@@ -275,7 +253,7 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={loading || googleLoading}
-                className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#79563E] text-sm font-semibold text-white transition hover:bg-[#62432F] disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? (
                   <>
@@ -293,11 +271,11 @@ export default function Login() {
               {/* Divider */}
               <div className="relative py-1">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-[#E8DFD6]" />
+                  <div className="w-full border-t border-border" />
                 </div>
 
                 <div className="relative flex justify-center">
-                  <span className="bg-white px-3 text-[10px] font-medium uppercase tracking-wider text-[#A0968D]">
+                  <span className="bg-card px-3 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
                     Or continue with
                   </span>
                 </div>
@@ -308,7 +286,7 @@ export default function Login() {
                 type="button"
                 onClick={handleGoogle}
                 disabled={googleLoading || loading}
-                className="flex h-12 w-full items-center justify-center gap-3 rounded-xl border border-[#E8DFD6] bg-white text-sm font-semibold text-[#463B32] transition hover:bg-[#F8F3EE] disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex h-12 w-full items-center justify-center gap-3 rounded-xl border border-border bg-card text-sm font-semibold text-foreground transition hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {googleLoading ? (
                   <>
@@ -343,26 +321,21 @@ export default function Login() {
                         d="M24 48c6.48 0 11.93-2.13 15.9-5.8l-7.73-6c-2.14 1.44-4.89 2.3-8.17 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 43.62 14.62 48 24 48Z"
                       />
                     </svg>
-
                     Continue with Google
                   </>
                 )}
               </button>
 
               {/* Error message */}
-              {message && (
-                <p className="text-xs leading-5 text-[#B65E4B]">
-                  {message}
-                </p>
-              )}
+              {message && <p className="text-xs leading-5 text-[#B65E4B]">{message}</p>}
             </form>
 
             {/* Register link */}
-            <p className="mt-7 text-center text-sm text-[#82776D]">
+            <p className="mt-7 text-center text-sm text-muted-foreground">
               New to Equiply?{" "}
               <Link
                 href="/register"
-                className="font-semibold text-[#79563E] hover:underline"
+                className="font-semibold text-primary hover:underline"
               >
                 Create an account
               </Link>
@@ -370,8 +343,8 @@ export default function Login() {
           </div>
 
           {/* Security message */}
-          <p className="mt-6 flex items-center justify-center gap-2 text-center text-xs text-[#A0968D]">
-            <ShieldCheck size={15} className="text-[#79563E]" />
+          <p className="mt-6 flex items-center justify-center gap-2 text-center text-xs text-muted-foreground">
+            <ShieldCheck size={15} className="text-primary" />
             Your account and booking information are protected.
           </p>
 
@@ -379,7 +352,7 @@ export default function Login() {
           <div className="mt-6 text-center">
             <Link
               href="/"
-              className="inline-flex items-center gap-1 text-xs font-medium text-[#82776D] transition hover:text-[#79563E]"
+              className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition hover:text-primary"
             >
               Back to home
               <ArrowRight size={13} />

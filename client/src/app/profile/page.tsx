@@ -1,4 +1,3 @@
- 
 "use client";
 
 import Link from "next/link";
@@ -19,11 +18,7 @@ import {
   CircleUserRound,
 } from "lucide-react";
 
-import {
-  errorMessage,
-  fetchProfile,
-  updateProfile,
-} from "@/lib/api";
+import { errorMessage, fetchProfile, updateProfile } from "@/lib/api";
 
 import { useAuth } from "@/lib/auth";
 import { formatDate, initials } from "@/lib/format";
@@ -51,17 +46,14 @@ function ProfileContent() {
 
   const profileImage = profile?.image || user?.image;
 
-  const currentRole = String(
-    user?.role || profile?.role || role || "customer"
-  )
+  const currentRole = String(user?.role || profile?.role || role || "customer")
     .trim()
     .toLowerCase();
 
   const isAdmin = currentRole === "admin";
   const isOwner = currentRole === "owner";
 
-  const displayName =
-    profile?.name || user?.name || "Equiply member";
+  const displayName = profile?.name || user?.name || "Equiply member";
 
   const email = profile?.email || user?.email || "";
 
@@ -99,10 +91,7 @@ function ProfileContent() {
     const trimmedName = name.trim();
 
     if (trimmedName.length < 2 || trimmedName.length > 80) {
-      showToast(
-        "Name must contain between 2 and 80 characters.",
-        "error"
-      );
+      showToast("Name must contain between 2 and 80 characters.", "error");
       return;
     }
 
@@ -117,16 +106,11 @@ function ProfileContent() {
     try {
       await updateProfile(trimmedName);
 
-      setProfile((current) =>
-        current ? { ...current, name: trimmedName } : current
-      );
+      setProfile((current) => (current ? { ...current, name: trimmedName } : current));
 
       setName(trimmedName);
 
-      showToast(
-        "Your profile was updated successfully.",
-        "success"
-      );
+      showToast("Your profile was updated successfully.", "success");
 
       void refresh().catch((caught) => {
         console.error("Profile refresh failed:", caught);
@@ -152,7 +136,7 @@ function ProfileContent() {
   function Avatar({ size = 88 }: { size?: number }) {
     return (
       <div
-        className="flex shrink-0 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-[#EDE3D9] font-semibold text-[#79563E] shadow-sm"
+        className="flex shrink-0 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-accent font-semibold text-primary shadow-sm"
         style={{
           width: size,
           height: size,
@@ -227,27 +211,26 @@ function ProfileContent() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FFFCFA] px-4 py-8 text-[#292723] sm:px-6 lg:px-8 lg:py-12">
+    <div className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-6 lg:px-8 lg:py-12">
       <div className="mx-auto max-w-[1120px]">
-
         {/* Page heading */}
-        <div className="mb-9 flex flex-col justify-between gap-5 border-b border-[#E8DFD6] pb-7 sm:flex-row sm:items-end">
+        <div className="mb-9 flex flex-col justify-between gap-5 border-b border-border pb-7 sm:flex-row sm:items-end">
           <div>
-            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#9A7656]">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
               Account settings
             </p>
 
-            <h1 className="text-3xl font-semibold tracking-tight text-[#292723] sm:text-4xl">
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
               My profile
             </h1>
 
-            <p className="mt-3 max-w-xl text-sm leading-6 text-[#82776D] sm:text-base">
-              Manage your personal information, account permissions,
-              and Equiply experience.
+            <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground sm:text-base">
+              Manage your personal information, account permissions, and Equiply
+              experience.
             </p>
           </div>
 
-          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[#E8DFD6] bg-white px-4 py-2 text-sm font-medium capitalize text-[#79563E]">
+          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium capitalize text-primary">
             <ShieldCheck size={16} />
             {currentRole} account
           </div>
@@ -271,59 +254,57 @@ function ProfileContent() {
         {/* Loading state */}
         {loading && (
           <div className="grid gap-6 lg:grid-cols-[1.3fr_0.8fr]">
-            <div className="h-[460px] animate-pulse rounded-2xl border border-[#E8DFD6] bg-white" />
+            <div className="h-[460px] animate-pulse rounded-2xl border border-border bg-card" />
 
             <div className="space-y-6">
-              <div className="h-[260px] animate-pulse rounded-2xl border border-[#E8DFD6] bg-white" />
-              <div className="h-[240px] animate-pulse rounded-2xl border border-[#E8DFD6] bg-white" />
+              <div className="h-[260px] animate-pulse rounded-2xl border border-border bg-card" />
+              <div className="h-[240px] animate-pulse rounded-2xl border border-border bg-card" />
             </div>
           </div>
         )}
 
         {!loading && (
           <div className="grid items-start gap-6 lg:grid-cols-[1.3fr_0.8fr]">
-
             {/* Profile information */}
-            <section className="overflow-hidden rounded-2xl border border-[#E8DFD6] bg-white shadow-[0_4px_24px_rgba(60,40,20,0.035)]">
-              <div className="border-b border-[#E8DFD6] px-6 py-5 sm:px-8">
-                <h2 className="text-lg font-semibold text-[#292723]">
+            <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-[0_4px_24px_rgba(60,40,20,0.035)]">
+              <div className="border-b border-border px-6 py-5 sm:px-8">
+                <h2 className="text-lg font-semibold text-foreground">
                   Personal information
                 </h2>
 
-                <p className="mt-1 text-sm text-[#82776D]">
+                <p className="mt-1 text-sm text-muted-foreground">
                   Update your profile details and personal information.
                 </p>
               </div>
 
               <form onSubmit={handleSubmit} className="p-6 sm:p-8">
-
                 {/* Profile identity */}
                 <div className="mb-8 flex flex-wrap items-center gap-5">
                   <Avatar />
 
                   <div className="min-w-0 flex-1">
-                    <h3 className="break-words text-xl font-semibold text-[#292723]">
+                    <h3 className="break-words text-xl font-semibold text-foreground">
                       {displayName}
                     </h3>
 
-                    <p className="mt-1 break-all text-sm text-[#82776D]">
+                    <p className="mt-1 break-all text-sm text-muted-foreground">
                       {email}
                     </p>
 
-                    <span className="mt-3 inline-flex rounded-full bg-[#F5EEE8] px-3 py-1 text-xs font-semibold capitalize text-[#79563E]">
+                    <span className="mt-3 inline-flex rounded-full bg-secondary px-3 py-1 text-xs font-semibold capitalize text-primary">
                       {currentRole}
                     </span>
                   </div>
                 </div>
 
-                <div className="mb-7 h-px bg-[#E8DFD6]" />
+                <div className="mb-7 h-px bg-border" />
 
                 {/* Form fields */}
                 <div className="space-y-5">
                   <div>
                     <label
                       htmlFor="profile-name"
-                      className="mb-2 block text-sm font-medium text-[#443B34]"
+                      className="mb-2 block text-sm font-medium text-foreground"
                     >
                       Full name
                     </label>
@@ -337,14 +318,14 @@ function ProfileContent() {
                       required
                       autoComplete="name"
                       placeholder="Enter your full name"
-                      className="h-12 w-full rounded-xl border border-[#E8DFD6] bg-[#FFFCFA] px-4 text-sm text-[#292723] outline-none transition placeholder:text-[#A99D92] focus:border-[#79563E] focus:ring-2 focus:ring-[#79563E]/10"
+                      className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10"
                     />
                   </div>
 
                   <div>
                     <label
                       htmlFor="profile-email"
-                      className="mb-2 block text-sm font-medium text-[#443B34]"
+                      className="mb-2 block text-sm font-medium text-foreground"
                     >
                       Email address
                     </label>
@@ -355,10 +336,10 @@ function ProfileContent() {
                       disabled
                       readOnly
                       type="email"
-                      className="h-12 w-full cursor-not-allowed rounded-xl border border-[#E8DFD6] bg-[#F8F5F1] px-4 text-sm text-[#82776D] outline-none"
+                      className="h-12 w-full cursor-not-allowed rounded-xl border border-border bg-secondary px-4 text-sm text-muted-foreground outline-none"
                     />
 
-                    <p className="mt-2 text-xs text-[#9A8D80]">
+                    <p className="mt-2 text-xs text-muted-foreground">
                       Your email address cannot be changed here.
                     </p>
                   </div>
@@ -366,29 +347,27 @@ function ProfileContent() {
                   <div>
                     <label
                       htmlFor="profile-date"
-                      className="mb-2 block text-sm font-medium text-[#443B34]"
+                      className="mb-2 block text-sm font-medium text-foreground"
                     >
                       Member since
                     </label>
 
                     <input
                       id="profile-date"
-                      value={formatDate(
-                        profile?.createdAt || user?.createdAt
-                      )}
+                      value={formatDate(profile?.createdAt || user?.createdAt)}
                       disabled
                       readOnly
-                      className="h-12 w-full cursor-not-allowed rounded-xl border border-[#E8DFD6] bg-[#F8F5F1] px-4 text-sm text-[#82776D] outline-none"
+                      className="h-12 w-full cursor-not-allowed rounded-xl border border-border bg-secondary px-4 text-sm text-muted-foreground outline-none"
                     />
                   </div>
                 </div>
 
                 {/* Actions */}
-                <div className="mt-8 flex flex-col gap-3 border-t border-[#E8DFD6] pt-6 sm:flex-row">
+                <div className="mt-8 flex flex-col gap-3 border-t border-border pt-6 sm:flex-row">
                   <button
                     type="submit"
                     disabled={saving || name.trim().length < 2}
-                    className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#79563E] px-6 text-sm font-semibold text-white transition hover:bg-[#62432F] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {saving ? (
                       <>
@@ -407,7 +386,7 @@ function ProfileContent() {
                     type="button"
                     onClick={() => void handleSignOut()}
                     disabled={signingOut}
-                    className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-[#E8DFD6] bg-white px-6 text-sm font-semibold text-[#79563E] transition hover:border-[#79563E] hover:bg-[#F8F3EE] disabled:opacity-60"
+                    className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-border bg-card px-6 text-sm font-semibold text-primary transition hover:border-primary hover:bg-secondary disabled:opacity-60"
                   >
                     {signingOut ? <Spinner /> : <LogOut size={17} />}
 
@@ -419,40 +398,31 @@ function ProfileContent() {
 
             {/* Right column */}
             <div className="space-y-6">
-
               {/* Account permissions */}
-              <section className="rounded-2xl border border-[#E8DFD6] bg-white p-6 shadow-[0_4px_24px_rgba(60,40,20,0.035)] sm:p-7">
+              <section className="rounded-2xl border border-border bg-card p-6 shadow-[0_4px_24px_rgba(60,40,20,0.035)] sm:p-7">
                 <div className="mb-5 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F5EEE8] text-[#79563E]">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-primary">
                     <LockKeyhole size={19} />
                   </div>
 
                   <div>
-                    <h2 className="font-semibold text-[#292723]">
-                      Account permissions
-                    </h2>
+                    <h2 className="font-semibold text-foreground">Account permissions</h2>
 
-                    <p className="text-xs text-[#82776D]">
-                      Your account access
-                    </p>
+                    <p className="text-xs text-muted-foreground">Your account access</p>
                   </div>
                 </div>
 
-                <div className="divide-y divide-[#EEE7E0]">
+                <div className="divide-y divide-border">
                   {permissions.map((permission) => (
                     <div
                       key={permission.label}
                       className="flex items-center justify-between gap-3 py-3"
                     >
-                      <span className="text-sm text-[#62584F]">
-                        {permission.label}
-                      </span>
+                      <span className="text-sm text-foreground">{permission.label}</span>
 
                       <span
                         className={`inline-flex shrink-0 items-center gap-1.5 text-xs font-semibold ${
-                          permission.allowed
-                            ? "text-[#66805D]"
-                            : "text-[#9A8D80]"
+                          permission.allowed ? "text-[#66805D]" : "text-muted-foreground"
                         }`}
                       >
                         {permission.allowed ? (
@@ -468,37 +438,37 @@ function ProfileContent() {
                 </div>
 
                 {!isOwner && !isAdmin && (
-                  <div className="mt-5 rounded-xl border border-[#E8DFD6] bg-[#F8F3EE] p-4">
-                    <h3 className="text-sm font-semibold text-[#79563E]">
+                  <div className="mt-5 rounded-xl border border-border bg-secondary p-4">
+                    <h3 className="text-sm font-semibold text-primary">
                       Become an equipment owner
                     </h3>
 
-                    <p className="mt-2 text-xs leading-5 text-[#82776D]">
-                      Ask an administrator to change your role to owner
-                      to list equipment and manage rental requests.
+                    <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                      Ask an administrator to change your role to owner to list equipment
+                      and manage rental requests.
                     </p>
                   </div>
                 )}
 
                 {isOwner && (
-                  <div className="mt-5 rounded-xl border border-[#E8DFD6] bg-[#F8F3EE] p-4">
-                    <h3 className="text-sm font-semibold text-[#79563E]">
+                  <div className="mt-5 rounded-xl border border-border bg-secondary p-4">
+                    <h3 className="text-sm font-semibold text-primary">
                       Owner account active
                     </h3>
 
-                    <p className="mt-2 text-xs leading-5 text-[#82776D]">
+                    <p className="mt-2 text-xs leading-5 text-muted-foreground">
                       You can list equipment and manage your rental business.
                     </p>
                   </div>
                 )}
 
                 {isAdmin && (
-                  <div className="mt-5 rounded-xl border border-[#E8DFD6] bg-[#F8F3EE] p-4">
-                    <h3 className="text-sm font-semibold text-[#79563E]">
+                  <div className="mt-5 rounded-xl border border-border bg-secondary p-4">
+                    <h3 className="text-sm font-semibold text-primary">
                       Administrator account active
                     </h3>
 
-                    <p className="mt-2 text-xs leading-5 text-[#82776D]">
+                    <p className="mt-2 text-xs leading-5 text-muted-foreground">
                       You have access to platform administration and management.
                     </p>
                   </div>
@@ -506,18 +476,16 @@ function ProfileContent() {
               </section>
 
               {/* Quick access */}
-              <section className="rounded-2xl border border-[#E8DFD6] bg-white p-6 shadow-[0_4px_24px_rgba(60,40,20,0.035)] sm:p-7">
+              <section className="rounded-2xl border border-border bg-card p-6 shadow-[0_4px_24px_rgba(60,40,20,0.035)] sm:p-7">
                 <div className="mb-5 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F5EEE8] text-[#79563E]">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-primary">
                     <CircleUserRound size={20} />
                   </div>
 
                   <div>
-                    <h2 className="font-semibold text-[#292723]">
-                      Quick access
-                    </h2>
+                    <h2 className="font-semibold text-foreground">Quick access</h2>
 
-                    <p className="text-xs text-[#82776D]">
+                    <p className="text-xs text-muted-foreground">
                       Manage your Equiply activities
                     </p>
                   </div>
@@ -533,25 +501,25 @@ function ProfileContent() {
                         <Link
                           key={item.href}
                           href={item.href}
-                          className="group flex items-center gap-3 rounded-xl border border-transparent p-3 transition hover:border-[#E8DFD6] hover:bg-[#FFFCFA]"
+                          className="group flex items-center gap-3 rounded-xl border border-transparent p-3 transition hover:border-border hover:bg-background"
                         >
-                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F5EEE8] text-[#79563E] transition group-hover:bg-[#79563E] group-hover:text-white">
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary text-primary transition group-hover:bg-primary group-hover:text-primary-foreground">
                             <Icon size={18} />
                           </div>
 
                           <div className="min-w-0 flex-1">
-                            <p className="text-sm font-semibold text-[#443B34]">
+                            <p className="text-sm font-semibold text-foreground">
                               {item.label}
                             </p>
 
-                            <p className="mt-0.5 text-xs text-[#96897D]">
+                            <p className="mt-0.5 text-xs text-muted-foreground">
                               {item.description}
                             </p>
                           </div>
 
                           <ChevronRight
                             size={17}
-                            className="shrink-0 text-[#B5A89B] transition group-hover:translate-x-1 group-hover:text-[#79563E]"
+                            className="shrink-0 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-primary"
                           />
                         </Link>
                       );

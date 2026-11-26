@@ -174,10 +174,7 @@ export default function Home() {
         if (cancelled) return;
 
         if (e instanceof ApiError && e.status === 0) {
-          setFeatured(
-            demoEquipment.map(normalizeEquipment).slice(0, 4)
-          );
-
+          setFeatured(demoEquipment.map(normalizeEquipment).slice(0, 4));
           setDemoMode(true);
         } else {
           setError(errorMessage(e));
@@ -210,16 +207,15 @@ export default function Home() {
     if (date) params.set("date", date);
 
     router.push(
-      `/equipment${params.size ? `?${params.toString()}` : ""}`
+      `/equipment${params.size ? `?${params.toString()}` : ""}`,
     );
   }
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#FFFCFA] text-[#292723] transition-colors duration-300 dark:bg-[#211B17] dark:text-[#F3E6DA]">
-
+    <main className="min-h-screen overflow-hidden bg-background text-foreground transition-colors duration-300">
       {/* ANNOUNCEMENT BAR */}
 
-      <div className="flex items-center justify-between border-b border-[#E8DFD6] bg-[#F7F1EB] px-5 py-2 text-[10px] text-[#766E65] dark:border-[#514033] dark:bg-[#29221D] dark:text-[#C0A993] sm:px-8 md:px-12">
+      <div className="flex items-center justify-between border-b border-border bg-secondary px-5 py-2 text-[10px] text-muted-foreground sm:px-8 md:px-12">
         <p>Find the equipment your project needs</p>
 
         <p className="hidden sm:block">
@@ -251,20 +247,18 @@ export default function Home() {
             <h1 className="max-w-xl text-4xl font-semibold leading-[1.12] tracking-tight text-white sm:text-5xl md:text-6xl">
               Get the job done.
               <br />
-              <span className="text-[#e6c7a9]">
-                Rent smarter.
-              </span>
+              <span className="text-[#e6c7a9]">Rent smarter.</span>
             </h1>
 
             <p className="mt-6 max-w-md text-sm leading-7 text-white/80 sm:text-base">
-              Find quality equipment, trusted owners and flexible
-              rentals for everything you need to get moving.
+              Find quality equipment, trusted owners and flexible rentals
+              for everything you need to get moving.
             </p>
 
             <div className="mt-8">
               <Link
                 href="/equipment"
-                className="inline-flex h-12 items-center justify-center rounded-md bg-[#79563E] px-7 text-xs font-semibold text-white transition hover:bg-[#5D402E] dark:bg-[#A77A55] dark:hover:bg-[#916747]"
+                className="inline-flex h-12 items-center justify-center rounded-md bg-primary px-7 text-xs font-semibold text-primary-foreground transition hover:bg-primary-hover"
               >
                 Explore Equipment
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -273,27 +267,21 @@ export default function Home() {
 
             <div className="mt-12 flex flex-wrap gap-x-10 gap-y-5">
               <div>
-                <p className="text-lg font-semibold text-white">
-                  Trusted
-                </p>
+                <p className="text-lg font-semibold text-white">Trusted</p>
                 <p className="mt-1 text-[10px] text-white/70">
                   Equipment owners
                 </p>
               </div>
 
               <div>
-                <p className="text-lg font-semibold text-white">
-                  Flexible
-                </p>
+                <p className="text-lg font-semibold text-white">Flexible</p>
                 <p className="mt-1 text-[10px] text-white/70">
                   Rental periods
                 </p>
               </div>
 
               <div>
-                <p className="text-lg font-semibold text-white">
-                  Simple
-                </p>
+                <p className="text-lg font-semibold text-white">Simple</p>
                 <p className="mt-1 text-[10px] text-white/70">
                   Booking experience
                 </p>
@@ -308,13 +296,13 @@ export default function Home() {
       <section className="relative z-20 mx-auto -mt-8 max-w-6xl px-4 sm:px-6">
         <form
           onSubmit={handleSearch}
-          className="grid gap-3 rounded-xl border border-[#E8DFD6] bg-white p-4 text-[#292723] shadow-xl shadow-black/5 dark:border-[#514033] dark:bg-[#29221D] dark:text-[#F3E6DA] md:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr_auto] lg:gap-0 lg:p-5"
+          className="grid gap-3 rounded-xl border border-border bg-card p-4 text-foreground shadow-xl shadow-black/5 md:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr_auto] lg:gap-0 lg:p-5"
         >
-          <label className="flex min-w-0 items-center gap-3 border-b border-[#E8DFD6] px-3 py-3 dark:border-[#514033] lg:border-b-0 lg:border-r">
-            <Search className="h-5 w-5 shrink-0 text-[#79563E] dark:text-[#C49A73]" />
+          <label className="flex min-w-0 items-center gap-3 border-b border-border px-3 py-3 lg:border-b-0 lg:border-r">
+            <Search className="h-5 w-5 shrink-0 text-primary" />
 
             <span className="min-w-0 flex-1">
-              <span className="block text-[10px] font-semibold uppercase tracking-wider text-[#82776D] dark:text-[#C0A993]">
+              <span className="block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                 Equipment
               </span>
 
@@ -322,16 +310,16 @@ export default function Home() {
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 placeholder="What do you need?"
-                className="h-8 border-0 bg-transparent px-0 text-xs text-[#292723] shadow-none placeholder:text-[#94877B] focus-visible:ring-0 dark:text-[#F3E6DA] dark:placeholder:text-[#A89581]"
+                className="h-8 border-0 bg-transparent px-0 text-xs text-foreground shadow-none placeholder:text-muted-foreground focus-visible:ring-0"
               />
             </span>
           </label>
 
-          <label className="flex min-w-0 items-center gap-3 border-b border-[#E8DFD6] px-3 py-3 dark:border-[#514033] lg:border-b-0 lg:border-r">
-            <MapPin className="h-5 w-5 shrink-0 text-[#79563E] dark:text-[#C49A73]" />
+          <label className="flex min-w-0 items-center gap-3 border-b border-border px-3 py-3 lg:border-b-0 lg:border-r">
+            <MapPin className="h-5 w-5 shrink-0 text-primary" />
 
             <span className="min-w-0 flex-1">
-              <span className="block text-[10px] font-semibold uppercase tracking-wider text-[#82776D] dark:text-[#C0A993]">
+              <span className="block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                 Location
               </span>
 
@@ -339,16 +327,16 @@ export default function Home() {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="City or area"
-                className="h-8 border-0 bg-transparent px-0 text-xs text-[#292723] shadow-none placeholder:text-[#94877B] focus-visible:ring-0 dark:text-[#F3E6DA] dark:placeholder:text-[#A89581]"
+                className="h-8 border-0 bg-transparent px-0 text-xs text-foreground shadow-none placeholder:text-muted-foreground focus-visible:ring-0"
               />
             </span>
           </label>
 
-          <label className="flex min-w-0 items-center gap-3 border-b border-[#E8DFD6] px-3 py-3 dark:border-[#514033] lg:border-b-0 lg:border-r">
-            <CalendarDays className="h-5 w-5 shrink-0 text-[#79563E] dark:text-[#C49A73]" />
+          <label className="flex min-w-0 items-center gap-3 border-b border-border px-3 py-3 lg:border-b-0 lg:border-r">
+            <CalendarDays className="h-5 w-5 shrink-0 text-primary" />
 
             <span className="min-w-0 flex-1">
-              <span className="block text-[10px] font-semibold uppercase tracking-wider text-[#82776D] dark:text-[#C0A993]">
+              <span className="block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                 Rental date
               </span>
 
@@ -357,14 +345,14 @@ export default function Home() {
                 min={new Date().toISOString().slice(0, 10)}
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="h-8 border-0 bg-transparent px-0 text-xs text-[#292723] shadow-none focus-visible:ring-0 dark:text-[#F3E6DA]"
+                className="h-8 border-0 bg-transparent px-0 text-xs text-foreground shadow-none focus-visible:ring-0"
               />
             </span>
           </label>
 
           <Button
             type="submit"
-            className="h-12 rounded-md bg-[#79563E] px-8 text-xs font-semibold text-white hover:bg-[#5D402E] dark:bg-[#A77A55] dark:text-white dark:hover:bg-[#916747] lg:ml-4"
+            className="h-12 rounded-md bg-primary px-8 text-xs font-semibold text-primary-foreground hover:bg-primary-hover lg:ml-4"
           >
             <Search className="mr-2 h-4 w-4" />
             Search
@@ -374,7 +362,7 @@ export default function Home() {
 
       {/* BENEFITS STRIP */}
 
-      <section className="grid grid-cols-2 border-b border-[#E8DFD6] bg-[#FFFCFA] px-5 py-10 dark:border-[#514033] dark:bg-[#211B17] sm:px-10 lg:grid-cols-4 lg:px-16">
+      <section className="grid grid-cols-2 border-b border-border bg-background px-5 py-10 sm:px-10 lg:grid-cols-4 lg:px-16">
         {[
           {
             icon: Leaf,
@@ -404,14 +392,14 @@ export default function Home() {
               key={item.title}
               className="flex items-center justify-center gap-3 px-2 py-4"
             >
-              <Icon className="h-6 w-6 shrink-0 text-[#79563E] dark:text-[#C49A73]" />
+              <Icon className="h-6 w-6 shrink-0 text-primary" />
 
               <div>
-                <p className="text-[11px] font-semibold text-[#302A24] dark:text-[#F3E6DA]">
+                <p className="text-[11px] font-semibold text-foreground">
                   {item.title}
                 </p>
 
-                <p className="mt-1 text-[10px] text-[#82776D] dark:text-[#C0A993]">
+                <p className="mt-1 text-[10px] text-muted-foreground">
                   {item.subtitle}
                 </p>
               </div>
@@ -425,18 +413,18 @@ export default function Home() {
       <section className="mx-auto max-w-[1400px] px-5 py-16 sm:px-8 md:px-12 lg:px-16">
         <div className="mb-10 flex items-end justify-between gap-4">
           <div>
-            <span className="mb-3 block text-[10px] font-bold tracking-[2px] text-[#79563E] dark:text-[#C49A73]">
+            <span className="mb-3 block text-[10px] font-bold tracking-[2px] text-primary">
               EXPLORE BY CATEGORY
             </span>
 
-            <h2 className="text-2xl font-medium tracking-tight text-[#292723] dark:text-[#F3E6DA] sm:text-3xl">
+            <h2 className="text-2xl font-medium tracking-tight text-foreground sm:text-3xl">
               Find equipment for every job
             </h2>
           </div>
 
           <Link
             href="/equipment"
-            className="flex shrink-0 items-center gap-2 text-xs font-medium text-[#766E65] transition hover:text-[#79563E] dark:text-[#C0A993] dark:hover:text-[#E6C7A9]"
+            className="flex shrink-0 items-center gap-2 text-xs font-medium text-muted-foreground transition hover:text-primary"
           >
             View all
             <ArrowRight className="h-4 w-4" />
@@ -459,7 +447,7 @@ export default function Home() {
                   href={cat.href}
                   className="group flex flex-col items-center text-center"
                 >
-                  <div className="relative mb-4 aspect-square w-full max-w-[150px] overflow-hidden rounded-full bg-[#F0EAE4] dark:bg-[#382D25]">
+                  <div className="relative mb-4 aspect-square w-full max-w-[150px] overflow-hidden rounded-full bg-secondary">
                     <img
                       src={cat.image}
                       alt={cat.name}
@@ -472,11 +460,11 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <h3 className="text-xs font-semibold text-[#302A24] dark:text-[#F3E6DA]">
+                  <h3 className="text-xs font-semibold text-foreground">
                     {cat.name}
                   </h3>
 
-                  <p className="mt-1 text-[10px] text-[#82776D] dark:text-[#C0A993]">
+                  <p className="mt-1 text-[10px] text-muted-foreground">
                     Browse rentals
                   </p>
                 </Link>
@@ -493,7 +481,13 @@ export default function Home() {
           {
             image: promoImages[0],
             eyebrow: "FOR YOUR NEXT PROJECT",
-            title: <>Build more.<br />Buy less.</>,
+            title: (
+              <>
+                Build more.
+                <br />
+                Buy less.
+              </>
+            ),
             description:
               "Discover reliable construction tools and machinery.",
             button: "Explore construction",
@@ -502,7 +496,13 @@ export default function Home() {
           {
             image: promoImages[1],
             eyebrow: "VEHICLES & TRANSPORT",
-            title: <>Move things.<br />Move forward.</>,
+            title: (
+              <>
+                Move things.
+                <br />
+                Move forward.
+              </>
+            ),
             description:
               "Find vehicles and transport equipment for your needs.",
             button: "Explore vehicles",
@@ -531,7 +531,7 @@ export default function Home() {
 
               <Link
                 href={item.href}
-                className="mt-6 inline-flex h-10 items-center justify-center rounded-md bg-[#FFFCFA] px-5 text-xs font-medium text-[#79563E] transition hover:bg-[#F0EAE4]"
+                className="mt-6 inline-flex h-10 items-center justify-center rounded-md bg-background px-5 text-xs font-medium text-primary transition hover:bg-secondary"
               >
                 {item.button}
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -546,22 +546,22 @@ export default function Home() {
       <section className="mx-auto max-w-[1400px] px-5 py-16 sm:px-8 md:px-12 lg:px-16">
         <div className="mb-9 flex items-end justify-between gap-4">
           <div>
-            <span className="mb-3 block text-[10px] font-bold tracking-[2px] text-[#79563E] dark:text-[#C49A73]">
+            <span className="mb-3 block text-[10px] font-bold tracking-[2px] text-primary">
               POPULAR RENTALS
             </span>
 
-            <h2 className="text-2xl font-medium tracking-tight text-[#292723] dark:text-[#F3E6DA] sm:text-3xl">
+            <h2 className="text-2xl font-medium tracking-tight text-foreground sm:text-3xl">
               Equipment worth discovering
             </h2>
 
-            <p className="mt-2 text-xs text-[#82776D] dark:text-[#C0A993]">
+            <p className="mt-2 text-xs text-muted-foreground">
               Find quality equipment for your next project.
             </p>
           </div>
 
           <Link
             href="/equipment"
-            className="flex shrink-0 items-center gap-2 text-xs font-medium text-[#302A24] transition hover:text-[#79563E] dark:text-[#E5D4C5] dark:hover:text-[#E6C7A9]"
+            className="flex shrink-0 items-center gap-2 text-xs font-medium text-foreground transition hover:text-primary"
           >
             View marketplace
             <ArrowRight className="h-4 w-4" />
@@ -589,7 +589,7 @@ export default function Home() {
 
       {/* BRAND STORY */}
 
-      <section className="grid border-y border-[#E8DFD6] bg-[#F7F1EB] dark:border-[#514033] dark:bg-[#29221D] md:grid-cols-[1.15fr_1fr_0.8fr]">
+      <section className="grid border-y border-border bg-secondary md:grid-cols-[1.15fr_1fr_0.8fr]">
         <div className="min-h-[300px] overflow-hidden md:min-h-[390px]">
           <img
             src={storyImage}
@@ -600,33 +600,32 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col justify-center px-7 py-12 sm:px-12">
-          <span className="mb-4 text-[10px] font-bold tracking-[2px] text-[#79563E] dark:text-[#C49A73]">
+          <span className="mb-4 text-[10px] font-bold tracking-[2px] text-primary">
             A BETTER WAY TO GET THINGS DONE
           </span>
 
-          <h2 className="text-3xl font-medium leading-tight tracking-tight text-[#292723] dark:text-[#F3E6DA]">
+          <h2 className="text-3xl font-medium leading-tight tracking-tight text-foreground">
             Smart rentals.
             <br />
             Real possibilities.
           </h2>
 
-          <p className="mt-5 text-sm leading-7 text-[#766E65] dark:text-[#C0A993]">
-            We believe useful equipment should be accessible when you
-            need it. Equiply connects people who have equipment with
-            people who need it, making projects easier and resources
-            more useful.
+          <p className="mt-5 text-sm leading-7 text-muted-foreground">
+            We believe useful equipment should be accessible when you need
+            it. Equiply connects people who have equipment with people who
+            need it, making projects easier and resources more useful.
           </p>
 
           <Link
             href="/equipment"
-            className="mt-7 inline-flex h-11 w-fit items-center justify-center rounded-md bg-[#79563E] px-6 text-xs font-medium text-white transition hover:bg-[#5D402E] dark:bg-[#A77A55] dark:hover:bg-[#916747]"
+            className="mt-7 inline-flex h-11 w-fit items-center justify-center rounded-md bg-primary px-6 text-xs font-medium text-primary-foreground transition hover:bg-primary-hover"
           >
             Discover Equiply
             <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
         </div>
 
-        <div className="flex flex-col justify-center gap-6 bg-[#79563E] px-8 py-12 text-white dark:bg-[#514033] sm:px-10">
+        <div className="flex flex-col justify-center gap-6 bg-primary px-8 py-12 text-primary-foreground sm:px-10">
           <h3 className="text-2xl font-medium">
             Better projects.
             <br />
@@ -654,7 +653,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* BENEFIT CARDS */}
+      {/* BENEFIT CARDS - ANIMATED */}
 
       <section className="mx-auto grid max-w-[1400px] grid-cols-2 gap-5 px-5 py-12 sm:px-8 md:grid-cols-4 md:px-12 lg:px-16">
         {[
@@ -678,31 +677,53 @@ export default function Home() {
             title: "Community driven",
             desc: "Connect renters with equipment owners.",
           },
-        ].map((item) => {
+        ].map((item, index) => {
           const Icon = item.icon;
 
           return (
-            <div
+            <motion.div
               key={item.title}
-              className="rounded-xl border border-[#E8DFD6] bg-white px-3 py-6 text-center dark:border-[#514033] dark:bg-[#29221D]"
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{
+                duration: 0.5,
+                delay: index * 0.12,
+                ease: "easeOut",
+              }}
+              whileHover={{
+                y: -7,
+                transition: { duration: 0.25 },
+              }}
+              className="group rounded-xl border border-border bg-card px-4 py-7 text-center shadow-sm transition-shadow duration-300 hover:shadow-lg hover:shadow-primary/10 sm:px-5"
             >
-              <Icon className="mx-auto h-7 w-7 text-[#79563E] dark:text-[#C49A73]" />
+              <motion.div
+                whileHover={{ scale: 1.15, rotate: 5 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 12,
+                }}
+                className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-primary-foreground"
+              >
+                <Icon className="h-6 w-6" />
+              </motion.div>
 
-              <h3 className="mt-4 text-sm font-semibold text-[#302A24] dark:text-[#F3E6DA]">
+              <h3 className="mt-5 text-sm font-semibold text-foreground">
                 {item.title}
               </h3>
 
-              <p className="mt-2 text-xs leading-6 text-[#82776D] dark:text-[#C0A993]">
+              <p className="mx-auto mt-2 max-w-[220px] text-xs leading-6 text-muted-foreground">
                 {item.desc}
               </p>
-            </div>
+            </motion.div>
           );
         })}
       </section>
 
       {/* INSPIRATION SECTION */}
 
-      <section className="grid border-y border-[#E8DFD6] bg-[#F7F1EB] dark:border-[#514033] dark:bg-[#29221D] md:grid-cols-[1.1fr_1fr_0.7fr]">
+      <section className="grid border-y border-border bg-secondary md:grid-cols-[1.1fr_1fr_0.7fr]">
         <div className="min-h-[280px] overflow-hidden">
           <img
             src={inspirationImage}
@@ -713,24 +734,24 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col justify-center px-7 py-12 sm:px-12">
-          <span className="mb-4 text-[10px] font-bold tracking-[2px] text-[#79563E] dark:text-[#C49A73]">
+          <span className="mb-4 text-[10px] font-bold tracking-[2px] text-primary">
             MAKE YOUR NEXT PROJECT HAPPEN
           </span>
 
-          <h2 className="text-3xl font-medium leading-tight text-[#292723] dark:text-[#F3E6DA]">
+          <h2 className="text-3xl font-medium leading-tight text-foreground">
             Everything you need.
             <br />
             Nothing you don't.
           </h2>
 
-          <p className="mt-5 text-sm leading-7 text-[#766E65] dark:text-[#C0A993]">
-            Explore equipment, discover new possibilities and find
-            practical solutions for the work ahead.
+          <p className="mt-5 text-sm leading-7 text-muted-foreground">
+            Explore equipment, discover new possibilities and find practical
+            solutions for the work ahead.
           </p>
 
           <Link
             href="/equipment"
-            className="mt-7 inline-flex h-11 w-fit items-center justify-center rounded-md bg-[#79563E] px-6 text-xs font-medium text-white transition hover:bg-[#5D402E] dark:bg-[#A77A55] dark:hover:bg-[#916747]"
+            className="mt-7 inline-flex h-11 w-fit items-center justify-center rounded-md bg-primary px-6 text-xs font-medium text-primary-foreground transition hover:bg-primary-hover"
           >
             Find your equipment
             <ArrowRight className="ml-2 h-4 w-4" />
@@ -748,9 +769,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
 
           <div className="absolute bottom-8 left-7 text-white">
-            <h3 className="text-2xl font-medium">
-              Make it happen.
-            </h3>
+            <h3 className="text-2xl font-medium">Make it happen.</h3>
 
             <p className="mt-2 text-xs text-white/80">
               Find what your project needs.
@@ -759,78 +778,104 @@ export default function Home() {
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
+      {/* TESTIMONIALS - ANIMATED */}
 
       <section className="mx-auto max-w-[1400px] px-5 py-16 sm:px-8 md:px-12 lg:px-16">
         <div className="mb-10">
-          <span className="mb-3 block text-[10px] font-bold tracking-[2px] text-[#79563E] dark:text-[#C49A73]">
+          <span className="mb-3 block text-[10px] font-bold tracking-[2px] text-primary">
             WHAT OUR COMMUNITY SAYS
           </span>
 
-          <h2 className="text-2xl font-medium text-[#292723] dark:text-[#F3E6DA] sm:text-3xl">
+          <h2 className="text-2xl font-medium text-foreground sm:text-3xl">
             Trusted by renters and owners
           </h2>
         </div>
 
         <div className="grid gap-5 md:grid-cols-3">
-          {testimonials.map((item) => (
-            <article
+          {testimonials.map((item, index) => (
+            <motion.article
               key={item.name}
-              className="rounded-xl border border-[#E8DFD6] bg-white p-7 text-[#292723] dark:border-[#514033] dark:bg-[#29221D] dark:text-[#F3E6DA]"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{
+                duration: 0.55,
+                delay: index * 0.15,
+                ease: "easeOut",
+              }}
+              whileHover={{
+                y: -8,
+                transition: { duration: 0.25 },
+              }}
+              className="group rounded-xl border border-border bg-card p-7 text-foreground shadow-sm transition-shadow duration-300 hover:shadow-xl hover:shadow-primary/10"
             >
+              {/* Animated star ratings */}
+
               <div className="flex gap-1 text-amber-500">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <Star
+                  <motion.span
                     key={i}
-                    className="h-3.5 w-3.5 fill-current"
-                  />
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{
+                      delay: index * 0.15 + i * 0.08,
+                      type: "spring",
+                      stiffness: 300,
+                    }}
+                  >
+                    <Star className="h-4 w-4 fill-current" />
+                  </motion.span>
                 ))}
               </div>
 
-              <p className="my-6 text-sm leading-7 text-[#766E65] dark:text-[#C0A993]">
+              <p className="my-6 min-h-[100px] text-sm leading-7 text-muted-foreground">
                 &ldquo;{item.text}&rdquo;
               </p>
 
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F0EAE4] text-sm font-semibold text-[#79563E] dark:bg-[#514033] dark:text-[#E6C7A9]">
+              <div className="flex items-center gap-3 border-t border-border pt-5">
+                <motion.div
+                  whileHover={{ rotate: 8, scale: 1.1 }}
+                  className="flex h-11 w-11 items-center justify-center rounded-full bg-secondary text-sm font-semibold text-primary"
+                >
                   {item.name.charAt(0)}
-                </div>
+                </motion.div>
 
                 <div>
-                  <h3 className="text-xs font-semibold text-[#302A24] dark:text-[#F3E6DA]">
+                  <h3 className="text-xs font-semibold text-foreground">
                     {item.name}
                   </h3>
 
-                  <p className="mt-1 text-[10px] text-[#82776D] dark:text-[#C0A993]">
+                  <p className="mt-1 text-[10px] text-muted-foreground">
                     {item.role}
                   </p>
                 </div>
               </div>
-            </article>
+            </motion.article>
           ))}
         </div>
       </section>
 
       {/* COMMUNITY CTA */}
 
-      <section className="grid overflow-hidden border-t border-[#E8DFD6] bg-[#F7F1EB] dark:border-[#514033] dark:bg-[#29221D] md:grid-cols-[1fr_0.65fr]">
+      <section className="grid overflow-hidden border-t border-border bg-secondary md:grid-cols-[1fr_0.65fr]">
         <div className="flex flex-col justify-center px-7 py-14 sm:px-12 lg:px-20">
-          <span className="mb-4 text-[10px] font-bold tracking-[2px] text-[#79563E] dark:text-[#C49A73]">
+          <span className="mb-4 text-[10px] font-bold tracking-[2px] text-primary">
             JOIN THE EQUIPLY COMMUNITY
           </span>
 
-          <h2 className="max-w-lg text-3xl font-medium leading-tight text-[#292723] dark:text-[#F3E6DA] sm:text-4xl">
+          <h2 className="max-w-lg text-3xl font-medium leading-tight text-foreground sm:text-4xl">
             Projects start with the right equipment.
           </h2>
 
-          <p className="mt-5 max-w-md text-sm leading-7 text-[#766E65] dark:text-[#C0A993]">
-            Discover equipment, connect with owners and make your
-            next project easier.
+          <p className="mt-5 max-w-md text-sm leading-7 text-muted-foreground">
+            Discover equipment, connect with owners and make your next
+            project easier.
           </p>
 
           <Link
             href="/equipment"
-            className="mt-7 inline-flex h-12 w-fit items-center justify-center rounded-md bg-[#79563E] px-7 text-xs font-semibold text-white transition hover:bg-[#5D402E] dark:bg-[#A77A55] dark:hover:bg-[#916747]"
+            className="mt-7 inline-flex h-12 w-fit items-center justify-center rounded-md bg-primary px-7 text-xs font-semibold text-primary-foreground transition hover:bg-primary-hover"
           >
             Explore the marketplace
             <ArrowRight className="ml-2 h-4 w-4" />
@@ -848,7 +893,6 @@ export default function Home() {
       </section>
 
       {/* EXISTING SHARED FOOTER REMAINS IN LAYOUT */}
-
     </main>
   );
 }
