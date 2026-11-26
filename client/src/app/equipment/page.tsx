@@ -16,8 +16,6 @@ import {
   LayoutGrid,
   Sparkles,
   ShieldCheck,
-  X,
-  ListFilter,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -187,8 +185,7 @@ function EquipmentBrowser() {
   ].filter(Boolean).length;
 
   return (
-    <main className="min-h-screen bg-[#FFFCFA] text-[#292723]">
-
+    <main className="min-h-screen bg-background text-foreground">
       {/* Marketplace hero */}
       <section className="relative isolate overflow-hidden bg-[#33271E]">
         <img
@@ -234,11 +231,10 @@ function EquipmentBrowser() {
 
       {/* Marketplace content */}
       <section className="mx-auto max-w-[1400px] px-4 py-10 sm:px-8 md:px-12 lg:px-16 lg:py-14">
-
         {/* Heading */}
         <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>
-            <p className="mb-3 text-[10px] font-bold uppercase tracking-[2px] text-[#9A7656]">
+            <p className="mb-3 text-[10px] font-bold uppercase tracking-[2px] text-primary">
               Explore our collection
             </p>
 
@@ -246,7 +242,7 @@ function EquipmentBrowser() {
               Browse equipment
             </h2>
 
-            <p className="mt-2 max-w-xl text-sm leading-6 text-[#82776D]">
+            <p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">
               Find equipment for construction, transportation, photography,
               outdoor activities and more.
             </p>
@@ -254,7 +250,7 @@ function EquipmentBrowser() {
 
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#79563E] transition hover:text-[#62432F]"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-primary transition hover:text-primary/80"
           >
             Back to home
             <ArrowRight size={16} />
@@ -262,10 +258,10 @@ function EquipmentBrowser() {
         </div>
 
         {/* Search */}
-        <div className="mb-9 rounded-2xl border border-[#E8DFD6] bg-white p-3 shadow-[0_4px_24px_rgba(60,40,20,0.035)] sm:p-4">
+        <div className="mb-9 rounded-2xl border border-border bg-card p-3 shadow-sm sm:p-4">
           <div className="grid gap-3 md:grid-cols-[1fr_1fr_auto]">
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9A7656]" />
+              <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
               <Input
                 value={q}
                 onChange={(event) => {
@@ -274,25 +270,25 @@ function EquipmentBrowser() {
                 }}
                 placeholder="Search excavators, cameras, tents..."
                 aria-label="Search equipment"
-                className="h-12 rounded-xl border-[#E8DFD6] bg-[#FFFCFA] pl-11 text-sm shadow-none focus-visible:ring-[#79563E]"
+                className="h-12 rounded-xl border-input bg-background pl-11 text-sm shadow-none focus-visible:ring-ring"
               />
             </div>
 
             <div className="relative">
-              <MapPin className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9A7656]" />
+              <MapPin className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
               <Input
                 value={location}
                 onChange={(event) => update({ location: event.target.value })}
                 placeholder="Enter city or location"
                 aria-label="Filter by location"
-                className="h-12 rounded-xl border-[#E8DFD6] bg-[#FFFCFA] pl-11 text-sm shadow-none focus-visible:ring-[#79563E]"
+                className="h-12 rounded-xl border-input bg-background pl-11 text-sm shadow-none focus-visible:ring-ring"
               />
             </div>
 
             <Button
               type="button"
               onClick={() => setReload((value) => value + 1)}
-              className="h-12 rounded-xl bg-[#79563E] px-7 text-sm font-semibold text-white hover:bg-[#62432F]"
+              className="h-12 rounded-xl bg-primary px-7 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
             >
               <Search className="mr-2 h-4 w-4" />
               Search equipment
@@ -303,10 +299,10 @@ function EquipmentBrowser() {
         {/* Category shortcuts */}
         <div className="mb-9">
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-[#443B34]">
+            <h3 className="text-sm font-semibold text-foreground">
               Explore categories
             </h3>
-            <span className="text-xs text-[#9A8D80]">
+            <span className="text-xs text-muted-foreground">
               {CATEGORIES.length} categories
             </span>
           </div>
@@ -317,8 +313,8 @@ function EquipmentBrowser() {
               onClick={() => update({ category: "All" })}
               className={`shrink-0 rounded-full border px-5 py-2.5 text-xs font-semibold transition ${
                 category === "All"
-                  ? "border-[#79563E] bg-[#79563E] text-white"
-                  : "border-[#E8DFD6] bg-white text-[#665B50] hover:border-[#79563E] hover:text-[#79563E]"
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-border bg-card text-secondary-foreground hover:border-primary hover:text-primary"
               }`}
             >
               All equipment
@@ -331,8 +327,8 @@ function EquipmentBrowser() {
                 onClick={() => update({ category: value })}
                 className={`shrink-0 rounded-full border px-5 py-2.5 text-xs font-semibold transition ${
                   category === value
-                    ? "border-[#79563E] bg-[#79563E] text-white"
-                    : "border-[#E8DFD6] bg-white text-[#665B50] hover:border-[#79563E] hover:text-[#79563E]"
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border bg-card text-secondary-foreground hover:border-primary hover:text-primary"
                 }`}
               >
                 {value}
@@ -343,44 +339,43 @@ function EquipmentBrowser() {
 
         {/* Filters and results */}
         <div className="grid items-start gap-7 lg:grid-cols-[250px_minmax(0,1fr)]">
-
           {/* Filter sidebar */}
-          <aside className="rounded-2xl border border-[#E8DFD6] bg-white p-5 shadow-[0_4px_24px_rgba(60,40,20,0.025)]">
+          <aside className="rounded-2xl border border-border bg-card p-5 shadow-sm">
             <div className="mb-6 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <SlidersHorizontal size={17} className="text-[#79563E]" />
+                <SlidersHorizontal size={17} className="text-primary" />
                 <h3 className="text-sm font-semibold">Filters</h3>
               </div>
 
               {activeFilterCount > 0 && (
-                <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-[#F5EEE8] px-2 text-xs font-semibold text-[#79563E]">
+                <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-secondary px-2 text-xs font-semibold text-secondary-foreground">
                   {activeFilterCount}
                 </span>
               )}
             </div>
 
             {/* Category */}
-            <div className="border-b border-[#F0EAE4] pb-6">
-              <h4 className="mb-4 text-xs font-semibold text-[#443B34]">
+            <div className="border-b border-border pb-6">
+              <h4 className="mb-4 text-xs font-semibold text-foreground">
                 Category
               </h4>
 
               <div className="space-y-3">
-                <label className="flex cursor-pointer items-center justify-between text-xs text-[#665B50]">
+                <label className="flex cursor-pointer items-center justify-between text-xs text-secondary-foreground">
                   <span>All categories</span>
                   <input
                     type="radio"
                     name="category"
                     checked={category === "All"}
                     onChange={() => update({ category: "All" })}
-                    className="accent-[#79563E]"
+                    className="accent-primary"
                   />
                 </label>
 
                 {CATEGORIES.map((value) => (
                   <label
                     key={value}
-                    className="flex cursor-pointer items-center justify-between gap-2 text-xs text-[#665B50]"
+                    className="flex cursor-pointer items-center justify-between gap-2 text-xs text-secondary-foreground"
                   >
                     <span>{value}</span>
                     <input
@@ -388,7 +383,7 @@ function EquipmentBrowser() {
                       name="category"
                       checked={category === value}
                       onChange={() => update({ category: value })}
-                      className="accent-[#79563E]"
+                      className="accent-primary"
                     />
                   </label>
                 ))}
@@ -396,13 +391,13 @@ function EquipmentBrowser() {
             </div>
 
             {/* Maximum price */}
-            <div className="border-b border-[#F0EAE4] py-6">
-              <h4 className="mb-3 text-xs font-semibold text-[#443B34]">
+            <div className="border-b border-border py-6">
+              <h4 className="mb-3 text-xs font-semibold text-foreground">
                 Maximum daily price
               </h4>
 
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[#9A8D80]">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
                   ৳
                 </span>
                 <Input
@@ -412,14 +407,14 @@ function EquipmentBrowser() {
                   value={maxPrice}
                   onChange={(event) => update({ maxPrice: event.target.value })}
                   aria-label="Maximum daily price"
-                  className="h-10 rounded-xl border-[#E8DFD6] pl-7 text-xs shadow-none focus-visible:ring-[#79563E]"
+                  className="h-10 rounded-xl border-input pl-7 text-xs shadow-none focus-visible:ring-ring"
                 />
               </div>
             </div>
 
             {/* Sort */}
             <div className="pt-6">
-              <h4 className="mb-3 text-xs font-semibold text-[#443B34]">
+              <h4 className="mb-3 text-xs font-semibold text-foreground">
                 Sort equipment
               </h4>
 
@@ -427,7 +422,7 @@ function EquipmentBrowser() {
                 value={sort}
                 onChange={(event) => update({ sort: event.target.value })}
                 aria-label="Sort listings"
-                className="h-10 w-full rounded-xl border border-[#E8DFD6] bg-white px-3 text-xs text-[#665B50] outline-none transition focus:border-[#79563E] focus:ring-2 focus:ring-[#79563E]/10"
+                className="h-10 w-full rounded-xl border border-input bg-background px-3 text-xs text-secondary-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-ring/20"
               >
                 {SORT_OPTIONS.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -442,7 +437,7 @@ function EquipmentBrowser() {
                 type="button"
                 variant="outline"
                 onClick={clearFilters}
-                className="mt-6 h-10 w-full rounded-xl border-[#E8DFD6] text-xs text-[#79563E] hover:bg-[#F8F3EE]"
+                className="mt-6 h-10 w-full rounded-xl border-border text-xs text-primary hover:bg-secondary"
               >
                 <RotateCcw className="mr-2 h-3.5 w-3.5" />
                 Clear all filters
@@ -452,19 +447,19 @@ function EquipmentBrowser() {
 
           {/* Results */}
           <div className="min-w-0">
-            <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-b border-[#E8DFD6] pb-4">
+            <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
               <div>
-                <h3 className="text-base font-semibold text-[#292723]">
+                <h3 className="text-base font-semibold text-foreground">
                   Available equipment
                 </h3>
-                <p className="mt-1 text-xs text-[#82776D]">
+                <p className="mt-1 text-xs text-muted-foreground">
                   {loading
                     ? "Finding equipment..."
                     : `${results.total} listing${results.total === 1 ? "" : "s"} found`}
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 text-xs text-[#9A8D80]">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <LayoutGrid size={15} />
                 Up to 12 per page
               </div>
@@ -494,7 +489,7 @@ function EquipmentBrowser() {
             )}
 
             {!error && !loading && results.items.length === 0 && (
-              <div className="rounded-2xl border border-[#E8DFD6] bg-white px-5 py-16">
+              <div className="rounded-2xl border border-border bg-card px-5 py-16">
                 <EmptyState
                   icon={<PackageSearch size={30} />}
                   title="No equipment found"
@@ -503,7 +498,7 @@ function EquipmentBrowser() {
                     <Button
                       type="button"
                       onClick={clearFilters}
-                      className="rounded-xl bg-[#79563E] text-xs text-white hover:bg-[#62432F]"
+                      className="rounded-xl bg-primary text-xs text-primary-foreground hover:bg-primary/90"
                     >
                       Reset filters
                     </Button>
@@ -530,13 +525,13 @@ function EquipmentBrowser() {
                       onClick={() =>
                         setPage((value) => Math.max(1, value - 1))
                       }
-                      className="h-10 rounded-xl border-[#E8DFD6] text-xs text-[#79563E] hover:bg-[#F8F3EE]"
+                      className="h-10 rounded-xl border-border text-xs text-primary hover:bg-secondary"
                     >
                       <ChevronLeft className="mr-1 h-4 w-4" />
                       Previous
                     </Button>
 
-                    <span className="text-xs text-[#665B50]">
+                    <span className="text-xs text-secondary-foreground">
                       Page {results.page} of {results.pages}
                     </span>
 
@@ -545,7 +540,7 @@ function EquipmentBrowser() {
                       variant="outline"
                       disabled={page >= results.pages}
                       onClick={() => setPage((value) => value + 1)}
-                      className="h-10 rounded-xl border-[#E8DFD6] text-xs text-[#79563E] hover:bg-[#F8F3EE]"
+                      className="h-10 rounded-xl border-border text-xs text-primary hover:bg-secondary"
                     >
                       Next
                       <ChevronRight className="ml-1 h-4 w-4" />
@@ -558,20 +553,20 @@ function EquipmentBrowser() {
         </div>
 
         {/* Owner CTA */}
-        <section className="relative mt-16 overflow-hidden rounded-2xl bg-[#6C665C] px-6 py-10 sm:px-10 md:flex md:items-center md:justify-between md:gap-8">
-          <div className="pointer-events-none absolute -right-10 -top-20 h-64 w-64 rounded-full border border-white/10" />
-          <div className="pointer-events-none absolute -right-2 -top-12 h-48 w-48 rounded-full border border-white/10" />
+        <section className="relative mt-16 overflow-hidden rounded-2xl bg-muted px-6 py-10 sm:px-10 md:flex md:items-center md:justify-between md:gap-8">
+          <div className="pointer-events-none absolute -right-10 -top-20 h-64 w-64 rounded-full border border-border/50" />
+          <div className="pointer-events-none absolute -right-2 -top-12 h-48 w-48 rounded-full border border-border/50" />
 
           <div className="relative">
-            <p className="mb-3 text-[10px] font-bold uppercase tracking-[2px] text-[#E5CDB3]">
+            <p className="mb-3 text-[10px] font-bold uppercase tracking-[2px] text-primary">
               For equipment owners
             </p>
 
-            <h2 className="text-2xl font-semibold text-white sm:text-3xl">
+            <h2 className="text-2xl font-semibold text-foreground sm:text-3xl">
               Own equipment? Put it to work.
             </h2>
 
-            <p className="mt-3 max-w-xl text-sm leading-6 text-white/75">
+            <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">
               Create a listing, connect with renters and make your equipment
               useful to more people.
             </p>
@@ -579,7 +574,7 @@ function EquipmentBrowser() {
 
           <Link
             href="/register"
-            className="relative mt-7 inline-flex h-12 shrink-0 items-center justify-center rounded-xl bg-[#F5F0E9] px-7 text-sm font-semibold text-[#46372C] transition hover:bg-white md:mt-0"
+            className="relative mt-7 inline-flex h-12 shrink-0 items-center justify-center rounded-xl bg-primary px-7 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 md:mt-0"
           >
             Start earning
             <ArrowRight className="ml-2 h-4 w-4" />
@@ -594,7 +589,7 @@ export default function EquipmentPage() {
   return (
     <Suspense
       fallback={
-        <main className="min-h-screen bg-[#FFFCFA]">
+        <main className="min-h-screen bg-background">
           <div className="mx-auto max-w-[1400px] px-5 py-16 sm:px-8 md:px-12">
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
               <CardSkeleton count={6} />

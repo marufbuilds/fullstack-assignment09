@@ -98,7 +98,6 @@ function AddEquipmentContent() {
         "success"
       );
 
-      // Allow the success toast to appear before navigating.
       window.setTimeout(() => {
         router.push("/owner/listings");
       }, 1200);
@@ -121,14 +120,19 @@ function AddEquipmentContent() {
       })
     : "0";
 
+  const inputClass =
+    "h-12 w-full rounded-xl border border-input bg-background px-4 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-ring/20";
+
+  const labelClass = "mb-2 block text-sm font-medium text-foreground";
+
   return (
-    <main className="min-h-screen bg-[#FFFCFA] px-4 py-8 text-[#292723] sm:px-6 lg:px-8 lg:py-12">
+    <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-6 lg:px-8 lg:py-12">
       <div className="mx-auto max-w-[1160px]">
         {/* Header */}
-        <div className="mb-9 border-b border-[#E8DFD6] pb-7">
+        <div className="mb-9 border-b border-border pb-7">
           <Link
             href="/owner/listings"
-            className="mb-7 inline-flex items-center gap-2 text-sm font-medium text-[#82776D] transition hover:text-[#79563E]"
+            className="mb-7 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-primary"
           >
             <ArrowLeft size={16} />
             Back to my listings
@@ -136,23 +140,23 @@ function AddEquipmentContent() {
 
           <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
             <div>
-              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#9A7656]">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
                 Owner workspace
               </p>
 
-              <h1 className="text-3xl font-semibold tracking-tight text-[#292723] sm:text-4xl">
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
                 List your equipment
               </h1>
 
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-[#82776D] sm:text-base">
-                Share your equipment with people who need it.
-                Add the details below and submit your listing for review.
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+                Share your equipment with people who need it. Add the details
+                below and submit your listing for review.
               </p>
             </div>
 
             <Link
               href="/owner/listings"
-              className="inline-flex h-11 w-fit items-center gap-2 rounded-xl border border-[#E8DFD6] bg-white px-5 text-sm font-semibold text-[#79563E] transition hover:border-[#79563E] hover:bg-[#F8F3EE]"
+              className="inline-flex h-11 w-fit items-center gap-2 rounded-xl border border-border bg-card px-5 text-sm font-semibold text-primary transition hover:border-primary hover:bg-accent"
             >
               My listings
               <ArrowUpRight size={16} />
@@ -163,36 +167,31 @@ function AddEquipmentContent() {
         {/* Main layout */}
         <div className="grid items-start gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           {/* Equipment form */}
-          <section className="overflow-hidden rounded-2xl border border-[#E8DFD6] bg-white shadow-[0_4px_24px_rgba(60,40,20,0.035)]">
-            <div className="border-b border-[#E8DFD6] px-6 py-5 sm:px-8">
+          <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+            <div className="border-b border-border px-6 py-5 sm:px-8">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F5EEE8] text-[#79563E]">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-secondary-foreground">
                   <Package size={19} />
                 </div>
 
                 <div>
-                  <h2 className="font-semibold text-[#292723]">
+                  <h2 className="font-semibold text-card-foreground">
                     Equipment details
                   </h2>
 
-                  <p className="mt-1 text-xs text-[#82776D]">
+                  <p className="mt-1 text-xs text-muted-foreground">
                     Complete the information about your listing.
                   </p>
                 </div>
               </div>
             </div>
 
-            <form
-              className="space-y-6 p-6 sm:p-8"
-              onSubmit={handleSubmit}
-            >
+            <form className="space-y-6 p-6 sm:p-8" onSubmit={handleSubmit}>
               {/* Equipment name */}
               <div>
-                <label
-                  htmlFor="equipment-title"
-                  className="mb-2 block text-sm font-medium text-[#443B34]"
-                >
-                  Equipment name <span className="text-[#A46D50]">*</span>
+                <label htmlFor="equipment-title" className={labelClass}>
+                  Equipment name{" "}
+                  <span className="text-destructive">*</span>
                 </label>
 
                 <input
@@ -201,28 +200,23 @@ function AddEquipmentContent() {
                   minLength={3}
                   maxLength={120}
                   value={form.title}
-                  onChange={(event) =>
-                    change("title", event.target.value)
-                  }
+                  onChange={(event) => change("title", event.target.value)}
                   placeholder="e.g. Compact excavator"
-                  className="h-12 w-full rounded-xl border border-[#E8DFD6] bg-[#FFFCFA] px-4 text-sm text-[#292723] outline-none transition placeholder:text-[#A99D92] focus:border-[#79563E] focus:ring-2 focus:ring-[#79563E]/10"
+                  className={inputClass}
                 />
               </div>
 
               {/* Category and location */}
               <div className="grid gap-5 sm:grid-cols-2">
                 <div>
-                  <label
-                    htmlFor="equipment-category"
-                    className="mb-2 block text-sm font-medium text-[#443B34]"
-                  >
-                    Category <span className="text-[#A46D50]">*</span>
+                  <label htmlFor="equipment-category" className={labelClass}>
+                    Category <span className="text-destructive">*</span>
                   </label>
 
                   <div className="relative">
                     <Tag
                       size={17}
-                      className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#9A8D80]"
+                      className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
                     />
 
                     <select
@@ -232,7 +226,7 @@ function AddEquipmentContent() {
                       onChange={(event) =>
                         change("category", event.target.value)
                       }
-                      className="h-12 w-full appearance-none rounded-xl border border-[#E8DFD6] bg-[#FFFCFA] pl-11 pr-4 text-sm text-[#443B34] outline-none transition focus:border-[#79563E] focus:ring-2 focus:ring-[#79563E]/10"
+                      className={`${inputClass} appearance-none pl-11`}
                     >
                       <option value="">Select category</option>
 
@@ -246,17 +240,14 @@ function AddEquipmentContent() {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="equipment-location"
-                    className="mb-2 block text-sm font-medium text-[#443B34]"
-                  >
-                    Location <span className="text-[#A46D50]">*</span>
+                  <label htmlFor="equipment-location" className={labelClass}>
+                    Location <span className="text-destructive">*</span>
                   </label>
 
                   <div className="relative">
                     <MapPin
                       size={17}
-                      className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#9A8D80]"
+                      className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
                     />
 
                     <input
@@ -267,7 +258,7 @@ function AddEquipmentContent() {
                         change("location", event.target.value)
                       }
                       placeholder="City or area"
-                      className="h-12 w-full rounded-xl border border-[#E8DFD6] bg-[#FFFCFA] pl-11 pr-4 text-sm text-[#292723] outline-none transition placeholder:text-[#A99D92] focus:border-[#79563E] focus:ring-2 focus:ring-[#79563E]/10"
+                      className={`${inputClass} pl-11`}
                     />
                   </div>
                 </div>
@@ -278,12 +269,12 @@ function AddEquipmentContent() {
                 <div className="mb-2 flex items-center justify-between gap-3">
                   <label
                     htmlFor="equipment-description"
-                    className="block text-sm font-medium text-[#443B34]"
+                    className={labelClass}
                   >
-                    Description <span className="text-[#A46D50]">*</span>
+                    Description <span className="text-destructive">*</span>
                   </label>
 
-                  <span className="text-xs text-[#A99D92]">
+                  <span className="text-xs text-muted-foreground">
                     {form.description.length}/3000
                   </span>
                 </div>
@@ -299,23 +290,20 @@ function AddEquipmentContent() {
                     change("description", event.target.value)
                   }
                   placeholder="Describe condition, features, accessories and anything a renter should know..."
-                  className="w-full resize-y rounded-xl border border-[#E8DFD6] bg-[#FFFCFA] px-4 py-3 text-sm leading-6 text-[#292723] outline-none transition placeholder:text-[#A99D92] focus:border-[#79563E] focus:ring-2 focus:ring-[#79563E]/10"
+                  className="w-full resize-y rounded-xl border border-input bg-background px-4 py-3 text-sm leading-6 text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-ring/20"
                 />
               </div>
 
               {/* Price and rental unit */}
               <div className="grid gap-5 sm:grid-cols-2">
                 <div>
-                  <label
-                    htmlFor="equipment-price"
-                    className="mb-2 block text-sm font-medium text-[#443B34]"
-                  >
+                  <label htmlFor="equipment-price" className={labelClass}>
                     Rental price (USD){" "}
-                    <span className="text-[#A46D50]">*</span>
+                    <span className="text-destructive">*</span>
                   </label>
 
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-medium text-[#9A8D80]">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground">
                       $
                     </span>
 
@@ -330,16 +318,13 @@ function AddEquipmentContent() {
                         change("price", event.target.value)
                       }
                       placeholder="45"
-                      className="h-12 w-full rounded-xl border border-[#E8DFD6] bg-[#FFFCFA] pl-9 pr-4 text-sm text-[#292723] outline-none transition placeholder:text-[#A99D92] focus:border-[#79563E] focus:ring-2 focus:ring-[#79563E]/10"
+                      className={`${inputClass} pl-9`}
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="equipment-rental-type"
-                    className="mb-2 block text-sm font-medium text-[#443B34]"
-                  >
+                  <label htmlFor="equipment-rental-type" className={labelClass}>
                     Rental unit
                   </label>
 
@@ -349,7 +334,7 @@ function AddEquipmentContent() {
                     onChange={(event) =>
                       change("rentalType", event.target.value)
                     }
-                    className="h-12 w-full rounded-xl border border-[#E8DFD6] bg-[#FFFCFA] px-4 text-sm text-[#443B34] outline-none transition focus:border-[#79563E] focus:ring-2 focus:ring-[#79563E]/10"
+                    className={inputClass}
                   >
                     {RENTAL_TYPES.map((type) => (
                       <option key={type.value} value={type.value}>
@@ -362,12 +347,9 @@ function AddEquipmentContent() {
 
               {/* Image URL */}
               <div>
-                <label
-                  htmlFor="equipment-image"
-                  className="mb-2 block text-sm font-medium text-[#443B34]"
-                >
+                <label htmlFor="equipment-image" className={labelClass}>
                   Equipment photo URL{" "}
-                  <span className="font-normal text-[#9A8D80]">
+                  <span className="font-normal text-muted-foreground">
                     (optional)
                   </span>
                 </label>
@@ -375,40 +357,38 @@ function AddEquipmentContent() {
                 <div className="relative">
                   <ImagePlus
                     size={17}
-                    className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#9A8D80]"
+                    className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
                   />
 
                   <input
                     id="equipment-image"
                     type="url"
                     value={form.image}
-                    onChange={(event) =>
-                      change("image", event.target.value)
-                    }
+                    onChange={(event) => change("image", event.target.value)}
                     placeholder="https://example.com/equipment.jpg"
-                    className="h-12 w-full rounded-xl border border-[#E8DFD6] bg-[#FFFCFA] pl-11 pr-4 text-sm text-[#292723] outline-none transition placeholder:text-[#A99D92] focus:border-[#79563E] focus:ring-2 focus:ring-[#79563E]/10"
+                    className={`${inputClass} pl-11`}
                   />
                 </div>
 
-                <p className="mt-2 text-xs leading-5 text-[#9A8D80]">
-                  Add a direct image URL. If you leave this empty,
-                  Equiply will use its default equipment image.
+                <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                  Add a direct image URL. If you leave this empty, Equiply will
+                  use its default equipment image.
                 </p>
               </div>
 
               {/* Error */}
               {error && (
-                <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                <div className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
                   {error}
                 </div>
               )}
 
               {/* Submit */}
-              <div className="flex flex-col gap-3 border-t border-[#E8DFD6] pt-6 sm:flex-row">
+              <div className="flex flex-col gap-3 border-t border-border pt-6 sm:flex-row">
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#79563E] px-6 text-sm font-semibold text-white transition hover:bg-[#62432F] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {submitting ? (
                     <>
@@ -425,15 +405,15 @@ function AddEquipmentContent() {
 
                 <Link
                   href="/owner/listings"
-                  className="inline-flex h-12 items-center justify-center rounded-xl border border-[#E8DFD6] bg-white px-6 text-sm font-semibold text-[#79563E] transition hover:border-[#79563E] hover:bg-[#F8F3EE]"
+                  className="inline-flex h-12 items-center justify-center rounded-xl border border-border bg-card px-6 text-sm font-semibold text-primary transition hover:border-primary hover:bg-accent"
                 >
                   Cancel
                 </Link>
               </div>
 
-              <p className="text-xs leading-5 text-[#9A8D80]">
-                Your listing will be reviewed by an administrator
-                before appearing in the public marketplace.
+              <p className="text-xs leading-5 text-muted-foreground">
+                Your listing will be reviewed by an administrator before
+                appearing in the public marketplace.
               </p>
             </form>
           </section>
@@ -441,24 +421,24 @@ function AddEquipmentContent() {
           {/* Right column */}
           <aside className="space-y-6 lg:sticky lg:top-6">
             {/* Live preview */}
-            <section className="overflow-hidden rounded-2xl border border-[#E8DFD6] bg-white shadow-[0_4px_24px_rgba(60,40,20,0.035)]">
-              <div className="flex items-center justify-between gap-3 border-b border-[#E8DFD6] px-5 py-4 sm:px-6">
+            <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+              <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4 sm:px-6">
                 <div>
-                  <h2 className="font-semibold text-[#292723]">
+                  <h2 className="font-semibold text-card-foreground">
                     Live preview
                   </h2>
 
-                  <p className="mt-1 text-xs text-[#82776D]">
+                  <p className="mt-1 text-xs text-muted-foreground">
                     Your listing appearance
                   </p>
                 </div>
 
-                <span className="rounded-full bg-[#F5EEE8] px-3 py-1 text-[11px] font-semibold text-[#79563E]">
+                <span className="rounded-full bg-secondary px-3 py-1 text-[11px] font-semibold text-secondary-foreground">
                   Preview
                 </span>
               </div>
 
-              <div className="relative aspect-[16/10] overflow-hidden bg-[#F5EEE8]">
+              <div className="relative aspect-[16/10] overflow-hidden bg-muted">
                 <img
                   src={form.image.trim() || FALLBACK_IMAGE}
                   alt="Equipment listing preview"
@@ -468,41 +448,41 @@ function AddEquipmentContent() {
                   className="h-full w-full object-cover"
                 />
 
-                <span className="absolute left-4 top-4 rounded-full border border-white/60 bg-white/90 px-3 py-1.5 text-xs font-semibold text-[#79563E] backdrop-blur">
+                <span className="absolute left-4 top-4 rounded-full border border-border bg-card/90 px-3 py-1.5 text-xs font-semibold text-primary backdrop-blur">
                   {form.category || "Category"}
                 </span>
               </div>
 
               <div className="p-5 sm:p-6">
-                <div className="mb-3 flex items-center gap-1.5 text-xs text-[#82776D]">
+                <div className="mb-3 flex items-center gap-1.5 text-xs text-muted-foreground">
                   <MapPin size={14} />
                   {form.location || "Equipment location"}
                 </div>
 
-                <h3 className="text-xl font-semibold leading-snug text-[#292723]">
+                <h3 className="text-xl font-semibold leading-snug text-card-foreground">
                   {form.title || "Your equipment name"}
                 </h3>
 
-                <p className="mt-3 line-clamp-4 text-sm leading-6 text-[#82776D]">
+                <p className="mt-3 line-clamp-4 text-sm leading-6 text-muted-foreground">
                   {form.description ||
                     "A clear description helps renters understand your equipment and decide faster."}
                 </p>
 
-                <div className="mt-6 flex flex-wrap items-end justify-between gap-3 border-t border-[#E8DFD6] pt-5">
+                <div className="mt-6 flex flex-wrap items-end justify-between gap-3 border-t border-border pt-5">
                   <div>
-                    <p className="text-xs text-[#9A8D80]">
+                    <p className="text-xs text-muted-foreground">
                       Rental price
                     </p>
 
-                    <p className="mt-1 text-2xl font-semibold text-[#79563E]">
+                    <p className="mt-1 text-2xl font-semibold text-primary">
                       ${previewPrice}
-                      <span className="ml-1 text-xs font-normal text-[#82776D]">
+                      <span className="ml-1 text-xs font-normal text-muted-foreground">
                         / {rentalLabel}
                       </span>
                     </p>
                   </div>
 
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F5EEE8] px-3 py-1.5 text-xs font-medium text-[#79563E]">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1.5 text-xs font-medium text-secondary-foreground">
                     <ImagePlus size={13} />
                     Listing preview
                   </span>
@@ -511,18 +491,18 @@ function AddEquipmentContent() {
             </section>
 
             {/* Review process */}
-            <section className="rounded-2xl border border-[#E8DFD6] bg-white p-6 shadow-[0_4px_24px_rgba(60,40,20,0.035)]">
+            <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F5EEE8] text-[#79563E]">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-secondary-foreground">
                   <ShieldCheck size={20} />
                 </div>
 
                 <div>
-                  <h3 className="font-semibold text-[#292723]">
+                  <h3 className="font-semibold text-card-foreground">
                     What happens next?
                   </h3>
 
-                  <p className="mt-1 text-xs text-[#82776D]">
+                  <p className="mt-1 text-xs text-muted-foreground">
                     Your listing approval process
                   </p>
                 </div>
@@ -530,63 +510,63 @@ function AddEquipmentContent() {
 
               <div className="mt-6 space-y-5">
                 <div className="flex gap-3">
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#F5EEE8] text-xs font-semibold text-[#79563E]">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-semibold text-secondary-foreground">
                     1
                   </div>
 
                   <div>
-                    <p className="text-sm font-semibold text-[#443B34]">
+                    <p className="text-sm font-semibold text-card-foreground">
                       Submit your listing
                     </p>
 
-                    <p className="mt-1 text-xs leading-5 text-[#82776D]">
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">
                       Your equipment details are sent to Equiply.
                     </p>
                   </div>
                 </div>
 
                 <div className="flex gap-3">
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#F5EEE8] text-xs font-semibold text-[#79563E]">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-semibold text-secondary-foreground">
                     2
                   </div>
 
                   <div>
-                    <p className="text-sm font-semibold text-[#443B34]">
+                    <p className="text-sm font-semibold text-card-foreground">
                       Admin reviews it
                     </p>
 
-                    <p className="mt-1 text-xs leading-5 text-[#82776D]">
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">
                       An administrator approves or rejects the listing.
                     </p>
                   </div>
                 </div>
 
                 <div className="flex gap-3">
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#F5EEE8] text-xs font-semibold text-[#79563E]">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-semibold text-secondary-foreground">
                     3
                   </div>
 
                   <div>
-                    <p className="text-sm font-semibold text-[#443B34]">
+                    <p className="text-sm font-semibold text-card-foreground">
                       Start receiving bookings
                     </p>
 
-                    <p className="mt-1 text-xs leading-5 text-[#82776D]">
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">
                       Approved equipment appears in the marketplace.
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-6 flex items-start gap-2 rounded-xl border border-[#E8DFD6] bg-[#F8F3EE] p-4">
+              <div className="mt-6 flex items-start gap-2 rounded-xl border border-border bg-muted p-4">
                 <CheckCircle2
                   size={17}
-                  className="mt-0.5 shrink-0 text-[#79563E]"
+                  className="mt-0.5 shrink-0 text-primary"
                 />
 
-                <p className="text-xs leading-5 text-[#82776D]">
-                  Your listing starts as pending review. It will
-                  become visible to renters after approval.
+                <p className="text-xs leading-5 text-muted-foreground">
+                  Your listing starts as pending review. It will become visible
+                  to renters after approval.
                 </p>
               </div>
             </section>

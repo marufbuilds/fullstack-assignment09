@@ -189,21 +189,21 @@ function DashboardContent() {
   ];
 
   return (
-    <main className="min-h-screen bg-[#FFFCFA] px-4 py-8 text-[#292723] sm:px-6 lg:px-8 lg:py-12">
+    <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-6 lg:px-8 lg:py-12">
       <div className="mx-auto max-w-[1160px]">
 
         {/* Welcome header */}
-        <section className="mb-9 flex flex-col justify-between gap-6 border-b border-[#E8DFD6] pb-8 lg:flex-row lg:items-end">
+        <section className="mb-9 flex flex-col justify-between gap-6 border-b border-border pb-8 lg:flex-row lg:items-end">
           <div>
-            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#9A7656]">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
               {isOwner ? "Owner workspace" : "Customer dashboard"}
             </p>
 
-            <h1 className="text-3xl font-semibold tracking-tight text-[#292723] sm:text-4xl">
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
               Welcome back, {(user?.name || "there").split(" ")[0]}
             </h1>
 
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-[#82776D] sm:text-base">
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
               {isOwner
                 ? "Manage your equipment, incoming customer bookings and business activity."
                 : "Track your rental requests, payments and saved equipment."}
@@ -214,7 +214,7 @@ function DashboardContent() {
             {isOwner && (
               <Link
                 href="/owner"
-                className="inline-flex h-11 items-center gap-2 rounded-xl border border-[#E8DFD6] bg-white px-4 text-sm font-semibold text-[#79563E] transition hover:border-[#79563E] hover:bg-[#F8F3EE]"
+                className="inline-flex h-11 items-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-semibold text-primary transition hover:border-primary hover:bg-secondary"
               >
                 <BriefcaseBusiness size={16} />
                 Owner workspace
@@ -223,7 +223,7 @@ function DashboardContent() {
 
             <Link
               href="/equipment"
-              className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#79563E] px-5 text-sm font-semibold text-white transition hover:bg-[#62432F]"
+              className="inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
             >
               <Search size={16} />
               Find equipment
@@ -231,7 +231,7 @@ function DashboardContent() {
 
             <Link
               href="/profile"
-              className="inline-flex h-11 items-center gap-2 rounded-xl border border-[#E8DFD6] bg-white px-4 text-sm font-semibold text-[#79563E] transition hover:border-[#79563E] hover:bg-[#F8F3EE]"
+              className="inline-flex h-11 items-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-semibold text-primary transition hover:border-primary hover:bg-secondary"
             >
               <UserRound size={16} />
               Edit profile
@@ -254,11 +254,11 @@ function DashboardContent() {
             {/* Statistics */}
             <section>
               <div className="mb-5">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9A7656]">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
                   Overview
                 </p>
 
-                <h2 className="mt-2 text-xl font-semibold text-[#292723]">
+                <h2 className="mt-2 text-xl font-semibold text-foreground">
                   Your activity
                 </h2>
               </div>
@@ -270,23 +270,23 @@ function DashboardContent() {
                   return (
                     <article
                       key={stat.label}
-                      className="rounded-2xl border border-[#E8DFD6] bg-white p-5 shadow-[0_4px_24px_rgba(60,40,20,0.035)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(60,40,20,0.06)]"
+                      className="rounded-2xl border border-border bg-card p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                     >
                       <div className="flex items-center justify-between gap-3">
-                        <p className="text-sm font-medium text-[#82776D]">
+                        <p className="text-sm font-medium text-muted-foreground">
                           {stat.label}
                         </p>
 
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F5EEE8] text-[#79563E]">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary text-primary">
                           <Icon size={19} />
                         </div>
                       </div>
 
-                      <h3 className="mt-5 break-words text-3xl font-semibold tracking-tight text-[#292723]">
+                      <h3 className="mt-5 break-words text-3xl font-semibold tracking-tight text-foreground">
                         {stat.value}
                       </h3>
 
-                      <p className="mt-2 text-xs text-[#9A8D80]">
+                      <p className="mt-2 text-xs text-muted-foreground">
                         {stat.hint}
                       </p>
                     </article>
@@ -299,14 +299,14 @@ function DashboardContent() {
             <div className="mt-8 grid items-start gap-6 lg:grid-cols-[1.2fr_0.8fr]">
 
               {/* Recent bookings */}
-              <section className="overflow-hidden rounded-2xl border border-[#E8DFD6] bg-white shadow-[0_4px_24px_rgba(60,40,20,0.035)]">
-                <div className="flex flex-col justify-between gap-3 border-b border-[#E8DFD6] px-5 py-5 sm:flex-row sm:items-center sm:px-7">
+              <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+                <div className="flex flex-col justify-between gap-3 border-b border-border px-5 py-5 sm:flex-row sm:items-center sm:px-7">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9A7656]">
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
                       {isOwner ? "Customer activity" : "Recent activity"}
                     </p>
 
-                    <h2 className="mt-2 text-lg font-semibold text-[#292723]">
+                    <h2 className="mt-2 text-lg font-semibold text-card-foreground">
                       {isOwner
                         ? "Incoming rental requests"
                         : "Your latest bookings"}
@@ -315,7 +315,7 @@ function DashboardContent() {
 
                   <Link
                     href={isOwner ? "/owner" : "/my-rentals"}
-                    className="inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-[#79563E] transition hover:text-[#62432F]"
+                    className="inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-primary transition hover:opacity-80"
                   >
                     View all
                     <ArrowUpRight size={16} />
@@ -328,7 +328,7 @@ function DashboardContent() {
                       {[0, 1, 2].map((row) => (
                         <div
                           key={row}
-                          className="h-[76px] animate-pulse rounded-xl bg-[#F8F3EE]"
+                          className="h-[76px] animate-pulse rounded-xl bg-secondary"
                         />
                       ))}
                     </div>
@@ -349,7 +349,7 @@ function DashboardContent() {
                       }
                       action={
                         <Link
-                          className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#79563E] px-5 text-sm font-semibold text-white transition hover:bg-[#62432F]"
+                          className="inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
                           href="/equipment"
                         >
                           Explore equipment
@@ -360,18 +360,18 @@ function DashboardContent() {
                   )}
 
                   {!loading && bookings.length > 0 && (
-                    <div className="divide-y divide-[#EEE7E0]">
+                    <div className="divide-y divide-border">
                       {bookings.slice(0, 5).map((booking) => (
                         <div
                           key={booking._id}
                           className="flex flex-col justify-between gap-3 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-center"
                         >
                           <div className="min-w-0">
-                            <h3 className="truncate text-sm font-semibold text-[#443B34]">
+                            <h3 className="truncate text-sm font-semibold text-card-foreground">
                               {booking.equipmentTitle || "Equipment"}
                             </h3>
 
-                            <p className="mt-1 text-xs text-[#82776D]">
+                            <p className="mt-1 text-xs text-muted-foreground">
                               {formatDateRange(
                                 booking.startDate,
                                 booking.endDate
@@ -380,7 +380,7 @@ function DashboardContent() {
                           </div>
 
                           <div className="flex items-center justify-between gap-4 sm:justify-end">
-                            <strong className="text-sm font-semibold text-[#79563E]">
+                            <strong className="text-sm font-semibold text-primary">
                               {money(booking.amount)}
                             </strong>
 
@@ -397,17 +397,17 @@ function DashboardContent() {
               <div className="space-y-6">
 
                 {/* Quick actions */}
-                <section className="rounded-2xl border border-[#E8DFD6] bg-white p-5 shadow-[0_4px_24px_rgba(60,40,20,0.035)] sm:p-7">
+                <section className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-7">
                   <div className="mb-5">
-                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9A7656]">
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
                       Shortcuts
                     </p>
 
-                    <h2 className="mt-2 text-lg font-semibold text-[#292723]">
+                    <h2 className="mt-2 text-lg font-semibold text-card-foreground">
                       Quick actions
                     </h2>
 
-                    <p className="mt-1 text-xs text-[#82776D]">
+                    <p className="mt-1 text-xs text-muted-foreground">
                       Everything you need, in one place.
                     </p>
                   </div>
@@ -418,25 +418,25 @@ function DashboardContent() {
                         <Link
                           key={title}
                           href={href}
-                          className="group flex items-center gap-3 rounded-xl border border-transparent p-3 transition hover:border-[#E8DFD6] hover:bg-[#FFFCFA]"
+                          className="group flex items-center gap-3 rounded-xl border border-transparent p-3 transition hover:border-border hover:bg-background"
                         >
-                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F5EEE8] text-[#79563E] transition group-hover:bg-[#79563E] group-hover:text-white">
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary text-primary transition group-hover:bg-primary group-hover:text-primary-foreground">
                             <Icon size={18} />
                           </div>
 
                           <div className="min-w-0 flex-1">
-                            <p className="text-sm font-semibold text-[#443B34]">
+                            <p className="text-sm font-semibold text-card-foreground">
                               {title}
                             </p>
 
-                            <p className="mt-1 text-xs leading-5 text-[#96897D]">
+                            <p className="mt-1 text-xs leading-5 text-muted-foreground">
                               {description}
                             </p>
                           </div>
 
                           <ArrowUpRight
                             size={16}
-                            className="shrink-0 text-[#B5A89B] transition group-hover:translate-x-0.5 group-hover:text-[#79563E]"
+                            className="shrink-0 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-primary"
                           />
                         </Link>
                       )
@@ -446,49 +446,49 @@ function DashboardContent() {
 
                 {/* Role information */}
                 {isOwner ? (
-                  <section className="rounded-2xl border border-[#E8DFD6] bg-[#F8F3EE] p-6">
+                  <section className="rounded-2xl border border-border bg-secondary p-6">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-[#79563E]">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-card text-primary">
                         <BriefcaseBusiness size={19} />
                       </div>
 
                       <div>
-                        <h3 className="font-semibold text-[#79563E]">
+                        <h3 className="font-semibold text-primary">
                           Owner tools are active
                         </h3>
 
-                        <p className="mt-1 text-xs text-[#82776D]">
+                        <p className="mt-1 text-xs text-muted-foreground">
                           Your owner workspace is ready.
                         </p>
                       </div>
                     </div>
 
-                    <p className="mt-4 text-sm leading-6 text-[#82776D]">
+                    <p className="mt-4 text-sm leading-6 text-muted-foreground">
                       Manage incoming rental requests and your
                       equipment from your owner workspace.
                     </p>
 
                     <Link
                       href="/owner"
-                      className="mt-5 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#79563E] px-4 text-sm font-semibold text-white transition hover:bg-[#62432F]"
+                      className="mt-5 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
                     >
                       Manage bookings and listings
                       <ArrowUpRight size={16} />
                     </Link>
                   </section>
                 ) : (
-                  <section className="rounded-2xl border border-[#E8DFD6] bg-[#F8F3EE] p-6">
+                  <section className="rounded-2xl border border-border bg-secondary p-6">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-[#79563E]">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-card text-primary">
                         <PackagePlus size={19} />
                       </div>
 
-                      <h3 className="font-semibold text-[#79563E]">
+                      <h3 className="font-semibold text-primary">
                         Earn from your equipment
                       </h3>
                     </div>
 
-                    <p className="mt-4 text-sm leading-6 text-[#82776D]">
+                    <p className="mt-4 text-sm leading-6 text-muted-foreground">
                       Have equipment you don't use every day?
                       Ask an administrator to enable owner tools
                       for your account, then list your first item.
@@ -497,13 +497,13 @@ function DashboardContent() {
                 )}
 
                 {/* Account note */}
-                <div className="flex items-start gap-3 rounded-xl border border-[#E8DFD6] bg-white p-4">
+                <div className="flex items-start gap-3 rounded-xl border border-border bg-card p-4">
                   <CheckCircle2
                     size={18}
-                    className="mt-0.5 shrink-0 text-[#79563E]"
+                    className="mt-0.5 shrink-0 text-primary"
                   />
 
-                  <p className="text-xs leading-5 text-[#82776D]">
+                  <p className="text-xs leading-5 text-muted-foreground">
                     Your dashboard keeps your rental activity,
                     saved equipment and account shortcuts together.
                   </p>

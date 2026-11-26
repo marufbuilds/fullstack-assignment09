@@ -5,99 +5,102 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* =========================================================
-   Equiply theme tokens
+   Equiply — Brown & Cream Design System
    ========================================================= */
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  --color-brand-50: #f0efff;
-  --color-brand-100: #e0dcff;
-  --color-brand-200: #c5b8ff;
-  --color-brand-300: #a28aff;
-  --color-brand-400: #8061ff;
-  --color-brand-500: #6542f5;
-  --color-brand-600: #5836df;
-  --color-brand-700: #4528b5;
-  --color-brand-800: #36208e;
-  --color-brand-900: #281769;
+  /* Brand */
+  --color-brand-50: #f8f3ee;
+  --color-brand-100: #eee3d8;
+  --color-brand-200: #dfc9b5;
+  --color-brand-300: #c9a98b;
+  --color-brand-400: #b38b69;
+  --color-brand-500: #79563e;
+  --color-brand-600: #684832;
+  --color-brand-700: #573b2a;
+  --color-brand-800: #432d21;
+  --color-brand-900: #302017;
 
-  --color-accent-100: #efe9ff;
-  --color-accent-200: #dfd2ff;
-  --color-accent-300: #c5aaff;
-  --color-accent-400: #a68aff;
-  --color-accent-500: #8a55ff;
-  --color-accent-600: #6d39ef;
+  /* Accent */
+  --color-accent-100: #f7f1eb;
+  --color-accent-200: #eee3d8;
+  --color-accent-300: #dfc9b5;
+  --color-accent-400: #c9a98b;
+  --color-accent-500: #a77a55;
+  --color-accent-600: #79563e;
 
-  --color-ink-50: #f6f8f6;
-  --color-ink-100: #e9edea;
-  --color-ink-200: #d5dcd7;
-  --color-ink-300: #b3bfb7;
-  --color-ink-400: #8b9a91;
-  --color-ink-500: #68766f;
-  --color-ink-600: #4e5b54;
-  --color-ink-700: #3a463f;
-  --color-ink-800: #26302b;
-  --color-ink-900: #16211c;
-  --color-ink-950: #0d1512;
+  /* Neutral */
+  --color-ink-50: #f8f3ee;
+  --color-ink-100: #eee3d8;
+  --color-ink-200: #dfc9b5;
+  --color-ink-300: #c9a98b;
+  --color-ink-400: #a77a55;
+  --color-ink-500: #766e65;
+  --color-ink-600: #62574d;
+  --color-ink-700: #4b4037;
+  --color-ink-800: #352c25;
+  --color-ink-900: #292723;
+  --color-ink-950: #211914;
 }
 
 /* =========================================================
-   Light theme
+   Light Theme
    ========================================================= */
 
 :root {
   color-scheme: light;
 
-  --background: #f5f6ff;
-  --foreground: #182044;
+  --background: #fffcfa;
+  --foreground: #292723;
 
   --card: #ffffff;
-  --card-foreground: #182044;
+  --card-foreground: #292723;
 
   --popover: #ffffff;
-  --popover-foreground: #182044;
+  --popover-foreground: #292723;
 
-  --primary: #6542f5;
+  --primary: #79563e;
   --primary-foreground: #ffffff;
 
-  --secondary: #eeebff;
-  --secondary-foreground: #4930c2;
+  --secondary: #f7f1eb;
+  --secondary-foreground: #684832;
 
-  --muted: #f0f1fb;
-  --muted-foreground: #74809b;
+  --muted: #f7f1eb;
+  --muted-foreground: #766e65;
 
-  --accent: #eeebff;
-  --accent-foreground: #5836df;
+  --accent: #eee3d8;
+  --accent-foreground: #684832;
 
   --destructive: #dc4c65;
 
-  --border: #e7e9f5;
-  --input: #dfe2f2;
-  --ring: #8061ff;
+  --border: #e8dfd6;
+  --input: #e8dfd6;
+  --ring: #a77a55;
 
   --sidebar: #ffffff;
-  --sidebar-foreground: #182044;
-  --sidebar-primary: #6542f5;
+  --sidebar-foreground: #292723;
+  --sidebar-primary: #79563e;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #eeebff;
-  --sidebar-accent-foreground: #5836df;
-  --sidebar-border: #e7e9f5;
-  --sidebar-ring: #8061ff;
+  --sidebar-accent: #f7f1eb;
+  --sidebar-accent-foreground: #684832;
+  --sidebar-border: #e8dfd6;
+  --sidebar-ring: #a77a55;
 
-  --ink: #182044;
-  --paper: #f5f6ff;
+  --ink: #292723;
+  --paper: #fffcfa;
   --surface: #ffffff;
-  --surface-soft: #f0f1fb;
-  --text: #182044;
-  --line: #e7e9f5;
-  --line-strong: #d7daf0;
+  --surface-soft: #f7f1eb;
+  --text: #292723;
+  --line: #e8dfd6;
+  --line-strong: #dfcfc1;
 
-  --brand: #6542f5;
-  --brand-dark: #5033d2;
+  --brand: #79563e;
+  --brand-dark: #573b2a;
   --danger: #dc4c65;
   --warning: #a56b16;
-  --success: #26a883;
+  --success: #26856b;
 
   --sidebar-width: 264px;
   --nav-height: 72px;
@@ -105,71 +108,71 @@
   --radius: 0.625rem;
   --radius-lg: 14px;
 
-  --shadow-xs: 0 1px 2px rgba(26, 46, 38, 0.04);
-  --shadow-sm: 0 2px 8px rgba(26, 46, 38, 0.05);
-  --shadow-md: 0 10px 24px rgba(26, 46, 38, 0.07);
-  --shadow-lg: 0 18px 40px rgba(26, 46, 38, 0.1);
+  --shadow-xs: 0 1px 2px rgba(41, 39, 35, 0.04);
+  --shadow-sm: 0 2px 8px rgba(41, 39, 35, 0.05);
+  --shadow-md: 0 10px 24px rgba(41, 39, 35, 0.07);
+  --shadow-lg: 0 18px 40px rgba(41, 39, 35, 0.1);
 
-  --chart-1: #6542f5;
-  --chart-2: #8a55ff;
-  --chart-3: #68766f;
-  --chart-4: #8061ff;
-  --chart-5: #6d39ef;
+  --chart-1: #79563e;
+  --chart-2: #a77a55;
+  --chart-3: #c9a98b;
+  --chart-4: #684832;
+  --chart-5: #dfc9b5;
 }
 
 /* =========================================================
-   Dark theme
+   Dark Theme
    ========================================================= */
 
 .dark {
   color-scheme: dark;
 
-  --background: #121329;
-  --foreground: #eef0ff;
+  --background: #211914;
+  --foreground: #f8ede2;
 
-  --card: #1a1b36;
-  --card-foreground: #eef0ff;
+  --card: #30251e;
+  --card-foreground: #f8ede2;
 
-  --popover: #1a1b36;
-  --popover-foreground: #eef0ff;
+  --popover: #30251e;
+  --popover-foreground: #f8ede2;
 
-  --primary: #907aff;
-  --primary-foreground: #ffffff;
+  --primary: #a77a55;
+  --primary-foreground: #211914;
 
-  --secondary: #282448;
-  --secondary-foreground: #e6e1ff;
+  --secondary: #453326;
+  --secondary-foreground: #f8ede2;
 
-  --muted: #252541;
-  --muted-foreground: #a8a9c6;
+  --muted: #30251e;
+  --muted-foreground: #e0c8b2;
 
-  --accent: #282448;
-  --accent-foreground: #c5b8ff;
+  --accent: #453326;
+  --accent-foreground: #f8ede2;
 
   --destructive: #ef7770;
 
-  --border: #343452;
-  --input: #424260;
-  --ring: #907aff;
+  --border: #5b4637;
+  --input: #66503f;
+  --ring: #a77a55;
 
-  --sidebar: #191a32;
-  --sidebar-foreground: #eef0ff;
-  --sidebar-primary: #907aff;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #282448;
-  --sidebar-accent-foreground: #e6e1ff;
-  --sidebar-border: #343452;
-  --sidebar-ring: #907aff;
+  --sidebar: #30251e;
+  --sidebar-foreground: #f8ede2;
+  --sidebar-primary: #a77a55;
+  --sidebar-primary-foreground: #211914;
+  --sidebar-accent: #453326;
+  --sidebar-accent-foreground: #f8ede2;
+  --sidebar-border: #5b4637;
+  --sidebar-ring: #a77a55;
 
-  --ink: #eef0ff;
-  --paper: #121329;
-  --surface: #1a1b36;
-  --surface-soft: #252541;
-  --text: #eef0ff;
-  --line: #343452;
-  --line-strong: #424260;
+  --ink: #f8ede2;
+  --paper: #211914;
+  --surface: #30251e;
+  --surface-soft: #453326;
+  --text: #f8ede2;
+  --line: #5b4637;
+  --line-strong: #66503f;
 
-  --brand: #907aff;
-  --brand-dark: #7058e8;
+  --brand: #a77a55;
+  --brand-dark: #8d6546;
   --danger: #ef7770;
   --warning: #e9c27c;
   --success: #55c99b;
@@ -179,15 +182,15 @@
   --shadow-md: 0 12px 30px rgba(0, 0, 0, 0.28);
   --shadow-lg: 0 26px 60px rgba(0, 0, 0, 0.38);
 
-  --chart-1: #907aff;
-  --chart-2: #c5b8ff;
-  --chart-3: #a8a9c6;
-  --chart-4: #a28aff;
-  --chart-5: #a68aff;
+  --chart-1: #a77a55;
+  --chart-2: #d2a77e;
+  --chart-3: #e0c8b2;
+  --chart-4: #8d6546;
+  --chart-5: #c9a98b;
 }
 
 /* =========================================================
-   Tailwind / shadcn theme mapping
+   Tailwind / shadcn Theme Mapping
    ========================================================= */
 
 @theme inline {
@@ -294,7 +297,7 @@ button {
 
 ::selection {
   background: var(--brand);
-  color: #fff;
+  color: #ffffff;
 }
 
 :focus-visible {
@@ -318,7 +321,7 @@ button {
 }
 
 /* =========================================================
-   Layout helpers
+   Layout Helpers
    ========================================================= */
 
 .wrap {
@@ -436,7 +439,7 @@ button {
 }
 
 .accent-text {
-  color: var(--color-accent-600);
+  color: var(--brand);
 }
 
 .section-head {
@@ -462,7 +465,7 @@ button {
   justify-content: center;
   gap: 9px;
   background: var(--brand);
-  color: #fff;
+  color: #ffffff;
   border: 1px solid transparent;
   border-radius: 10px;
   padding: 11px 21px;
@@ -516,13 +519,13 @@ button {
 }
 
 .btn-accent {
-  background: #8a55ff;
-  color: #fff;
+  background: #a77a55;
+  color: #ffffff;
 }
 
 .btn-accent:hover {
-  background: #6d39ef;
-  color: #fff;
+  background: #8d6546;
+  color: #ffffff;
 }
 
 .btn-danger {
@@ -716,7 +719,7 @@ label > textarea {
 }
 
 /* =========================================================
-   Badges, statuses, avatars
+   Badges, Statuses, Avatars
    ========================================================= */
 
 .badge {
@@ -739,15 +742,21 @@ label > textarea {
 }
 
 .dark .badge-brand {
-  background: #282448;
-  color: #c5b8ff;
-  border-color: #424260;
+  background: #453326;
+  color: #f8ede2;
+  border-color: #5b4637;
 }
 
 .badge-accent {
-  background: #efe9ff;
-  color: #6d39ef;
-  border-color: #dfd2ff;
+  background: #f7f1eb;
+  color: #684832;
+  border-color: #eee3d8;
+}
+
+.dark .badge-accent {
+  background: #453326;
+  color: #f8ede2;
+  border-color: #5b4637;
 }
 
 .status {
@@ -799,7 +808,7 @@ label > textarea {
   display: grid;
   place-items: center;
   background: linear-gradient(140deg, var(--color-brand-400), var(--color-brand-700));
-  color: #fff;
+  color: #ffffff;
   font-weight: 800;
   font-size: 23px;
   flex: none;
@@ -842,7 +851,7 @@ label > textarea {
 .chip.active {
   background: var(--brand);
   border-color: var(--brand);
-  color: #fff;
+  color: #ffffff;
 }
 
 /* =========================================================
@@ -971,7 +980,7 @@ label > textarea {
 }
 
 /* =========================================================
-   Equipment details
+   Equipment Details
    ========================================================= */
 
 .detailsgrid {
@@ -1020,7 +1029,7 @@ label > textarea {
 }
 
 /* =========================================================
-   Tabs and tables
+   Tabs and Tables
    ========================================================= */
 
 .tabs {
@@ -1050,7 +1059,7 @@ label > textarea {
 
 .tabactive {
   background: var(--brand);
-  color: #fff;
+  color: #ffffff;
   border-color: var(--brand);
 }
 
@@ -1139,7 +1148,7 @@ label > textarea {
 }
 
 /* =========================================================
-   Auth pages
+   Auth Pages
    ========================================================= */
 
 .authwrap {
@@ -1208,7 +1217,7 @@ label > textarea {
 }
 
 /* =========================================================
-   Notices, empty states, loading
+   Notices, Empty States, Loading
    ========================================================= */
 
 .notice {
@@ -1246,15 +1255,15 @@ label > textarea {
 }
 
 .notice-info {
-  background: #eef4ff;
-  border-color: #dbe6fb;
-  color: #2a4d9b;
+  background: #f7f1eb;
+  border-color: #e8dfd6;
+  color: #684832;
 }
 
 .dark .notice-info {
-  background: #1d304b;
-  border-color: #344d70;
-  color: #b9d2ff;
+  background: #30251e;
+  border-color: #5b4637;
+  color: #e0c8b2;
 }
 
 .empty {
@@ -1301,7 +1310,7 @@ label > textarea {
   height: 18px;
   border-radius: 50%;
   border: 2.5px solid rgba(255, 255, 255, 0.4);
-  border-top-color: #fff;
+  border-top-color: #ffffff;
   animation: spin 0.7s linear infinite;
 }
 
@@ -1325,20 +1334,20 @@ label > textarea {
 }
 
 /* =========================================================
-   Home page blocks
+   Home Page Blocks
    ========================================================= */
 
 .hero {
   position: relative;
   border-radius: 22px;
   overflow: hidden;
-  color: #fff;
+  color: #ffffff;
   background:
     linear-gradient(
       95deg,
-      rgba(17, 35, 27, 0.88) 0%,
-      rgba(17, 35, 27, 0.72) 42%,
-      rgba(17, 35, 27, 0.38) 100%
+      rgba(33, 25, 20, 0.9) 0%,
+      rgba(33, 25, 20, 0.72) 42%,
+      rgba(33, 25, 20, 0.38) 100%
     ),
     var(--hero-image) center/cover;
   box-shadow: var(--shadow-lg);
@@ -1352,7 +1361,7 @@ label > textarea {
 .hero-search {
   display: flex;
   gap: 10px;
-  background: #fff;
+  background: #ffffff;
   border-radius: 999px;
   padding: 8px 8px 8px 20px;
   align-items: center;
@@ -1366,7 +1375,7 @@ label > textarea {
   background: transparent;
   padding: 10px 0;
   box-shadow: none;
-  color: #182044;
+  color: #292723;
 }
 
 .hero-search input:focus {
@@ -1377,11 +1386,11 @@ label > textarea {
   display: grid;
   grid-template-columns: 1.4fr 1fr 1fr auto;
   gap: 0;
-  background: #fff;
+  background: #ffffff;
   border-radius: 16px;
   padding: 10px;
   align-items: stretch;
-  box-shadow: 0 12px 30px rgba(13, 21, 18, 0.12);
+  box-shadow: 0 12px 30px rgba(33, 25, 20, 0.12);
   max-width: 920px;
   margin-top: 34px;
 }
@@ -1395,11 +1404,11 @@ label > textarea {
 }
 
 .hero-field + .hero-field {
-  border-left: 1px solid #e7e9f5;
+  border-left: 1px solid #e8dfd6;
 }
 
 .hero-field svg {
-  color: #6542f5;
+  color: #79563e;
   flex: none;
   margin-top: 2px;
 }
@@ -1412,7 +1421,7 @@ label > textarea {
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #74809b;
+  color: #766e65;
 }
 
 .hero-field input {
@@ -1423,7 +1432,7 @@ label > textarea {
   box-shadow: none;
   font-size: 15px;
   font-weight: 500;
-  color: #182044;
+  color: #292723;
   width: 100%;
 }
 
@@ -1523,14 +1532,14 @@ label > textarea {
   display: grid;
   place-items: center;
   font-weight: 700;
-  background: #eeebff;
+  background: var(--surface-soft);
   color: var(--brand);
   font-size: 15px;
 }
 
 .cta-panel {
-  background: linear-gradient(120deg, #5033d2, #6542f5);
-  color: #fff;
+  background: linear-gradient(120deg, #573b2a, #79563e);
+  color: #ffffff;
   border-radius: 20px;
   padding: clamp(32px, 5vw, 56px);
   display: flex;
@@ -1574,7 +1583,7 @@ label > textarea {
 }
 
 /* =========================================================
-   Navbar and shell
+   Navbar and Shell
    ========================================================= */
 
 .topbar {
@@ -1612,7 +1621,7 @@ label > textarea {
   height: 36px;
   border-radius: 12px;
   background: linear-gradient(140deg, var(--color-brand-400), var(--color-brand-700));
-  color: #fff;
+  color: #ffffff;
   display: grid;
   place-items: center;
   font-size: 17px;
@@ -1842,7 +1851,7 @@ label > textarea {
   align-items: center;
   gap: 8px;
   background: var(--brand);
-  color: #fff;
+  color: #ffffff;
   border-radius: 13px;
   padding: 12px;
   font-weight: 700;
@@ -1858,7 +1867,7 @@ label > textarea {
 }
 
 /* =========================================================
-   Main content and footer
+   Main Content and Footer
    ========================================================= */
 
 .app-content {
@@ -1957,11 +1966,11 @@ label > textarea {
 
 .footer-socials a:hover {
   background: var(--brand);
-  color: #fff;
+  color: #ffffff;
 }
 
 /* =========================================================
-   Theme toggle
+   Theme Toggle
    ========================================================= */
 
 .theme-toggle {
@@ -1987,7 +1996,7 @@ label > textarea {
 }
 
 /* =========================================================
-   Owner information card
+   Owner Information Card
    ========================================================= */
 
 .owner-card {
@@ -2087,7 +2096,7 @@ label > textarea {
   margin-top: 20px;
   border-radius: 12px;
   background: var(--brand);
-  color: #fff;
+  color: #ffffff;
   font-weight: 700;
   text-decoration: none;
   transition:
@@ -2107,7 +2116,7 @@ label > textarea {
 }
 
 /* =========================================================
-   Landing page reference design
+   Landing Page Reference Design
    ========================================================= */
 
 .equiply-home-ref .home-hero-ref {
@@ -2120,7 +2129,7 @@ label > textarea {
   display: flex;
   align-items: center;
   overflow: hidden;
-  color: white;
+  color: #ffffff;
   padding: clamp(28px, 5vw, 64px);
 }
 
@@ -2140,19 +2149,19 @@ label > textarea {
 }
 
 .hero-eyebrow-ref {
-  color: #d5cbff;
+  color: #e0c8b2;
 }
 
 .hero-copy-ref h1 {
   font-size: clamp(36px, 5vw, 64px);
   line-height: 1.05;
   letter-spacing: -0.045em;
-  color: white;
+  color: #ffffff;
   margin: 20px 0;
 }
 
 .hero-copy-ref h1 span {
-  color: #b9aaff;
+  color: #d2a77e;
 }
 
 .hero-copy-ref > p {
@@ -2166,13 +2175,13 @@ label > textarea {
 .search-panel-ref {
   display: grid;
   grid-template-columns: 1.2fr 1fr 1fr auto;
-  background: #fff;
+  background: #ffffff;
   border-radius: 14px;
   padding: 8px;
   gap: 6px;
   max-width: 900px;
-  color: #182044;
-  box-shadow: 0 16px 40px rgba(20, 20, 70, 0.22);
+  color: #292723;
+  box-shadow: 0 16px 40px rgba(33, 25, 20, 0.22);
 }
 
 .search-panel-ref label {
@@ -2180,13 +2189,13 @@ label > textarea {
   align-items: center;
   gap: 12px;
   padding: 12px;
-  border-right: 1px solid #ececf6;
-  color: #7357f6;
+  border-right: 1px solid #e8dfd6;
+  color: #79563e;
 }
 
 .search-panel-ref label span {
   font-size: 10px;
-  color: #77809a;
+  color: #766e65;
   font-weight: 700;
   display: block;
   flex: 1;
@@ -2198,7 +2207,7 @@ label > textarea {
   outline: none;
   width: 100%;
   font-size: 13px;
-  color: #182044;
+  color: #292723;
   background: transparent;
   margin-top: 4px;
 }
@@ -2210,8 +2219,8 @@ label > textarea {
   justify-content: center;
   gap: 8px;
   border: 0;
-  background: linear-gradient(120deg, #6040f5, #924bff);
-  color: white;
+  background: linear-gradient(120deg, #684832, #a77a55);
+  color: #ffffff;
   padding: 0 20px;
   border-radius: 10px;
   font-weight: 700;
@@ -2312,10 +2321,10 @@ label > textarea {
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: #fff;
+  background: #ffffff;
   display: grid;
   place-items: center;
-  color: #6542f5;
+  color: #79563e;
 }
 
 .category-tile-ref strong,
@@ -2412,7 +2421,7 @@ label > textarea {
 }
 
 /* =========================================================
-   shadcn base styles
+   shadcn Base Styles
    ========================================================= */
 
 @layer base {
@@ -2484,7 +2493,7 @@ label > textarea {
     inset: 0;
     z-index: 75;
     border: 0;
-    background: rgba(13, 21, 18, 0.55);
+    background: rgba(33, 25, 20, 0.55);
     backdrop-filter: blur(2px);
   }
 
@@ -2511,7 +2520,7 @@ label > textarea {
 
   .hero-field:nth-child(2),
   .hero-field:nth-child(4) {
-    border-left: 1px solid #e7e9f5;
+    border-left: 1px solid #e8dfd6;
   }
 }
 
@@ -2620,7 +2629,7 @@ label > textarea {
 
   .hero-field + .hero-field {
     border-left: 0;
-    border-top: 1px solid #e7e9f5;
+    border-top: 1px solid #e8dfd6;
   }
 
   .hero-panel .btn {
@@ -2673,7 +2682,7 @@ label > textarea {
 
   .search-panel-ref label {
     border-right: 0;
-    border-bottom: 1px solid #ececf6;
+    border-bottom: 1px solid #e8dfd6;
   }
 
   .search-panel-ref button {
@@ -2716,13 +2725,9 @@ label > textarea {
   }
 }
 
-/* ========================================
-   Smooth Light / Dark Theme Transition
-======================================== */
-
-/* ========================================
+/* =========================================================
    Circular Light / Dark Theme Reveal
-======================================== */
+   ========================================================= */
 
 @supports (view-transition-name: root) {
   ::view-transition-old(root) {
@@ -2749,6 +2754,7 @@ label > textarea {
 }
 
 /* Respect reduced-motion preferences */
+
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root),
   ::view-transition-new(root) {

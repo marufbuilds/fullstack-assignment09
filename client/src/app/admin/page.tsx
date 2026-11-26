@@ -12,7 +12,6 @@ import {
   Wallet,
   CalendarDays,
   RefreshCw,
-  ArrowUpRight,
   Clock3,
   CheckCircle2,
   LayoutDashboard,
@@ -117,9 +116,7 @@ function AdminContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const pending = equipment.filter(
-    (item) => item.status === "pending"
-  );
+  const pending = equipment.filter((item) => item.status === "pending");
 
   const completed = bookings.filter(
     (booking) => booking.status === "completed"
@@ -196,11 +193,8 @@ function AdminContent() {
   const totalEquipment = stats?.totalEquipment ?? stats?.equipment ?? 0;
   const totalBookings = stats?.totalBookings ?? stats?.bookings ?? 0;
 
-  const pendingApprovals =
-    stats?.pendingApprovals ?? pending.length;
-
-  const completedRentals =
-    stats?.completedRentals ?? completed.length;
+  const pendingApprovals = stats?.pendingApprovals ?? pending.length;
+  const completedRentals = stats?.completedRentals ?? completed.length;
 
   const paidPayments = stats?.paidPayments ?? 0;
   const totalRevenue = stats?.totalRevenue;
@@ -239,10 +233,7 @@ function AdminContent() {
     },
     {
       label: "Total revenue",
-      value:
-        totalRevenue !== undefined
-          ? money(totalRevenue)
-          : "—",
+      value: totalRevenue !== undefined ? money(totalRevenue) : "—",
       description: "From paid transactions",
       icon: TrendingUp,
     },
@@ -256,37 +247,37 @@ function AdminContent() {
   ];
 
   return (
-    <main className="min-h-screen bg-[#FFFCFA] px-4 py-7 text-[#292723] sm:px-6 lg:px-8 lg:py-10">
+    <main className="min-h-screen bg-background px-4 py-7 text-foreground sm:px-6 lg:px-8 lg:py-10">
       <div className="mx-auto max-w-[1440px] space-y-8">
 
         {/* Header */}
         <section className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#9A7656]">
+            <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
               <ShieldCheck size={15} />
               Equiply administration
             </div>
 
-            <h1 className="text-3xl font-semibold tracking-tight text-[#292723] sm:text-4xl">
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
               Platform overview
             </h1>
 
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-[#82776D] sm:text-base">
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">
               Manage users, equipment listings, bookings and platform activity
               from one place.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center gap-2 rounded-full border border-[#E8DFD6] bg-white px-3 py-2 text-xs font-semibold text-[#79563E]">
-              <span className="h-2 w-2 rounded-full bg-[#79563E]" />
+            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-2 text-xs font-semibold text-primary">
+              <span className="h-2 w-2 rounded-full bg-primary" />
               Administrator
             </span>
 
             <button
               onClick={() => void load()}
               disabled={loading}
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-[#E8DFD6] bg-white px-4 text-sm font-semibold text-[#79563E] transition hover:bg-[#F8F3EE] disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-semibold text-primary transition hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-50"
             >
               <RefreshCw
                 size={15}
@@ -298,22 +289,18 @@ function AdminContent() {
         </section>
 
         {/* Notice */}
-        {notice && (
-          <Notice kind={noticeKind}>
-            {notice}
-          </Notice>
-        )}
+        {notice && <Notice kind={noticeKind}>{notice}</Notice>}
 
         {/* Navigation tabs */}
-        <div className="flex gap-2 overflow-x-auto border-b border-[#E8DFD6] pb-3">
+        <div className="flex gap-2 overflow-x-auto border-b border-border pb-3">
           {tabs.map(({ name, icon: Icon, count }) => (
             <button
               key={name}
               onClick={() => setTab(name)}
               className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition ${
                 tab === name
-                  ? "bg-[#79563E] text-white shadow-sm"
-                  : "bg-white text-[#82776D] hover:bg-[#F5EEE8] hover:text-[#79563E]"
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "bg-card text-muted-foreground hover:bg-secondary hover:text-primary"
               }`}
             >
               <Icon size={16} />
@@ -323,8 +310,8 @@ function AdminContent() {
                 <span
                   className={`rounded-full px-2 py-0.5 text-xs ${
                     tab === name
-                      ? "bg-white/20 text-white"
-                      : "bg-[#F5EEE8] text-[#79563E]"
+                      ? "bg-primary-foreground/20 text-primary-foreground"
+                      : "bg-secondary text-secondary-foreground"
                   }`}
                 >
                   {count}
@@ -336,10 +323,7 @@ function AdminContent() {
 
         {/* Error */}
         {error && (
-          <ErrorState
-            message={error}
-            onRetry={() => void load()}
-          />
+          <ErrorState message={error} onRetry={() => void load()} />
         )}
 
         {/* Loading */}
@@ -348,7 +332,7 @@ function AdminContent() {
             {[0, 1, 2, 3, 4, 5].map((row) => (
               <div
                 key={row}
-                className="h-36 animate-pulse rounded-2xl border border-[#E8DFD6] bg-white"
+                className="h-36 animate-pulse rounded-2xl border border-border bg-card"
               />
             ))}
           </div>
@@ -366,23 +350,23 @@ function AdminContent() {
                   {statCards.map(({ label, value, description, icon: Icon }) => (
                     <div
                       key={label}
-                      className="group rounded-2xl border border-[#E8DFD6] bg-white p-5 shadow-[0_4px_24px_rgba(60,40,20,0.025)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(60,40,20,0.06)] sm:p-6"
+                      className="group rounded-2xl border border-border bg-card p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md sm:p-6"
                     >
                       <div className="flex items-center justify-between gap-3">
-                        <p className="text-sm font-medium text-[#82776D]">
+                        <p className="text-sm font-medium text-muted-foreground">
                           {label}
                         </p>
 
-                        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F5EEE8] text-[#79563E] transition group-hover:bg-[#79563E] group-hover:text-white">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-secondary text-primary transition group-hover:bg-primary group-hover:text-primary-foreground">
                           <Icon size={20} />
                         </div>
                       </div>
 
-                      <h2 className="mt-5 text-3xl font-semibold tracking-tight text-[#292723]">
+                      <h2 className="mt-5 text-3xl font-semibold tracking-tight text-card-foreground">
                         {value}
                       </h2>
 
-                      <p className="mt-1 text-xs text-[#9A8D80]">
+                      <p className="mt-1 text-xs text-muted-foreground">
                         {description}
                       </p>
                     </div>
@@ -391,27 +375,27 @@ function AdminContent() {
 
                 {/* Attention and recent activity */}
                 <section className="grid items-start gap-5 xl:grid-cols-2">
-                  <div className="overflow-hidden rounded-2xl border border-[#E8DFD6] bg-white shadow-sm">
-                    <div className="border-b border-[#E8DFD6] p-5 sm:p-6">
+                  <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+                    <div className="border-b border-border p-5 sm:p-6">
                       <div className="flex items-center justify-between gap-3">
                         <div>
-                          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9A7656]">
+                          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
                             Needs attention
                           </p>
-                          <h2 className="mt-2 text-xl font-semibold text-[#292723]">
+                          <h2 className="mt-2 text-xl font-semibold text-card-foreground">
                             Listings awaiting review
                           </h2>
                         </div>
 
-                        <span className="rounded-xl bg-[#F5EEE8] px-3 py-2 text-sm font-semibold text-[#79563E]">
+                        <span className="rounded-xl bg-secondary px-3 py-2 text-sm font-semibold text-secondary-foreground">
                           {pending.length}
                         </span>
                       </div>
                     </div>
 
-                    <div className="divide-y divide-[#F0EAE4] px-5 sm:px-6">
+                    <div className="divide-y divide-border px-5 sm:px-6">
                       {pending.length === 0 ? (
-                        <p className="py-8 text-sm text-[#82776D]">
+                        <p className="py-8 text-sm text-muted-foreground">
                           Nothing to review. All listings are up to date.
                         </p>
                       ) : (
@@ -421,10 +405,10 @@ function AdminContent() {
                             className="flex flex-col gap-3 py-5 sm:flex-row sm:items-center sm:justify-between"
                           >
                             <div className="min-w-0">
-                              <p className="truncate font-semibold text-[#443B34]">
+                              <p className="truncate font-semibold text-card-foreground">
                                 {item.title}
                               </p>
-                              <p className="mt-1 text-xs text-[#9A8D80]">
+                              <p className="mt-1 text-xs text-muted-foreground">
                                 {item.category} · {item.location}
                               </p>
                             </div>
@@ -433,7 +417,7 @@ function AdminContent() {
                               <button
                                 disabled={actingId === item._id}
                                 onClick={() => void moderate(item, "approved")}
-                                className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#79563E] px-3 text-xs font-semibold text-white transition hover:bg-[#62432F] disabled:opacity-50"
+                                className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-primary px-3 text-xs font-semibold text-primary-foreground transition hover:opacity-90 disabled:opacity-50"
                               >
                                 {actingId === item._id ? (
                                   <Spinner />
@@ -446,7 +430,7 @@ function AdminContent() {
                               <button
                                 disabled={actingId === item._id}
                                 onClick={() => void moderate(item, "rejected")}
-                                className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-[#E8DFD6] px-3 text-xs font-semibold text-[#82776D] transition hover:border-red-200 hover:bg-red-50 hover:text-red-700 disabled:opacity-50"
+                                className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-border px-3 text-xs font-semibold text-muted-foreground transition hover:border-destructive/40 hover:bg-destructive/10 hover:text-destructive disabled:opacity-50"
                               >
                                 <XCircle size={14} />
                                 Reject
@@ -458,19 +442,19 @@ function AdminContent() {
                     </div>
                   </div>
 
-                  <div className="overflow-hidden rounded-2xl border border-[#E8DFD6] bg-white shadow-sm">
-                    <div className="border-b border-[#E8DFD6] p-5 sm:p-6">
-                      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9A7656]">
+                  <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+                    <div className="border-b border-border p-5 sm:p-6">
+                      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
                         Recent activity
                       </p>
-                      <h2 className="mt-2 text-xl font-semibold text-[#292723]">
+                      <h2 className="mt-2 text-xl font-semibold text-card-foreground">
                         Latest bookings
                       </h2>
                     </div>
 
-                    <div className="divide-y divide-[#F0EAE4] px-5 sm:px-6">
+                    <div className="divide-y divide-border px-5 sm:px-6">
                       {bookings.length === 0 ? (
-                        <p className="py-8 text-sm text-[#82776D]">
+                        <p className="py-8 text-sm text-muted-foreground">
                           No bookings have been created yet.
                         </p>
                       ) : (
@@ -480,17 +464,17 @@ function AdminContent() {
                             className="flex items-center justify-between gap-3 py-4"
                           >
                             <div className="min-w-0">
-                              <p className="truncate font-semibold text-[#443B34]">
+                              <p className="truncate font-semibold text-card-foreground">
                                 {booking.equipmentTitle || "Equipment"}
                               </p>
-                              <p className="mt-1 flex items-center gap-1.5 text-xs text-[#9A8D80]">
+                              <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
                                 <Clock3 size={12} />
                                 {formatDate(booking.createdAt)}
                               </p>
                             </div>
 
                             <div className="shrink-0 text-right">
-                              <p className="font-semibold text-[#443B34]">
+                              <p className="font-semibold text-card-foreground">
                                 {money(booking.amount)}
                               </p>
                               <div className="mt-1">
@@ -505,21 +489,21 @@ function AdminContent() {
                 </section>
 
                 {/* Monthly analytics */}
-                <section className="rounded-2xl border border-[#E8DFD6] bg-white p-5 shadow-sm sm:p-7">
+                <section className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-7">
                   <div className="mb-6">
-                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9A7656]">
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
                       Platform analytics
                     </p>
-                    <h2 className="mt-2 text-xl font-semibold text-[#292723]">
+                    <h2 className="mt-2 text-xl font-semibold text-card-foreground">
                       Monthly booking statistics
                     </h2>
-                    <p className="mt-1 text-sm text-[#82776D]">
+                    <p className="mt-1 text-sm text-muted-foreground">
                       Booking activity across the platform.
                     </p>
                   </div>
 
                   {monthlyBookings.length === 0 ? (
-                    <p className="text-sm text-[#82776D]">
+                    <p className="text-sm text-muted-foreground">
                       No monthly statistics available yet.
                     </p>
                   ) : (
@@ -540,17 +524,17 @@ function AdminContent() {
                         return (
                           <div key={`${item.year}-${item.month}`}>
                             <div className="mb-2 flex items-center justify-between gap-3 text-sm">
-                              <span className="font-semibold text-[#443B34]">
+                              <span className="font-semibold text-card-foreground">
                                 {monthName} {item.year}
                               </span>
-                              <span className="text-[#82776D]">
+                              <span className="text-muted-foreground">
                                 {item.count} bookings
                               </span>
                             </div>
 
-                            <div className="h-2.5 overflow-hidden rounded-full bg-[#F1EAE3]">
+                            <div className="h-2.5 overflow-hidden rounded-full bg-secondary">
                               <div
-                                className="h-full rounded-full bg-[#79563E] transition-all duration-500"
+                                className="h-full rounded-full bg-primary transition-all duration-500"
                                 style={{
                                   width: `${(item.count / maximum) * 100}%`,
                                 }}
@@ -567,12 +551,12 @@ function AdminContent() {
 
             {/* Listings */}
             {tab === "Listings" && (
-              <section className="overflow-hidden rounded-2xl border border-[#E8DFD6] bg-white shadow-sm">
-                <div className="border-b border-[#E8DFD6] p-5 sm:p-6">
-                  <h2 className="text-xl font-semibold text-[#292723]">
+              <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+                <div className="border-b border-border p-5 sm:p-6">
+                  <h2 className="text-xl font-semibold text-card-foreground">
                     Equipment listings
                   </h2>
-                  <p className="mt-1 text-sm text-[#82776D]">
+                  <p className="mt-1 text-sm text-muted-foreground">
                     Review and manage equipment submitted by owners.
                   </p>
                 </div>
@@ -587,7 +571,7 @@ function AdminContent() {
                   </div>
                 ) : (
                   <>
-                    <div className="hidden grid-cols-[minmax(180px,1.5fr)_minmax(120px,1fr)_100px_110px_190px] gap-4 border-b border-[#E8DFD6] bg-[#F8F3EE] px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#82776D] lg:grid">
+                    <div className="hidden grid-cols-[minmax(180px,1.5fr)_minmax(120px,1fr)_100px_110px_190px] gap-4 border-b border-border bg-muted px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground lg:grid">
                       <span>Equipment</span>
                       <span>Owner</span>
                       <span>Price</span>
@@ -595,41 +579,41 @@ function AdminContent() {
                       <span>Action</span>
                     </div>
 
-                    <div className="divide-y divide-[#F0EAE4]">
+                    <div className="divide-y divide-border">
                       {equipment.map((item) => (
                         <div
                           key={item._id}
                           className="grid gap-4 px-5 py-5 sm:px-6 lg:grid-cols-[minmax(180px,1.5fr)_minmax(120px,1fr)_100px_110px_190px] lg:items-center"
                         >
                           <div className="min-w-0">
-                            <p className="font-semibold text-[#443B34]">
+                            <p className="font-semibold text-card-foreground">
                               {item.title}
                             </p>
-                            <p className="mt-1 text-xs text-[#9A8D80]">
+                            <p className="mt-1 text-xs text-muted-foreground">
                               {item.category} · {item.location}
                             </p>
                           </div>
 
                           <div>
-                            <p className="text-xs text-[#9A8D80] lg:hidden">
+                            <p className="text-xs text-muted-foreground lg:hidden">
                               Owner
                             </p>
-                            <span className="text-sm text-[#82776D]">
+                            <span className="text-sm text-muted-foreground">
                               {item.ownerId || "—"}
                             </span>
                           </div>
 
                           <div>
-                            <p className="text-xs text-[#9A8D80] lg:hidden">
+                            <p className="text-xs text-muted-foreground lg:hidden">
                               Price
                             </p>
-                            <span className="text-sm font-semibold text-[#443B34]">
+                            <span className="text-sm font-semibold text-card-foreground">
                               {money(item.price)}/day
                             </span>
                           </div>
 
                           <div>
-                            <p className="mb-1 text-xs text-[#9A8D80] lg:hidden">
+                            <p className="mb-1 text-xs text-muted-foreground lg:hidden">
                               Status
                             </p>
                             <StatusBadge
@@ -647,7 +631,7 @@ function AdminContent() {
                               <button
                                 disabled={actingId === item._id}
                                 onClick={() => void moderate(item, "approved")}
-                                className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#79563E] px-3 text-xs font-semibold text-white transition hover:bg-[#62432F] disabled:opacity-50"
+                                className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-primary px-3 text-xs font-semibold text-primary-foreground transition hover:opacity-90 disabled:opacity-50"
                               >
                                 {actingId === item._id ? (
                                   <Spinner />
@@ -662,7 +646,7 @@ function AdminContent() {
                               <button
                                 disabled={actingId === item._id}
                                 onClick={() => void moderate(item, "rejected")}
-                                className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-[#E8DFD6] px-3 text-xs font-semibold text-[#82776D] transition hover:border-red-200 hover:bg-red-50 hover:text-red-700 disabled:opacity-50"
+                                className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-border px-3 text-xs font-semibold text-muted-foreground transition hover:border-destructive/40 hover:bg-destructive/10 hover:text-destructive disabled:opacity-50"
                               >
                                 <XCircle size={14} />
                                 Reject
@@ -679,12 +663,12 @@ function AdminContent() {
 
             {/* Bookings */}
             {tab === "Bookings" && (
-              <section className="overflow-hidden rounded-2xl border border-[#E8DFD6] bg-white shadow-sm">
-                <div className="border-b border-[#E8DFD6] p-5 sm:p-6">
-                  <h2 className="text-xl font-semibold text-[#292723]">
+              <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+                <div className="border-b border-border p-5 sm:p-6">
+                  <h2 className="text-xl font-semibold text-card-foreground">
                     All bookings
                   </h2>
-                  <p className="mt-1 text-sm text-[#82776D]">
+                  <p className="mt-1 text-sm text-muted-foreground">
                     View rental dates, booking amounts and payment status.
                   </p>
                 </div>
@@ -699,7 +683,7 @@ function AdminContent() {
                   </div>
                 ) : (
                   <>
-                    <div className="hidden grid-cols-[minmax(150px,1.5fr)_minmax(140px,1fr)_100px_110px_100px] gap-4 border-b border-[#E8DFD6] bg-[#F8F3EE] px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#82776D] lg:grid">
+                    <div className="hidden grid-cols-[minmax(150px,1.5fr)_minmax(140px,1fr)_100px_110px_100px] gap-4 border-b border-border bg-muted px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground lg:grid">
                       <span>Equipment</span>
                       <span>Dates</span>
                       <span>Amount</span>
@@ -707,26 +691,26 @@ function AdminContent() {
                       <span>Payment</span>
                     </div>
 
-                    <div className="divide-y divide-[#F0EAE4]">
+                    <div className="divide-y divide-border">
                       {bookings.map((booking) => (
                         <div
                           key={booking._id}
                           className="grid gap-4 px-5 py-5 sm:px-6 lg:grid-cols-[minmax(150px,1.5fr)_minmax(140px,1fr)_100px_110px_100px] lg:items-center"
                         >
                           <div>
-                            <p className="text-xs text-[#9A8D80] lg:hidden">
+                            <p className="text-xs text-muted-foreground lg:hidden">
                               Equipment
                             </p>
-                            <p className="font-semibold text-[#443B34]">
+                            <p className="font-semibold text-card-foreground">
                               {booking.equipmentTitle || "Equipment"}
                             </p>
                           </div>
 
                           <div>
-                            <p className="text-xs text-[#9A8D80] lg:hidden">
+                            <p className="text-xs text-muted-foreground lg:hidden">
                               Rental dates
                             </p>
-                            <span className="text-sm text-[#82776D]">
+                            <span className="text-sm text-muted-foreground">
                               {formatDateRange(
                                 booking.startDate,
                                 booking.endDate
@@ -735,30 +719,30 @@ function AdminContent() {
                           </div>
 
                           <div>
-                            <p className="text-xs text-[#9A8D80] lg:hidden">
+                            <p className="text-xs text-muted-foreground lg:hidden">
                               Amount
                             </p>
-                            <span className="text-sm font-semibold text-[#443B34]">
+                            <span className="text-sm font-semibold text-card-foreground">
                               {money(booking.amount)}
                             </span>
                           </div>
 
                           <div>
-                            <p className="mb-1 text-xs text-[#9A8D80] lg:hidden">
+                            <p className="mb-1 text-xs text-muted-foreground lg:hidden">
                               Status
                             </p>
                             <StatusBadge status={booking.status} />
                           </div>
 
                           <div>
-                            <p className="mb-1 text-xs text-[#9A8D80] lg:hidden">
+                            <p className="mb-1 text-xs text-muted-foreground lg:hidden">
                               Payment
                             </p>
                             <span
                               className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
                                 booking.paymentStatus === "paid"
-                                  ? "bg-[#F0EDE5] text-[#79563E]"
-                                  : "bg-[#F5EEE8] text-[#82776D]"
+                                  ? "bg-secondary text-secondary-foreground"
+                                  : "bg-muted text-muted-foreground"
                               }`}
                             >
                               {booking.paymentStatus === "paid"
@@ -776,12 +760,12 @@ function AdminContent() {
 
             {/* Users */}
             {tab === "Users" && (
-              <section className="overflow-hidden rounded-2xl border border-[#E8DFD6] bg-white shadow-sm">
-                <div className="border-b border-[#E8DFD6] p-5 sm:p-6">
-                  <h2 className="text-xl font-semibold text-[#292723]">
+              <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+                <div className="border-b border-border p-5 sm:p-6">
+                  <h2 className="text-xl font-semibold text-card-foreground">
                     User management
                   </h2>
-                  <p className="mt-1 text-sm text-[#82776D]">
+                  <p className="mt-1 text-sm text-muted-foreground">
                     Manage registered accounts and their platform roles.
                   </p>
                 </div>
@@ -796,7 +780,7 @@ function AdminContent() {
                   </div>
                 ) : (
                   <>
-                    <div className="hidden grid-cols-[minmax(130px,1fr)_minmax(180px,1.5fr)_120px_100px_150px] gap-4 border-b border-[#E8DFD6] bg-[#F8F3EE] px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#82776D] lg:grid">
+                    <div className="hidden grid-cols-[minmax(130px,1fr)_minmax(180px,1.5fr)_120px_100px_150px] gap-4 border-b border-border bg-muted px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground lg:grid">
                       <span>Name</span>
                       <span>Email</span>
                       <span>Joined</span>
@@ -804,50 +788,50 @@ function AdminContent() {
                       <span>Change role</span>
                     </div>
 
-                    <div className="divide-y divide-[#F0EAE4]">
+                    <div className="divide-y divide-border">
                       {users.map((row) => (
                         <div
                           key={row._id}
                           className="grid gap-4 px-5 py-5 sm:px-6 lg:grid-cols-[minmax(130px,1fr)_minmax(180px,1.5fr)_120px_100px_150px] lg:items-center"
                         >
                           <div>
-                            <p className="text-xs text-[#9A8D80] lg:hidden">
+                            <p className="text-xs text-muted-foreground lg:hidden">
                               Name
                             </p>
-                            <p className="font-semibold text-[#443B34]">
+                            <p className="font-semibold text-card-foreground">
                               {row.name}
                             </p>
                           </div>
 
                           <div className="min-w-0">
-                            <p className="text-xs text-[#9A8D80] lg:hidden">
+                            <p className="text-xs text-muted-foreground lg:hidden">
                               Email
                             </p>
-                            <p className="break-all text-sm text-[#82776D]">
+                            <p className="break-all text-sm text-muted-foreground">
                               {row.email}
                             </p>
                           </div>
 
                           <div>
-                            <p className="text-xs text-[#9A8D80] lg:hidden">
+                            <p className="text-xs text-muted-foreground lg:hidden">
                               Joined
                             </p>
-                            <p className="text-sm text-[#82776D]">
+                            <p className="text-sm text-muted-foreground">
                               {formatDate(row.createdAt)}
                             </p>
                           </div>
 
                           <div>
-                            <p className="mb-1 text-xs text-[#9A8D80] lg:hidden">
+                            <p className="mb-1 text-xs text-muted-foreground lg:hidden">
                               Current role
                             </p>
-                            <span className="inline-flex rounded-full bg-[#F5EEE8] px-3 py-1 text-xs font-semibold capitalize text-[#79563E]">
+                            <span className="inline-flex rounded-full bg-secondary px-3 py-1 text-xs font-semibold capitalize text-secondary-foreground">
                               {row.role || "customer"}
                             </span>
                           </div>
 
                           <div>
-                            <p className="mb-1 text-xs text-[#9A8D80] lg:hidden">
+                            <p className="mb-1 text-xs text-muted-foreground lg:hidden">
                               Change role
                             </p>
                             <select
@@ -859,7 +843,7 @@ function AdminContent() {
                               onChange={(event) =>
                                 void changeRole(row, event.target.value)
                               }
-                              className="h-10 w-full rounded-xl border border-[#E8DFD6] bg-white px-3 text-sm text-[#443B34] outline-none transition focus:border-[#79563E] focus:ring-2 focus:ring-[#79563E]/10 disabled:cursor-not-allowed disabled:opacity-50"
+                              className="h-10 w-full rounded-xl border border-input bg-card px-3 text-sm text-card-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-ring/20 disabled:cursor-not-allowed disabled:opacity-50"
                             >
                               <option value="customer">Customer</option>
                               <option value="owner">Owner</option>
@@ -867,7 +851,7 @@ function AdminContent() {
                             </select>
 
                             {row._id === user?.id && (
-                              <p className="mt-1 text-[11px] text-[#9A8D80]">
+                              <p className="mt-1 text-[11px] text-muted-foreground">
                                 Your account
                               </p>
                             )}
@@ -883,9 +867,9 @@ function AdminContent() {
         )}
 
         {/* Footer note */}
-        <div className="flex flex-col gap-2 border-t border-[#E8DFD6] pt-5 text-xs text-[#9A8D80] sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-2 border-t border-border pt-5 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <span className="flex items-center gap-2">
-            <ShieldCheck size={14} className="text-[#79563E]" />
+            <ShieldCheck size={14} className="text-primary" />
             Equiply administration panel
           </span>
           <span>Manage the platform responsibly.</span>
