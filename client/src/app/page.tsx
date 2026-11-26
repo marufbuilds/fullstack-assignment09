@@ -1,3 +1,4 @@
+ 
 "use client";
 
 import Link from "next/link";
@@ -27,7 +28,6 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
 import { EquipmentCard } from "@/components/EquipmentCard";
 import { CardSkeleton, Notice } from "@/components/ui";
 
@@ -91,7 +91,7 @@ const categories = [
 ];
 
 /* ----------------------------------
-   DIFFERENT IMAGE DATA
+   IMAGE DATA
 ---------------------------------- */
 
 const heroImage =
@@ -205,17 +205,9 @@ export default function Home() {
 
     const params = new URLSearchParams();
 
-    if (q.trim()) {
-      params.set("q", q.trim());
-    }
-
-    if (location.trim()) {
-      params.set("location", location.trim());
-    }
-
-    if (date) {
-      params.set("date", date);
-    }
+    if (q.trim()) params.set("q", q.trim());
+    if (location.trim()) params.set("location", location.trim());
+    if (date) params.set("date", date);
 
     router.push(
       `/equipment${params.size ? `?${params.toString()}` : ""}`
@@ -223,11 +215,11 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#fffdfb] text-[#292723]">
+    <main className="min-h-screen overflow-hidden bg-[#FFFCFA] text-[#292723] transition-colors duration-300 dark:bg-[#211B17] dark:text-[#F3E6DA]">
 
       {/* ANNOUNCEMENT BAR */}
 
-      <div className="flex items-center justify-between bg-[#e9e0d5] px-5 py-2 text-[10px] text-[#655a50] sm:px-8 md:px-12">
+      <div className="flex items-center justify-between border-b border-[#E8DFD6] bg-[#F7F1EB] px-5 py-2 text-[10px] text-[#766E65] dark:border-[#514033] dark:bg-[#29221D] dark:text-[#C0A993] sm:px-8 md:px-12">
         <p>Find the equipment your project needs</p>
 
         <p className="hidden sm:block">
@@ -237,31 +229,29 @@ export default function Home() {
 
       {/* HERO SECTION */}
 
-      <section className="relative flex min-h-[490px] items-center overflow-hidden bg-[#d9d0c5] md:min-h-[570px]">
-
+      <section className="relative flex min-h-[490px] items-center overflow-hidden bg-[#29221D] md:min-h-[570px]">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${heroImage})` }}
         />
 
-        <div className="absolute inset-0 bg-gradient-to-r from-[#29231d]/85 via-[#29231d]/55 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#17152b]/90 via-[#17152b]/60 to-transparent" />
 
         <div className="relative z-10 mx-auto w-full max-w-[1400px] px-6 py-20 sm:px-10 md:px-16 lg:px-20">
-
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
             className="max-w-2xl"
           >
-            <span className="mb-5 block text-[10px] font-semibold tracking-[3px] text-[#e8d7c3]">
+            <span className="mb-5 block text-[10px] font-semibold tracking-[3px] text-[#e6c7a9]">
               EQUIPMENT FOR EVERY PROJECT
             </span>
 
             <h1 className="max-w-xl text-4xl font-semibold leading-[1.12] tracking-tight text-white sm:text-5xl md:text-6xl">
               Get the job done.
               <br />
-              <span className="text-[#e5cdb3]">
+              <span className="text-[#e6c7a9]">
                 Rent smarter.
               </span>
             </h1>
@@ -274,7 +264,7 @@ export default function Home() {
             <div className="mt-8">
               <Link
                 href="/equipment"
-                className="inline-flex h-12 items-center justify-center bg-[#79563e] px-7 text-xs font-semibold text-white transition hover:bg-[#5d402e]"
+                className="inline-flex h-12 items-center justify-center rounded-md bg-[#79563E] px-7 text-xs font-semibold text-white transition hover:bg-[#5D402E] dark:bg-[#A77A55] dark:hover:bg-[#916747]"
               >
                 Explore Equipment
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -316,16 +306,15 @@ export default function Home() {
       {/* SEARCH SECTION */}
 
       <section className="relative z-20 mx-auto -mt-8 max-w-6xl px-4 sm:px-6">
-
         <form
           onSubmit={handleSearch}
-          className="grid gap-3 border border-[#e8e0d7] bg-white p-4 shadow-xl shadow-[#493522]/10 md:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr_auto] lg:gap-0 lg:p-5"
+          className="grid gap-3 rounded-xl border border-[#E8DFD6] bg-white p-4 text-[#292723] shadow-xl shadow-black/5 dark:border-[#514033] dark:bg-[#29221D] dark:text-[#F3E6DA] md:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr_auto] lg:gap-0 lg:p-5"
         >
-          <label className="flex min-w-0 items-center gap-3 border-b border-[#eee7df] px-3 py-3 lg:border-b-0 lg:border-r">
-            <Search className="h-5 w-5 shrink-0 text-[#94765b]" />
+          <label className="flex min-w-0 items-center gap-3 border-b border-[#E8DFD6] px-3 py-3 dark:border-[#514033] lg:border-b-0 lg:border-r">
+            <Search className="h-5 w-5 shrink-0 text-[#79563E] dark:text-[#C49A73]" />
 
             <span className="min-w-0 flex-1">
-              <span className="block text-[10px] font-semibold uppercase tracking-wider text-[#655a50]">
+              <span className="block text-[10px] font-semibold uppercase tracking-wider text-[#82776D] dark:text-[#C0A993]">
                 Equipment
               </span>
 
@@ -333,16 +322,16 @@ export default function Home() {
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 placeholder="What do you need?"
-                className="h-8 border-0 bg-transparent px-0 text-xs shadow-none focus-visible:ring-0"
+                className="h-8 border-0 bg-transparent px-0 text-xs text-[#292723] shadow-none placeholder:text-[#94877B] focus-visible:ring-0 dark:text-[#F3E6DA] dark:placeholder:text-[#A89581]"
               />
             </span>
           </label>
 
-          <label className="flex min-w-0 items-center gap-3 border-b border-[#eee7df] px-3 py-3 lg:border-b-0 lg:border-r">
-            <MapPin className="h-5 w-5 shrink-0 text-[#94765b]" />
+          <label className="flex min-w-0 items-center gap-3 border-b border-[#E8DFD6] px-3 py-3 dark:border-[#514033] lg:border-b-0 lg:border-r">
+            <MapPin className="h-5 w-5 shrink-0 text-[#79563E] dark:text-[#C49A73]" />
 
             <span className="min-w-0 flex-1">
-              <span className="block text-[10px] font-semibold uppercase tracking-wider text-[#655a50]">
+              <span className="block text-[10px] font-semibold uppercase tracking-wider text-[#82776D] dark:text-[#C0A993]">
                 Location
               </span>
 
@@ -350,16 +339,16 @@ export default function Home() {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="City or area"
-                className="h-8 border-0 bg-transparent px-0 text-xs shadow-none focus-visible:ring-0"
+                className="h-8 border-0 bg-transparent px-0 text-xs text-[#292723] shadow-none placeholder:text-[#94877B] focus-visible:ring-0 dark:text-[#F3E6DA] dark:placeholder:text-[#A89581]"
               />
             </span>
           </label>
 
-          <label className="flex min-w-0 items-center gap-3 border-b border-[#eee7df] px-3 py-3 lg:border-b-0 lg:border-r">
-            <CalendarDays className="h-5 w-5 shrink-0 text-[#94765b]" />
+          <label className="flex min-w-0 items-center gap-3 border-b border-[#E8DFD6] px-3 py-3 dark:border-[#514033] lg:border-b-0 lg:border-r">
+            <CalendarDays className="h-5 w-5 shrink-0 text-[#79563E] dark:text-[#C49A73]" />
 
             <span className="min-w-0 flex-1">
-              <span className="block text-[10px] font-semibold uppercase tracking-wider text-[#655a50]">
+              <span className="block text-[10px] font-semibold uppercase tracking-wider text-[#82776D] dark:text-[#C0A993]">
                 Rental date
               </span>
 
@@ -368,14 +357,14 @@ export default function Home() {
                 min={new Date().toISOString().slice(0, 10)}
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="h-8 border-0 bg-transparent px-0 text-xs shadow-none focus-visible:ring-0"
+                className="h-8 border-0 bg-transparent px-0 text-xs text-[#292723] shadow-none focus-visible:ring-0 dark:text-[#F3E6DA]"
               />
             </span>
           </label>
 
           <Button
             type="submit"
-            className="h-12 rounded-none bg-[#79563e] px-8 text-xs font-semibold text-white hover:bg-[#5d402e] lg:ml-4"
+            className="h-12 rounded-md bg-[#79563E] px-8 text-xs font-semibold text-white hover:bg-[#5D402E] dark:bg-[#A77A55] dark:text-white dark:hover:bg-[#916747] lg:ml-4"
           >
             <Search className="mr-2 h-4 w-4" />
             Search
@@ -385,8 +374,7 @@ export default function Home() {
 
       {/* BENEFITS STRIP */}
 
-      <section className="grid grid-cols-2 border-b border-[#eee7df] px-5 py-10 sm:px-10 lg:grid-cols-4 lg:px-16">
-
+      <section className="grid grid-cols-2 border-b border-[#E8DFD6] bg-[#FFFCFA] px-5 py-10 dark:border-[#514033] dark:bg-[#211B17] sm:px-10 lg:grid-cols-4 lg:px-16">
         {[
           {
             icon: Leaf,
@@ -416,14 +404,14 @@ export default function Home() {
               key={item.title}
               className="flex items-center justify-center gap-3 px-2 py-4"
             >
-              <Icon className="h-6 w-6 shrink-0 text-[#856b51]" />
+              <Icon className="h-6 w-6 shrink-0 text-[#79563E] dark:text-[#C49A73]" />
 
               <div>
-                <p className="text-[11px] font-semibold text-[#292723]">
+                <p className="text-[11px] font-semibold text-[#302A24] dark:text-[#F3E6DA]">
                   {item.title}
                 </p>
 
-                <p className="mt-1 text-[10px] text-[#8b837a]">
+                <p className="mt-1 text-[10px] text-[#82776D] dark:text-[#C0A993]">
                   {item.subtitle}
                 </p>
               </div>
@@ -435,21 +423,20 @@ export default function Home() {
       {/* CATEGORIES */}
 
       <section className="mx-auto max-w-[1400px] px-5 py-16 sm:px-8 md:px-12 lg:px-16">
-
         <div className="mb-10 flex items-end justify-between gap-4">
           <div>
-            <span className="mb-3 block text-[10px] font-bold tracking-[2px] text-[#94765b]">
+            <span className="mb-3 block text-[10px] font-bold tracking-[2px] text-[#79563E] dark:text-[#C49A73]">
               EXPLORE BY CATEGORY
             </span>
 
-            <h2 className="text-2xl font-medium tracking-tight sm:text-3xl">
+            <h2 className="text-2xl font-medium tracking-tight text-[#292723] dark:text-[#F3E6DA] sm:text-3xl">
               Find equipment for every job
             </h2>
           </div>
 
           <Link
             href="/equipment"
-            className="flex shrink-0 items-center gap-2 text-xs font-medium text-[#55483d] hover:text-[#94765b]"
+            className="flex shrink-0 items-center gap-2 text-xs font-medium text-[#766E65] transition hover:text-[#79563E] dark:text-[#C0A993] dark:hover:text-[#E6C7A9]"
           >
             View all
             <ArrowRight className="h-4 w-4" />
@@ -457,7 +444,6 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-3 gap-x-4 gap-y-8 sm:grid-cols-3 md:grid-cols-6 md:gap-7">
-
           {categories.map((cat, i) => {
             const Icon = cat.icon;
 
@@ -473,7 +459,7 @@ export default function Home() {
                   href={cat.href}
                   className="group flex flex-col items-center text-center"
                 >
-                  <div className="relative mb-4 aspect-square w-full max-w-[150px] overflow-hidden rounded-full bg-[#eee7df]">
+                  <div className="relative mb-4 aspect-square w-full max-w-[150px] overflow-hidden rounded-full bg-[#F0EAE4] dark:bg-[#382D25]">
                     <img
                       src={cat.image}
                       alt={cat.name}
@@ -486,11 +472,11 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <h3 className="text-xs font-semibold text-[#292723]">
+                  <h3 className="text-xs font-semibold text-[#302A24] dark:text-[#F3E6DA]">
                     {cat.name}
                   </h3>
 
-                  <p className="mt-1 text-[10px] text-[#8b837a]">
+                  <p className="mt-1 text-[10px] text-[#82776D] dark:text-[#C0A993]">
                     Browse rentals
                   </p>
                 </Link>
@@ -503,92 +489,79 @@ export default function Home() {
       {/* PROMOTIONAL COLLECTIONS */}
 
       <section className="mx-auto grid max-w-[1400px] gap-5 px-5 pb-12 sm:px-8 md:grid-cols-2 md:px-12 lg:px-16">
+        {[
+          {
+            image: promoImages[0],
+            eyebrow: "FOR YOUR NEXT PROJECT",
+            title: <>Build more.<br />Buy less.</>,
+            description:
+              "Discover reliable construction tools and machinery.",
+            button: "Explore construction",
+            href: "/equipment?category=Construction",
+          },
+          {
+            image: promoImages[1],
+            eyebrow: "VEHICLES & TRANSPORT",
+            title: <>Move things.<br />Move forward.</>,
+            description:
+              "Find vehicles and transport equipment for your needs.",
+            button: "Explore vehicles",
+            href: "/equipment?category=Vehicles%20%26%20Transportation",
+          },
+        ].map((item) => (
+          <div
+            key={item.eyebrow}
+            className="group relative flex min-h-[280px] items-center overflow-hidden rounded-xl bg-cover bg-center"
+            style={{ backgroundImage: `url(${item.image})` }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-black/75 to-black/10" />
 
-        <div
-          className="group relative flex min-h-[280px] items-center overflow-hidden bg-cover bg-center"
-          style={{ backgroundImage: `url(${promoImages[0]})` }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-black/75 to-black/10" />
+            <div className="relative max-w-sm p-8 sm:p-10">
+              <span className="text-[10px] font-bold tracking-[2px] text-[#E6C7A9]">
+                {item.eyebrow}
+              </span>
 
-          <div className="relative max-w-sm p-8 sm:p-10">
-            <span className="text-[10px] font-bold tracking-[2px] text-[#e8d7c3]">
-              FOR YOUR NEXT PROJECT
-            </span>
+              <h2 className="mt-4 text-3xl font-medium leading-tight text-white">
+                {item.title}
+              </h2>
 
-            <h2 className="mt-4 text-3xl font-medium leading-tight text-white">
-              Build more.
-              <br />
-              Buy less.
-            </h2>
+              <p className="mt-3 text-xs leading-6 text-white/80">
+                {item.description}
+              </p>
 
-            <p className="mt-3 text-xs leading-6 text-white/80">
-              Discover reliable construction tools and machinery.
-            </p>
-
-            <Link
-              href="/equipment?category=Construction"
-              className="mt-6 inline-flex h-10 items-center justify-center bg-[#f5f0e9] px-5 text-xs text-[#46372c] transition hover:bg-white"
-            >
-              Explore construction
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
+              <Link
+                href={item.href}
+                className="mt-6 inline-flex h-10 items-center justify-center rounded-md bg-[#FFFCFA] px-5 text-xs font-medium text-[#79563E] transition hover:bg-[#F0EAE4]"
+              >
+                {item.button}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </div>
           </div>
-        </div>
-
-        <div
-          className="group relative flex min-h-[280px] items-center overflow-hidden bg-cover bg-center"
-          style={{ backgroundImage: `url(${promoImages[1]})` }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-black/75 to-black/10" />
-
-          <div className="relative max-w-sm p-8 sm:p-10">
-            <span className="text-[10px] font-bold tracking-[2px] text-[#e8d7c3]">
-              VEHICLES & TRANSPORT
-            </span>
-
-            <h2 className="mt-4 text-3xl font-medium leading-tight text-white">
-              Move things.
-              <br />
-              Move forward.
-            </h2>
-
-            <p className="mt-3 text-xs leading-6 text-white/80">
-              Find vehicles and transport equipment for your needs.
-            </p>
-
-            <Link
-              href="/equipment?category=Vehicles%20%26%20Transportation"
-              className="mt-6 inline-flex h-10 items-center justify-center bg-[#f5f0e9] px-5 text-xs text-[#46372c] transition hover:bg-white"
-            >
-              Explore vehicles
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </div>
-        </div>
+        ))}
       </section>
 
       {/* FEATURED EQUIPMENT */}
 
       <section className="mx-auto max-w-[1400px] px-5 py-16 sm:px-8 md:px-12 lg:px-16">
-
         <div className="mb-9 flex items-end justify-between gap-4">
           <div>
-            <span className="mb-3 block text-[10px] font-bold tracking-[2px] text-[#94765b]">
+            <span className="mb-3 block text-[10px] font-bold tracking-[2px] text-[#79563E] dark:text-[#C49A73]">
               POPULAR RENTALS
             </span>
 
-            <h2 className="text-2xl font-medium tracking-tight sm:text-3xl">
+            <h2 className="text-2xl font-medium tracking-tight text-[#292723] dark:text-[#F3E6DA] sm:text-3xl">
               Equipment worth discovering
             </h2>
 
-            <p className="mt-2 text-xs text-[#81796f]">
+            <p className="mt-2 text-xs text-[#82776D] dark:text-[#C0A993]">
               Find quality equipment for your next project.
             </p>
           </div>
 
           <Link
             href="/equipment"
-            className="flex shrink-0 items-center gap-2 text-xs font-medium hover:text-[#94765b]"
+            className="flex shrink-0 items-center gap-2 text-xs font-medium text-[#302A24] transition hover:text-[#79563E] dark:text-[#E5D4C5] dark:hover:text-[#E6C7A9]"
           >
             View marketplace
             <ArrowRight className="h-4 w-4" />
@@ -616,8 +589,7 @@ export default function Home() {
 
       {/* BRAND STORY */}
 
-      <section className="grid bg-[#f1ece6] md:grid-cols-[1.15fr_1fr_0.8fr]">
-
+      <section className="grid border-y border-[#E8DFD6] bg-[#F7F1EB] dark:border-[#514033] dark:bg-[#29221D] md:grid-cols-[1.15fr_1fr_0.8fr]">
         <div className="min-h-[300px] overflow-hidden md:min-h-[390px]">
           <img
             src={storyImage}
@@ -628,17 +600,17 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col justify-center px-7 py-12 sm:px-12">
-          <span className="mb-4 text-[10px] font-bold tracking-[2px] text-[#94765b]">
+          <span className="mb-4 text-[10px] font-bold tracking-[2px] text-[#79563E] dark:text-[#C49A73]">
             A BETTER WAY TO GET THINGS DONE
           </span>
 
-          <h2 className="text-3xl font-medium leading-tight tracking-tight">
+          <h2 className="text-3xl font-medium leading-tight tracking-tight text-[#292723] dark:text-[#F3E6DA]">
             Smart rentals.
             <br />
             Real possibilities.
           </h2>
 
-          <p className="mt-5 text-sm leading-7 text-[#797169]">
+          <p className="mt-5 text-sm leading-7 text-[#766E65] dark:text-[#C0A993]">
             We believe useful equipment should be accessible when you
             need it. Equiply connects people who have equipment with
             people who need it, making projects easier and resources
@@ -647,14 +619,14 @@ export default function Home() {
 
           <Link
             href="/equipment"
-            className="mt-7 inline-flex h-11 w-fit items-center justify-center bg-[#79563e] px-6 text-xs text-white transition hover:bg-[#5d402e]"
+            className="mt-7 inline-flex h-11 w-fit items-center justify-center rounded-md bg-[#79563E] px-6 text-xs font-medium text-white transition hover:bg-[#5D402E] dark:bg-[#A77A55] dark:hover:bg-[#916747]"
           >
             Discover Equiply
             <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
         </div>
 
-        <div className="flex flex-col justify-center gap-6 bg-[#6c665c] px-8 py-12 text-white sm:px-10">
+        <div className="flex flex-col justify-center gap-6 bg-[#79563E] px-8 py-12 text-white dark:bg-[#514033] sm:px-10">
           <h3 className="text-2xl font-medium">
             Better projects.
             <br />
@@ -672,7 +644,7 @@ export default function Home() {
             return (
               <div
                 key={item.text}
-                className="flex items-center gap-3 text-xs text-white/85"
+                className="flex items-center gap-3 text-xs opacity-90"
               >
                 <Icon className="h-5 w-5 shrink-0" />
                 {item.text}
@@ -685,7 +657,6 @@ export default function Home() {
       {/* BENEFIT CARDS */}
 
       <section className="mx-auto grid max-w-[1400px] grid-cols-2 gap-5 px-5 py-12 sm:px-8 md:grid-cols-4 md:px-12 lg:px-16">
-
         {[
           {
             icon: Leaf,
@@ -713,15 +684,15 @@ export default function Home() {
           return (
             <div
               key={item.title}
-              className="px-3 py-5 text-center"
+              className="rounded-xl border border-[#E8DFD6] bg-white px-3 py-6 text-center dark:border-[#514033] dark:bg-[#29221D]"
             >
-              <Icon className="mx-auto h-7 w-7 text-[#79563e]" />
+              <Icon className="mx-auto h-7 w-7 text-[#79563E] dark:text-[#C49A73]" />
 
-              <h3 className="mt-4 text-sm font-semibold">
+              <h3 className="mt-4 text-sm font-semibold text-[#302A24] dark:text-[#F3E6DA]">
                 {item.title}
               </h3>
 
-              <p className="mt-2 text-xs leading-6 text-[#81796f]">
+              <p className="mt-2 text-xs leading-6 text-[#82776D] dark:text-[#C0A993]">
                 {item.desc}
               </p>
             </div>
@@ -731,8 +702,7 @@ export default function Home() {
 
       {/* INSPIRATION SECTION */}
 
-      <section className="grid bg-[#f1ece6] md:grid-cols-[1.1fr_1fr_0.7fr]">
-
+      <section className="grid border-y border-[#E8DFD6] bg-[#F7F1EB] dark:border-[#514033] dark:bg-[#29221D] md:grid-cols-[1.1fr_1fr_0.7fr]">
         <div className="min-h-[280px] overflow-hidden">
           <img
             src={inspirationImage}
@@ -743,24 +713,24 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col justify-center px-7 py-12 sm:px-12">
-          <span className="mb-4 text-[10px] font-bold tracking-[2px] text-[#94765b]">
+          <span className="mb-4 text-[10px] font-bold tracking-[2px] text-[#79563E] dark:text-[#C49A73]">
             MAKE YOUR NEXT PROJECT HAPPEN
           </span>
 
-          <h2 className="text-3xl font-medium leading-tight">
+          <h2 className="text-3xl font-medium leading-tight text-[#292723] dark:text-[#F3E6DA]">
             Everything you need.
             <br />
             Nothing you don't.
           </h2>
 
-          <p className="mt-5 text-sm leading-7 text-[#797169]">
+          <p className="mt-5 text-sm leading-7 text-[#766E65] dark:text-[#C0A993]">
             Explore equipment, discover new possibilities and find
             practical solutions for the work ahead.
           </p>
 
           <Link
             href="/equipment"
-            className="mt-7 inline-flex h-11 w-fit items-center justify-center bg-[#79563e] px-6 text-xs text-white transition hover:bg-[#5d402e]"
+            className="mt-7 inline-flex h-11 w-fit items-center justify-center rounded-md bg-[#79563E] px-6 text-xs font-medium text-white transition hover:bg-[#5D402E] dark:bg-[#A77A55] dark:hover:bg-[#916747]"
           >
             Find your equipment
             <ArrowRight className="ml-2 h-4 w-4" />
@@ -792,13 +762,12 @@ export default function Home() {
       {/* TESTIMONIALS */}
 
       <section className="mx-auto max-w-[1400px] px-5 py-16 sm:px-8 md:px-12 lg:px-16">
-
         <div className="mb-10">
-          <span className="mb-3 block text-[10px] font-bold tracking-[2px] text-[#94765b]">
+          <span className="mb-3 block text-[10px] font-bold tracking-[2px] text-[#79563E] dark:text-[#C49A73]">
             WHAT OUR COMMUNITY SAYS
           </span>
 
-          <h2 className="text-2xl font-medium sm:text-3xl">
+          <h2 className="text-2xl font-medium text-[#292723] dark:text-[#F3E6DA] sm:text-3xl">
             Trusted by renters and owners
           </h2>
         </div>
@@ -807,9 +776,9 @@ export default function Home() {
           {testimonials.map((item) => (
             <article
               key={item.name}
-              className="border border-[#ece5dc] bg-[#faf7f3] p-7"
+              className="rounded-xl border border-[#E8DFD6] bg-white p-7 text-[#292723] dark:border-[#514033] dark:bg-[#29221D] dark:text-[#F3E6DA]"
             >
-              <div className="flex gap-1 text-[#b48a53]">
+              <div className="flex gap-1 text-amber-500">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
                     key={i}
@@ -818,21 +787,21 @@ export default function Home() {
                 ))}
               </div>
 
-              <p className="my-6 text-sm leading-7 text-[#615950]">
+              <p className="my-6 text-sm leading-7 text-[#766E65] dark:text-[#C0A993]">
                 &ldquo;{item.text}&rdquo;
               </p>
 
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#e6d7c7] text-sm font-semibold text-[#6d4f37]">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F0EAE4] text-sm font-semibold text-[#79563E] dark:bg-[#514033] dark:text-[#E6C7A9]">
                   {item.name.charAt(0)}
                 </div>
 
                 <div>
-                  <h3 className="text-xs font-semibold">
+                  <h3 className="text-xs font-semibold text-[#302A24] dark:text-[#F3E6DA]">
                     {item.name}
                   </h3>
 
-                  <p className="mt-1 text-[10px] text-[#898177]">
+                  <p className="mt-1 text-[10px] text-[#82776D] dark:text-[#C0A993]">
                     {item.role}
                   </p>
                 </div>
@@ -844,25 +813,24 @@ export default function Home() {
 
       {/* COMMUNITY CTA */}
 
-      <section className="grid overflow-hidden bg-[#e9e0d5] md:grid-cols-[1fr_0.65fr]">
-
+      <section className="grid overflow-hidden border-t border-[#E8DFD6] bg-[#F7F1EB] dark:border-[#514033] dark:bg-[#29221D] md:grid-cols-[1fr_0.65fr]">
         <div className="flex flex-col justify-center px-7 py-14 sm:px-12 lg:px-20">
-          <span className="mb-4 text-[10px] font-bold tracking-[2px] text-[#94765b]">
+          <span className="mb-4 text-[10px] font-bold tracking-[2px] text-[#79563E] dark:text-[#C49A73]">
             JOIN THE EQUIPLY COMMUNITY
           </span>
 
-          <h2 className="max-w-lg text-3xl font-medium leading-tight sm:text-4xl">
+          <h2 className="max-w-lg text-3xl font-medium leading-tight text-[#292723] dark:text-[#F3E6DA] sm:text-4xl">
             Projects start with the right equipment.
           </h2>
 
-          <p className="mt-5 max-w-md text-sm leading-7 text-[#766d64]">
+          <p className="mt-5 max-w-md text-sm leading-7 text-[#766E65] dark:text-[#C0A993]">
             Discover equipment, connect with owners and make your
             next project easier.
           </p>
 
           <Link
             href="/equipment"
-            className="mt-7 inline-flex h-12 w-fit items-center justify-center bg-[#79563e] px-7 text-xs text-white transition hover:bg-[#5d402e]"
+            className="mt-7 inline-flex h-12 w-fit items-center justify-center rounded-md bg-[#79563E] px-7 text-xs font-semibold text-white transition hover:bg-[#5D402E] dark:bg-[#A77A55] dark:hover:bg-[#916747]"
           >
             Explore the marketplace
             <ArrowRight className="ml-2 h-4 w-4" />

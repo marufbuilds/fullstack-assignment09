@@ -11,24 +11,16 @@ import {
   ShieldCheck,
   CheckCircle2,
   ArrowRight,
-  X,
-  AlertCircle,
 } from "lucide-react";
 
 import { authClient, useAuth } from "@/lib/auth";
+import { useToast } from "@/lib/toast";
 import { Spinner } from "@/components/ui";
-
-type ToastType = "success" | "error" | "info";
-
-type ToastData = {
-  type: ToastType;
-  title: string;
-  description: string;
-};
 
 export default function Login() {
   const router = useRouter();
   const { status } = useAuth();
+  const { showToast } = useToast();
 
   const [show, setShow] = useState(false);
   const [email, setEmail] = useState("");
@@ -37,7 +29,6 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [target, setTarget] = useState("/");
-  const [toast, setToast] = useState<ToastData | null>(null);
   const [loginSucceeded, setLoginSucceeded] = useState(false);
 
   // Get redirect destination from URL.
@@ -50,17 +41,6 @@ export default function Login() {
     }
   }, []);
 
-  // Automatically hide toast after 4 seconds.
-  useEffect(() => {
-    if (!toast) return;
-
-    const timeout = window.setTimeout(() => {
-      setToast(null);
-    }, 4000);
-
-    return () => window.clearTimeout(timeout);
-  }, [toast]);
-
   // Redirect authenticated users.
   useEffect(() => {
     if (status === "authenticated" && !loginSucceeded) {
@@ -68,19 +48,10 @@ export default function Login() {
     }
   }, [status, target, router, loginSucceeded]);
 
-  function showToast(
-    type: ToastType,
-    title: string,
-    description: string
-  ) {
-    setToast({ type, title, description });
-  }
-
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     setMessage("");
-    setToast(null);
     setLoading(true);
 
     try {
@@ -94,16 +65,15 @@ export default function Login() {
           result.error.message || "Could not sign you in.";
 
         setMessage(errorText);
-        showToast("error", "Sign-in failed", errorText);
+        showToast(errorText, "error");
         return;
       }
 
       setLoginSucceeded(true);
 
       showToast(
-        "success",
-        "Welcome back!",
-        "You have signed in successfully. Redirecting..."
+        "You have signed in successfully. Redirecting...",
+        "success"
       );
 
       window.setTimeout(() => {
@@ -116,7 +86,7 @@ export default function Login() {
         "Could not reach the Equiply API. Is the backend running?";
 
       setMessage(errorText);
-      showToast("error", "Connection failed", errorText);
+      showToast(errorText, "error");
     } finally {
       setLoading(false);
     }
@@ -124,7 +94,6 @@ export default function Login() {
 
   async function handleGoogle() {
     setMessage("");
-    setToast(null);
     setGoogleLoading(true);
 
     try {
@@ -138,58 +107,13 @@ export default function Login() {
       const errorText = "Google sign-in could not be started.";
 
       setMessage(errorText);
-      showToast("error", "Google sign-in failed", errorText);
+      showToast(errorText, "error");
       setGoogleLoading(false);
     }
   }
 
   return (
     <main className="relative min-h-screen bg-[#FFFCFA] px-4 py-6 text-[#292723] sm:px-6 lg:py-10">
-
-      {/* Toast Notification */}
-      {toast && (
-        <div
-          role="status"
-          aria-live="polite"
-          className="fixed right-4 top-5 z-[100] flex w-[calc(100%-2rem)] max-w-sm items-start gap-3 rounded-2xl border border-[#E8DFD6] bg-white p-4 shadow-[0_12px_40px_rgba(60,40,20,0.12)] animate-in slide-in-from-top-3 fade-in duration-300"
-        >
-          <div
-            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
-              toast.type === "success"
-                ? "bg-[#F1F5EF] text-[#54734D]"
-                : toast.type === "error"
-                  ? "bg-[#FDF0ED] text-[#B65E4B]"
-                  : "bg-[#F8F3EE] text-[#79563E]"
-            }`}
-          >
-            {toast.type === "success" ? (
-              <CheckCircle2 size={21} />
-            ) : (
-              <AlertCircle size={21} />
-            )}
-          </div>
-
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-[#292723]">
-              {toast.title}
-            </p>
-
-            <p className="mt-1 text-xs leading-5 text-[#82776D]">
-              {toast.description}
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setToast(null)}
-            aria-label="Close notification"
-            className="rounded-lg p-1 text-[#A0968D] transition hover:bg-[#F8F3EE] hover:text-[#79563E]"
-          >
-            <X size={17} />
-          </button>
-        </div>
-      )}
-
       <div className="mx-auto grid min-h-[calc(100vh-48px)] max-w-[1250px] items-center gap-6 lg:grid-cols-2 lg:gap-12">
 
         {/* LEFT: Equipment image */}

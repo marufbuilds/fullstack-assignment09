@@ -4,7 +4,7 @@
 // Owner form: submit a new listing to the marketplace for review.
 
 import Link from "next/link";
-import { useEffect, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -17,9 +17,6 @@ import {
   Send,
   ShieldCheck,
   Tag,
-  AlertCircle,
-  X,
-  Check,
 } from "lucide-react";
 
 import { createEquipment, errorMessage } from "@/lib/api";
@@ -31,6 +28,7 @@ import {
 
 import { AuthGuard } from "@/components/AuthGuard";
 import { Spinner } from "@/components/ui";
+import { useToast } from "@/lib/toast";
 
 const initialForm = {
   title: "",
@@ -42,34 +40,13 @@ const initialForm = {
   location: "",
 };
 
-type ToastType = "success" | "error";
-
 function AddEquipmentContent() {
   const router = useRouter();
+  const { showToast } = useToast();
 
   const [form, setForm] = useState(initialForm);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-
-  const [toast, setToast] = useState<{
-    message: string;
-    type: ToastType;
-  } | null>(null);
-
-  // Automatically hide toast after 4 seconds.
-  useEffect(() => {
-    if (!toast) return;
-
-    const timeout = window.setTimeout(() => {
-      setToast(null);
-    }, 4000);
-
-    return () => window.clearTimeout(timeout);
-  }, [toast]);
-
-  function showToast(message: string, type: ToastType = "success") {
-    setToast({ message, type });
-  }
 
   function change(key: keyof typeof form, value: string) {
     setForm((current) => ({ ...current, [key]: value }));
@@ -116,7 +93,10 @@ function AddEquipmentContent() {
         image: form.image.trim() || FALLBACK_IMAGE,
       });
 
-      showToast("Your equipment listing was submitted successfully.");
+      showToast(
+        "Your equipment listing was submitted successfully.",
+        "success"
+      );
 
       // Allow the success toast to appear before navigating.
       window.setTimeout(() => {
@@ -143,51 +123,7 @@ function AddEquipmentContent() {
 
   return (
     <main className="min-h-screen bg-[#FFFCFA] px-4 py-8 text-[#292723] sm:px-6 lg:px-8 lg:py-12">
-
-      {/* Toast notification */}
-      {toast && (
-        <div
-          role="status"
-          aria-live="polite"
-          className="fixed right-4 top-5 z-[100] flex w-[calc(100%-2rem)] max-w-sm items-start gap-3 rounded-2xl border border-[#E8DFD6] bg-white p-4 shadow-[0_12px_40px_rgba(60,40,20,0.12)] animate-in slide-in-from-top-3 fade-in duration-300"
-        >
-          <div
-            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
-              toast.type === "success"
-                ? "bg-[#F0F5ED] text-[#66805D]"
-                : "bg-red-50 text-red-600"
-            }`}
-          >
-            {toast.type === "success" ? (
-              <Check size={21} />
-            ) : (
-              <AlertCircle size={21} />
-            )}
-          </div>
-
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-[#292723]">
-              {toast.type === "success" ? "Success" : "Something went wrong"}
-            </p>
-
-            <p className="mt-1 text-xs leading-5 text-[#82776D]">
-              {toast.message}
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setToast(null)}
-            aria-label="Close notification"
-            className="rounded-lg p-1 text-[#A0968D] transition hover:bg-[#F8F3EE] hover:text-[#79563E]"
-          >
-            <X size={17} />
-          </button>
-        </div>
-      )}
-
       <div className="mx-auto max-w-[1160px]">
-
         {/* Header */}
         <div className="mb-9 border-b border-[#E8DFD6] pb-7">
           <Link
@@ -226,10 +162,8 @@ function AddEquipmentContent() {
 
         {/* Main layout */}
         <div className="grid items-start gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-
           {/* Equipment form */}
           <section className="overflow-hidden rounded-2xl border border-[#E8DFD6] bg-white shadow-[0_4px_24px_rgba(60,40,20,0.035)]">
-
             <div className="border-b border-[#E8DFD6] px-6 py-5 sm:px-8">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F5EEE8] text-[#79563E]">
@@ -506,10 +440,8 @@ function AddEquipmentContent() {
 
           {/* Right column */}
           <aside className="space-y-6 lg:sticky lg:top-6">
-
             {/* Live preview */}
             <section className="overflow-hidden rounded-2xl border border-[#E8DFD6] bg-white shadow-[0_4px_24px_rgba(60,40,20,0.035)]">
-
               <div className="flex items-center justify-between gap-3 border-b border-[#E8DFD6] px-5 py-4 sm:px-6">
                 <div>
                   <h2 className="font-semibold text-[#292723]">
@@ -526,7 +458,6 @@ function AddEquipmentContent() {
                 </span>
               </div>
 
-              {/* Image */}
               <div className="relative aspect-[16/10] overflow-hidden bg-[#F5EEE8]">
                 <img
                   src={form.image.trim() || FALLBACK_IMAGE}
@@ -542,7 +473,6 @@ function AddEquipmentContent() {
                 </span>
               </div>
 
-              {/* Preview content */}
               <div className="p-5 sm:p-6">
                 <div className="mb-3 flex items-center gap-1.5 text-xs text-[#82776D]">
                   <MapPin size={14} />
