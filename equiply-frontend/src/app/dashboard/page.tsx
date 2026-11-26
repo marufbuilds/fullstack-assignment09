@@ -1,6 +1,0 @@
-'use client';
-
-import Link from 'next/link';
-
-export default function Dashboard() { return <div className="wrap section"><div className="eyebrow">Workspace</div><h1 className="h2">Your Equiply workspace</h1><p className="muted">A quick overview of the rental marketplace workspace. Account data will be connected later.</p><div className="grid3" style={{ marginTop: 24 }}>{[["Active rentals", "0", "Your current bookings"], ["Saved equipment", "—", "Local favorites"], ["Owner listings", "0", "Your equipment"]].map(([label, value, desc]) => <div className="card" style={{ padding: 22 }} key={label}><p className="muted">{label}</p><h2 style={{ fontSize: 32, fontWeight: 900, margin: "8px 0" }}>{value}</h2><small className="muted">{desc}</small></div>)}</div><div className="grid3" style={{ marginTop: 30 }}>{[['My Rentals', 'Review your rental bookings.', '/dashboard/rentals'], ['My Equipment', 'Manage your listings.', '/dashboard/equipment'], ['Favorites', 'View equipment you saved.', '/favorites'], ['Add Equipment', 'List equipment for rent.', '/add-equipment'], ['Profile', 'Your account information.', '/dashboard/profile']].map(([t, d, l]) => <Link href={l} className="card" style={{ padding: 24 }} key={t}><h3>{t}</h3><p className="muted">{d}</p><span style={{ color: 'var(--brand)', fontWeight: 700 }}>Open →</span></Link>)}</div></div>;
- }
